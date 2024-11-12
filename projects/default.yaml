@@ -1,93 +1,46 @@
 apiVersion: argoproj.io/v1alpha1
-kind: AppProject
-metadata:
-  annotations:
-    argocd-autopilot.argoproj-labs.io/default-dest-server: https://kubernetes.default.svc
-    argocd.argoproj.io/sync-options: PruneLast=true
-    argocd.argoproj.io/sync-wave: "-2"
-  creationTimestamp: null
-  name: default
-  namespace: argocd
-spec:
-  clusterResourceWhitelist:
-  - group: '*'
-    kind: '*'
-  description: default project
-  destinations:
-  - namespace: '*'
-    server: '*'
-  namespaceResourceWhitelist:
-  - group: '*'
-    kind: '*'
-  sourceRepos:
-  - '*'
-status: {}
-
----
-apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  annotations:
-    argocd.argoproj.io/sync-wave: "0"
-  creationTimestamp: null
-  name: default
-  namespace: argocd
+  name: common
 spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
   generators:
-  - git:
-      files:
-      - path: apps/**/default/config.json
-      repoURL: https://github.com/diogosilva30/homelab.git
-      requeueAfterSeconds: 20
-      revision: ""
-      template:
-        metadata: {}
-        spec:
-          destination: {}
-          project: ""
-  - git:
-      files:
-      - path: apps/**/default/config_dir.json
-      repoURL: https://github.com/diogosilva30/homelab.git
-      requeueAfterSeconds: 20
-      revision: ""
-      template:
-        metadata: {}
-        spec:
-          destination: {}
-          project: ""
-          source:
-            directory:
-              exclude: '{{ exclude }}'
-              include: '{{ include }}'
-              jsonnet: {}
-              recurse: true
-            repoURL: ""
-  syncPolicy: {}
+    - git:
+        repoURL: &repo https://github.com/diogosilva30/homelab
+        revision: HEAD
+        directories:
+          - path: apps/*
   template:
     metadata:
-      labels:
-        app.kubernetes.io/managed-by: argocd-autopilot
-        app.kubernetes.io/name: '{{ appName }}'
-      name: default-{{ userGivenName }}
-      namespace: argocd
+      name: "{{ .path.basenameNormalized }}"
     spec:
-      destination:
-        namespace: '{{ destNamespace }}'
-        server: '{{ destServer }}'
-      ignoreDifferences:
-      - group: argoproj.io
-        jsonPointers:
-        - /status
-        kind: Application
       project: default
       source:
-        path: '{{ srcPath }}'
-        repoURL: '{{ srcRepoURL }}'
-        targetRevision: '{{ srcTargetRevision }}'
+        repoURL: *repo
+        targetRevision: HEAD
+        path: "{{ .path.path }}"
+        # Inject the cluster annotations into the manifests
+        # From: https://github.com/argoproj/argo-cd/discussions/9042#discussioncomment-4398836
+        kustomize:
+          # Need to manually set annotations for now: https://github.com/argoproj/argo-cd/issues/11213
+          commonAnnotations:
+            dns: lab.local
+            name: LAB
+            environment: LAB
+            # Integration with external-dns
+            external-dns.alpha.kubernetes.io/target: lab.local
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: "{{ .path.basenameNormalized }}"
       syncPolicy:
         automated:
-          allowEmpty: true
           prune: true
           selfHeal: true
-status: {}
+        syncOptions:
+          - CreateNamespace=true
+          # Needs server side apply because some
+          # resources are too big to fit in the
+          # lastAppliedConfig annotation
+          # https://argo-cd.readthedocs.io/en/stable/user-guide/sync-options/#server-side-apply
+          - ServerSideApply=true
