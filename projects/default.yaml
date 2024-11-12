@@ -27,7 +27,7 @@ status: {}
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: common
+  name: default
 spec:
   goTemplate: true
   goTemplateOptions: ["missingkey=error"]
