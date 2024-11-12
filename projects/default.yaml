@@ -33,7 +33,7 @@ spec:
   goTemplateOptions: ["missingkey=error"]
   generators:
     - git:
-        repoURL: &repo https://github.com/diogosilva30/k3s.dsilva.dev.git
+        repoURL: &repo https://github.com/diogosilva30/homelab
         revision: HEAD
         directories:
           - path: apps/*
