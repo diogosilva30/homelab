@@ -1,0 +1,26 @@
+# Custom values for the pihole chart
+# https://artifacthub.io/packages/helm/mojo2600/pihole
+
+# dnsmasq:
+#   customDnsEntries:
+#     - address=/nas/192.168.178.10
+ 
+#   customCnameEntries:
+#     - cname=foo.nas,nas
+
+admin:
+  # Use secret specified in "pihole/manifests/admin-password.yaml"
+  enabled: true
+  existingSecret: "pihole-admin-password"
+  passwordKey: "password"
+
+
+persistentVolumeClaim:
+  enabled: true
+
+podDnsConfig:
+  enabled: true
+  policy: "None"
+  nameservers:
+  - 127.0.0.1
+  - 1.1.1.1
