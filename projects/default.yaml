@@ -36,7 +36,7 @@ spec:
         repoURL: &repo https://github.com/diogosilva30/homelab
         revision: HEAD
         directories:
-          - path: apps/*
+          - path: apps/default/*
   template:
     metadata:
       name: "{{ .path.basenameNormalized }}"
