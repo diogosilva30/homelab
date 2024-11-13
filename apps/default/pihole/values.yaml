@@ -14,7 +14,21 @@ admin:
   existingSecret: "pihole-admin-password"
   passwordKey: "password"
 
+# create a kubernetes service and expose
+# port 53 outside of cluster on the local network
+serviceDns:
+  loadBalancerIP: 192.168.1.86 # IP of the LoadBalancer
+  type: LoadBalancer
 
+# enables cloudflare tunnel sidecar container
+# and sets upstream dns in pihole to leverage it
+doh:
+  enabled: true
+  pullPolicy: Always
+  envVars: {
+    DOH_UPSTREAM: "https://1.1.1.1/dns-query"
+  }
+  
 persistentVolumeClaim:
   enabled: true
 
