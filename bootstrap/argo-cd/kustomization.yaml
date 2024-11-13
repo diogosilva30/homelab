@@ -1,22 +1,66 @@
-apiVersion: kustomize.config.k8s.io/v1beta1
-configMapGenerator:
-- name: argocd-cm
-  behavior: merge
-  literals:
-  - |
-    repository.credentials=- passwordSecret:
-        key: git_token
-        name: autopilot-secret
-      url: https://github.com/
-      usernameSecret:
-        key: git_username
-        name: autopilot-secret
-  - kustomize.buildOptions=--enable-alpha-plugins --enable-helm --load-restrictor LoadRestrictionsNone
-  # Enable web terminal to exec into pods
-  # https://argo-cd.readthedocs.io/en/stable/operator-manual/web_based_terminal/
-  - exec.enabled="true"
-
 kind: Kustomization
 namespace: argocd
+apiVersion: kustomize.config.k8s.io/v1beta1
+
+
+configMapGenerator:
+  - name: argocd-cm
+    behavior: merge
+    literals:
+    - |
+      repository.credentials=- passwordSecret:
+          key: git_token
+          name: autopilot-secret
+        url: https://github.com/
+        usernameSecret:
+          key: git_username
+          name: autopilot-secret
+    - kustomize.buildOptions=--enable-alpha-plugins --enable-helm --load-restrictor LoadRestrictionsNone
+    # Enable web terminal to exec into pods
+    # https://argo-cd.readthedocs.io/en/stable/operator-manual/web_based_terminal/
+    - exec.enabled="true"
+
 resources:
-- github.com/argoproj-labs/argocd-autopilot/manifests/base?ref=v0.4.17
+  - github.com/argoproj-labs/argocd-autopilot/manifests/base?ref=v0.4.17
+  # Prometheus operator CRDs
+  - https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/v0.75.2/bundle.yaml
+  - manifests/ingress.yaml
+  - manifests/service-monitors.yaml
+  # ArgoCD Image Updater
+  - https://raw.githubusercontent.com/argoproj-labs/argocd-image-updater/stable/manifests/install.yaml
+
+
+
+# Our dynamic environment-specific variables are injects in every manifests
+# as annotations (check `kustomize.commonAnnotations` in `project/default.yaml`).
+# So we just need to make a kustomize replacement of the value we want to replace
+# with the annotation value
+replacements:
+  - source:
+      kind: Ingress
+      name: argocd-ingress
+      fieldPath: metadata.annotations.dns
+    targets:
+      - select:
+          kind: Ingress
+          name: argocd-ingress
+        fieldPaths:
+          - spec.rules.0.host
+        options:
+          # This keeps the "argo." prefix
+          delimiter: "."
+          index: 1
+
+# Add the patch to the deployment
+patches:
+  # https://argo-cd.readthedocs.io/en/stable/operator-manual/custom_tools/
+  - target:
+      kind: Deployment
+      name: argocd-repo-server
+    path: manifests/repo-server-deployment-patch.yaml
+  - target:
+      kind: Role
+      name: argocd-server
+    path: manifests/web-terminal-permission-patch.yaml
+
+

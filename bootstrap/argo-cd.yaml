@@ -20,19 +20,20 @@ spec:
   source:
     path: bootstrap/argo-cd
     repoURL: https://github.com/diogosilva30/homelab.git
+    kustomize:
+      commonAnnotations:
+        dns: lab.local
+        environment: argo-cd
+        external-dns.alpha.kubernetes.io/target: lab.local
   syncPolicy:
     automated:
       allowEmpty: true
       prune: true
       selfHeal: true
     syncOptions:
-    - allowEmpty=true
-status:
-  health: {}
-  summary: {}
-  sync:
-    comparedTo:
-      destination: {}
-      source:
-        repoURL: ""
-    status: ""
+      - allowEmpty=true
+      # Needs server side apply because some
+      # resources are too big to fit in the
+      # lastAppliedConfig annotation
+      # https://argo-cd.readthedocs.io/en/stable/user-guide/sync-options/#server-side-apply
+      - ServerSideApply=true
