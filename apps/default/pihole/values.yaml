@@ -1,18 +1,42 @@
 # Custom values for the pihole chart
 # https://artifacthub.io/packages/helm/mojo2600/pihole
 
-# dnsmasq:
-#   customDnsEntries:
-#     - address=/nas/192.168.178.10
- 
-#   customCnameEntries:
-#     - cname=foo.nas,nas
+replicaCount: 2 # for high availability
+
+dnsmasq:
+  # Configure pihole for DHCP server on all network devices except MEO TvBox,
+  # otherwise no television :(
+  # https://gist.github.com/andrepcg/5999203519c722004c463eb1494559f8
+  staticDhcpEntries:
+      - dhcp-host=38:e1:f4:4c:e8:ec,set:meo
+      - dhcp-option=tag:meo,option:dns-server,192.168.1.254
 
 admin:
   # Use secret specified in "pihole/manifests/admin-password.yaml"
   enabled: true
   existingSecret: "pihole-admin-password"
   passwordKey: "password"
+
+# Following settings are required for running pihole as DHCP server
+# https://docs.pi-hole.net/docker/dhcp/
+# https://github.com/MoJo2600/pihole-kubernetes/issues/185
+hostNetwork: "true"
+privileged: "true"
+capabilities:
+  add:
+  - NET_ADMIN
+serviceDhcp:
+  enabled: true
+  type: LoadBalancer
+
+extraEnvVars:
+  # https://github.com/MoJo2600/pihole-kubernetes/issues/163#issuecomment-872216807
+  DHCP_ACTIVE: "true"
+  DHCP_START: "192.168.1.64"
+  DHCP_END: "192.168.1.253"
+  DHCP_ROUTER: "192.168.1.254"
+  ServerIP: "192.168.1.86"
+  TZ: "Europe/Lisbon"
 
 # create a kubernetes service and expose
 # port 53 outside of cluster on the local network
@@ -28,7 +52,6 @@ doh:
   envVars: {
     DOH_UPSTREAM: "https://1.1.1.1/dns-query"
   }
-  
 persistentVolumeClaim:
   enabled: true
 
