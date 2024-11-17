@@ -1,15 +1,15 @@
 # Custom values for the pihole chart
 # https://artifacthub.io/packages/helm/mojo2600/pihole
 
-replicaCount: 2 # for high availability
+replicaCount: 1
 
 dnsmasq:
-  # Configure pihole for DHCP server on all network devices except MEO TvBox,
-  # otherwise no television :(
-  # https://gist.github.com/andrepcg/5999203519c722004c463eb1494559f8
-  staticDhcpEntries:
-      - dhcp-host=38:e1:f4:4c:e8:ec,set:meo
-      - dhcp-option=tag:meo,option:dns-server,192.168.1.254
+  customSettings:
+    # Configure pihole for DHCP server on all network devices except MEO TvBox,
+    # otherwise no television :(
+    # https://gist.github.com/andrepcg/5999203519c722004c463eb1494559f8
+    - dhcp-host=38:e1:f4:4c:e8:ec,set:meo
+    - dhcp-option=tag:meo,option:dns-server,192.168.1.254
 
 admin:
   # Use secret specified in "pihole/manifests/admin-password.yaml"
@@ -17,32 +17,31 @@ admin:
   existingSecret: "pihole-admin-password"
   passwordKey: "password"
 
+
 # Following settings are required for running pihole as DHCP server
 # https://docs.pi-hole.net/docker/dhcp/
 # https://github.com/MoJo2600/pihole-kubernetes/issues/185
-hostNetwork: "true"
-privileged: "true"
+
+hostNetwork: "true" # The pod uses the host network rather than k8s network (to perform a network broadcast on port 67 / DHCP) See  https://docs.pi-hole.net/docker/DHCP/#docker-pi-hole-with-host-networking-mode
+privileged: "true" # Give root permission to the pod on the host
+webHttp: "55080" # Random HTTP port to prevent clash (because the pod will be on the host network)
+webHttps: "55443" # Random HTTPS port to prevent clash (because the pod will be on the host network)
 capabilities:
   add:
   - NET_ADMIN
-serviceDhcp:
-  enabled: true
-  type: LoadBalancer
 
 extraEnvVars:
+  DNSMASQ_LISTENING: "all" # Listen on all interfaces
   # https://github.com/MoJo2600/pihole-kubernetes/issues/163#issuecomment-872216807
   DHCP_ACTIVE: "true"
   DHCP_START: "192.168.1.64"
   DHCP_END: "192.168.1.253"
   DHCP_ROUTER: "192.168.1.254"
+  DHCP_IPv6: "true"
+  DHCP_rapid_commit: "true"
   ServerIP: "192.168.1.86"
   TZ: "Europe/Lisbon"
 
-# create a kubernetes service and expose
-# port 53 outside of cluster on the local network
-serviceDns:
-  loadBalancerIP: 192.168.1.86 # IP of the LoadBalancer
-  type: LoadBalancer
 
 # enables cloudflare tunnel sidecar container
 # and sets upstream dns in pihole to leverage it
