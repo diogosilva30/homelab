@@ -1,0 +1,55 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+helmGlobals:
+  chartHome: ../../charts
+
+
+resources:
+  - manifests/ingress.yaml
+  - manifests/environment-variables.yaml
+
+helmCharts:
+  - name: homepage
+    repo: https://jameswynn.github.io/helm-charts/
+    namespace: dashboard
+    releaseName: homepage
+    version: 2.0.1
+    valuesFile: values.yaml
+
+
+replacements:
+  - source:
+      kind: Ingress
+      name: dashboard
+      fieldPath: metadata.annotations.dns
+    targets:
+      - select:
+          kind: Ingress
+          name: dashboard
+        fieldPaths:
+          - spec.rules.0.host
+        options:
+          # This keeps the "dashboard." prefix
+          delimiter: "."
+          index: 1
+
+
+# Patch the deployment to add environment variables from the secret
+patches:
+  - target:
+      kind: Deployment
+      name: homepage
+    patch: |-
+      - op: add
+        path: /spec/template/spec/containers/0/envFrom
+        value:
+          - secretRef:
+              name: homepage-env
+      # Add reload annotation to deployment to trigger a rolling update
+      - op: add
+        path: /metadata/annotations
+        value:
+          configmap.reloader.stakater.com/reload: "homepage"
+          secret.reloader.stakater.com/reload: "homepage-env"
+
