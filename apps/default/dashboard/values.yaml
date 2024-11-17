@@ -64,7 +64,7 @@ config:
               currency: USD
               symbols: [BTC, AVAX, ETH, ADA, NEXO]
               # Read key from environment variable
-              key: "{{HOMEPAGE_COINMARKETCAP_API_KEY}}"
+              key: "{{HOMEPAGE_VAR_COINMARKETCAP_API_KEY}}"
         - Degiro:
             icon: mdi-chart-areaspline
             description: Stock portfolio
