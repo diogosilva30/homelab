@@ -43,12 +43,12 @@ resources:
 replacements:
   - source:
       kind: Ingress
-      name: argocd-ingress
+      name: argocd-server
       fieldPath: metadata.annotations.dns
     targets:
       - select:
           kind: Ingress
-          name: argocd-ingress
+          name: argocd-server
         fieldPaths:
           - spec.rules.0.host
         options:

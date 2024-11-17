@@ -4,7 +4,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: uptimekuma-ingress-unprotected
+  name: uptime-kuma-unprotected
   namespace: uptimekuma
   annotations:
     traefik.ingress.kubernetes.io/rewrite-target: /
@@ -43,20 +43,20 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: uptimekuma-ingress
+  name: uptime-kuma
   namespace: uptimekuma
   annotations:
     traefik.ingress.kubernetes.io/rewrite-target: /
     traefik.ingress.kubernetes.io/router.priority: "32"
-    # # Use the OIDC forward authentication middleware created in Terraform to protect
-    # # this route
-    # traefik.ingress.kubernetes.io/router.middlewares: traefik-forward-auth@kubernetescrd
     # Register in "DevOps" center page
     gethomepage.dev/enabled: "true"
     gethomepage.dev/description: Uptime monitoring
     gethomepage.dev/group: Monitoring
     gethomepage.dev/icon: uptime-kuma.svg
     gethomepage.dev/name: Uptime Kuma
+    gethomepage.dev/widget.type: "uptimekuma"
+    gethomepage.dev/widget.url: "http://uptime-kuma.uptimekuma.svc.cluster.local:3001"
+    gethomepage.dev/widget.slug: "homelab"
 spec:
   rules:
     # DNS will be replace by kustomize

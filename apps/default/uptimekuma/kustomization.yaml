@@ -19,12 +19,12 @@ helmCharts:
 replacements:
   - source:
       kind: Ingress
-      name: uptimekuma-ingress-unprotected
+      name: uptime-kuma-unprotected
       fieldPath: metadata.annotations.dns
     targets:
       - select:
           kind: Ingress
-          name: uptimekuma-ingress
+          name: uptime-kuma
         fieldPaths:
           - spec.rules.0.host
         options:
@@ -33,7 +33,7 @@ replacements:
           index: 1
       - select:
           kind: Ingress
-          name: uptimekuma-ingress-unprotected
+          name: uptime-kuma-unprotected
         fieldPaths:
           - spec.rules.0.host
         options:
