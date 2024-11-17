@@ -1,0 +1,18 @@
+sidecars:
+  ui:
+    image: ghcr.io/gurucomputing/headscale-ui:2024.10.10
+    ports:
+      - name: http
+        containerPort: 80
+
+env:
+  HEADSCALE_DISABLE_CHECK_UPDATES: "true"
+  HEADSCALE_LOG_LEVEL: "warn"
+  # Set clients to use Pi-hole as DNS server (192.168.1.86)
+  HEADSCALE_DNS_NAMESERVERS_GLOBAL: "192.168.1.86 1.1.1.1"
+service:
+  main:
+    ports:
+      ui:
+        port: 80
+
