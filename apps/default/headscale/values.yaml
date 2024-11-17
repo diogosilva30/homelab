@@ -23,8 +23,6 @@ persistence:
     mountPath: /etc/headscale
 
 service:
-  # -- Configures service settings for the chart.
-  # @default -- See [values.yaml](./values.yaml)
   main:
     ports:
       ui:

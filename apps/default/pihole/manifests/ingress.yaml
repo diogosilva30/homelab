@@ -1,0 +1,35 @@
+# Middleware to redirect from "/" to "/admin"
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: root-path-redirect
+spec:
+  redirectRegex:
+    regex: ^https?:\/\/([^\/]+)\/?$
+    replacement: https://${1}/admin/
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: pihole-web
+  annotations:
+    # Use the above middlewares
+    traefik.ingress.kubernetes.io/router.middlewares: pihole-root-path-redirect@kubernetescrd
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/description: DNS ad-blocker
+    gethomepage.dev/group: Networking
+    gethomepage.dev/icon: pi-hole
+    gethomepage.dev/name: Pi-hole
+spec:
+  rules:
+    # DNS will be replace by kustomize
+    - host: pihole.$(DNS)
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: pihole-web
+                port:
+                  name: http

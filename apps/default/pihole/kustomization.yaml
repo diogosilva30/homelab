@@ -6,6 +6,7 @@ helmGlobals:
 
 resources:
   - manifests/admin-password.yaml
+  - manifests/ingress.yaml
 
 helmCharts:
   - name: pihole
@@ -14,3 +15,33 @@ helmCharts:
     releaseName: pihole
     version: 2.26.2
     valuesFile: values.yaml
+
+replacements:
+  - source:
+      kind: Ingress
+      name: pihole-web
+      fieldPath: metadata.annotations.dns
+    targets:
+      - select:
+          kind: Ingress
+          name: pihole-web
+        fieldPaths:
+          - spec.rules.0.host
+        options:
+          # This keeps the "pihole." prefix
+          delimiter: "."
+          index: 1
+
+patches:
+  - target:
+      kind: Deployment
+      name: pihole
+    # Add "app.kubernetes.io/name: pihole-web" label
+    # to deployment pod template for dashboard to correctly query it
+    patch: |-
+      - op: add
+        path: /spec/template/metadata/labels
+        value:
+          app: pihole	
+          release: pihole
+          app.kubernetes.io/name: pihole-web

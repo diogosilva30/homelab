@@ -42,7 +42,6 @@ extraEnvVars:
   ServerIP: "192.168.1.86"
   TZ: "Europe/Lisbon"
 
-
 # enables cloudflare tunnel sidecar container
 # and sets upstream dns in pihole to leverage it
 doh:
