@@ -19,6 +19,11 @@ configMapGenerator:
     # Enable web terminal to exec into pods
     # https://argo-cd.readthedocs.io/en/stable/operator-manual/web_based_terminal/
     - exec.enabled="true"
+  - behavior: merge
+    name: argocd-cmd-params-cm
+    literals:
+      # Disable HTTPS redirection
+      - server.insecure="true"
 
 resources:
   - github.com/argoproj-labs/argocd-autopilot/manifests/base?ref=v0.4.17
