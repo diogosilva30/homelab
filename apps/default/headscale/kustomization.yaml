@@ -4,6 +4,8 @@ kind: Kustomization
 helmGlobals:
   chartHome: ../../charts
 
+resources:
+  - manifests/ingress.yaml
 
 helmCharts:
   - name: headscale
@@ -12,3 +14,19 @@ helmCharts:
     releaseName: headscale
     version: 0.14.0
     valuesFile: values.yaml
+
+replacements:
+  - source:
+      kind: Ingress
+      name: headscale
+      fieldPath: metadata.annotations.dns
+    targets:
+      - select:
+          kind: Ingress
+          name: headscale
+        fieldPaths:
+          - spec.rules.0.host
+        options:
+          # This keeps the "vpn." prefix
+          delimiter: "."
+          index: 1

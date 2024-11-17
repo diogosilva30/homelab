@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: headscale
+  annotations:
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/description: VPN management
+    gethomepage.dev/group: Networking
+    gethomepage.dev/icon: tailscale
+    gethomepage.dev/name: Headscale
+spec:
+  rules:
+    # DNS will be replace by kustomize
+    - host: vpn.$(DNS)
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: headscale
+                port:
+                  name: http
