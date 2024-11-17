@@ -6,7 +6,7 @@ metadata:
     gethomepage.dev/enabled: "true"
     gethomepage.dev/description: Speedtest tracker
     gethomepage.dev/group: Monitoring
-    gethomepage.dev/icon: speedtest-tracker.svg
+    gethomepage.dev/icon: openspeedtest
     gethomepage.dev/name: Speedtest Tracker
 spec:
   rules:
