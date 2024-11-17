@@ -70,3 +70,10 @@ spec:
           # lastAppliedConfig annotation
           # https://argo-cd.readthedocs.io/en/stable/user-guide/sync-options/#server-side-apply
           - ServerSideApply=true
+
+      ignoreDifferences:
+        - group: apps/v1
+          kind: Deployment
+          namespace: reloader
+          jqPathExpressions:
+            - .spec.template.spec.containers[].env[].valueFrom.resourceFieldRef.divisor
