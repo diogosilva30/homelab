@@ -13,7 +13,7 @@ metadata:
     gethomepage.dev/name: ArgoCD
 spec:
   rules:
-    # DNS will be replace by kustomize
+    # DNS will be replaced by kustomize
     - host: argo.$(DNS)
       http:
         paths:

@@ -4,7 +4,7 @@ metadata:
   name: dashboard
 spec:
   rules:
-    # DNS will be replace by kustomize
+    # DNS will be replaced by kustomize
     - host: dashboard.$(DNS)
       http:
         paths:

@@ -10,7 +10,7 @@ metadata:
     gethomepage.dev/name: Speedtest Tracker
 spec:
   rules:
-    # DNS will be replace by kustomize
+    # DNS will be replaced by kustomize
     - host: speedtest.$(DNS)
       http:
         paths:

@@ -22,7 +22,7 @@ metadata:
     gethomepage.dev/name: Pi-hole
 spec:
   rules:
-    # DNS will be replace by kustomize
+    # DNS will be replaced by kustomize
     - host: pihole.$(DNS)
       http:
         paths:

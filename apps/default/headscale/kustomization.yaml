@@ -6,6 +6,7 @@ helmGlobals:
 
 resources:
   - manifests/ingress.yaml
+  - manifests/tunnel-binding.yaml
 
 helmCharts:
   - name: headscale

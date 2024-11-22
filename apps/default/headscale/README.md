@@ -3,5 +3,11 @@
 ## Generate API key
 
 ```bash
-kubectl exec -it -n headscale $(kubectl get pod -n headscale -l app.kubernetes.io/name=headscale -o jsonpath='{.items[0].metadata.name}') -- headscale apikeys create
+kubectl exec -it -n headscale deploy/headscale -- headscale apikeys create -e 99y
 ```
+
+## Current issues
+
+- https://github.com/cloudflare/cloudflared/issues/990
+- https://github.com/cloudflare/cloudflared/issues/883
+- https://github.com/juanfont/headscale/issues/1468#issuecomment-1967338278

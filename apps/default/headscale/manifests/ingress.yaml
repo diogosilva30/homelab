@@ -1,3 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: headscale-ui
+spec:
+  selector:
+    app.kubernetes.io/name: headscale
+  ports:
+  - name: ui
+    port: 80
+    targetPort: 80
+---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -10,10 +22,20 @@ metadata:
     gethomepage.dev/name: Headscale
 spec:
   rules:
-    # DNS will be replace by kustomize
-    - host: vpn.$(DNS)
+    # These are the paths for internal usage
+    # outside access will be done through the tunnel
+    # created in the tunnel-binding.yaml
+    - host: vpn.$(DNS)  # DNS will be replaced by kustomize
       http:
         paths:
+          - path: /web
+            pathType: Prefix
+            backend:
+              service:
+                name: headscale-ui
+                port:
+                  name: ui
+
           - path: /
             pathType: Prefix
             backend:
@@ -21,10 +43,3 @@ spec:
                 name: headscale
                 port:
                   name: http
-          - path: /web
-            pathType: Prefix
-            backend:
-              service:
-                name: headscale
-                port:
-                  name: ui
