@@ -6,6 +6,9 @@ helmGlobals:
 
 resources:
   - manifests/ingress.yaml
+  - manifests/git-credentials.yaml
+  - manifests/config-pvc.yaml
+  - manifests/git-sync.yaml
 
 helmCharts:
   - name: homeassistant

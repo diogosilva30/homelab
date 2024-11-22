@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: config-git-sync
+  # Enable automatic reload when secret with env vars changes
+  annotations:
+    secret.reloader.stakater.com/reload: "git-credentials"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: config-git-sync
+  template:
+    metadata:
+      labels:
+        app: config-git-sync
+    spec:
+      containers:
+        - name: git-sync-container
+          image: databurst/git-sync:latest@sha256:6691653fc6279bcd76437fea6a138318b74c777a186f263c802a1f3f1f2a52bf
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: GIT_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: git-credentials
+                  key: GIT_TOKEN
+            - name: SUBFOLDER_PATH
+              value: config
+            - name: REPO_URL
+              value: https://user:$(GIT_TOKEN)@github.com/diogosilva30/home-assistant.git
+            - name: GIT_BRANCH
+              value: main
+            - name: DIRECTORY_NAME
+              value: project
+            - name: INTERVAL
+              value: "60" # 1 minute
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "32Mi"
+            limits:
+              cpu: "100m"
+              memory: "128Mi"
+          volumeMounts:
+            - name: config
+              mountPath: /app/sync
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: homeassistant-config

@@ -1,1 +1,11 @@
 # https://artifacthub.io/packages/helm/volker-raschek/homeassistant
+
+volumeMounts:
+  - name: config
+    mountPath: /config
+
+# Add a persistent volume for the Home Assistant configuration
+volumes:
+  - name: config
+    persistentVolumeClaim:
+      claimName: homeassistant-config

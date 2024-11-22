@@ -2,6 +2,12 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: homeassistant
+  annotations:
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/description: Home automation
+    gethomepage.dev/group: Home
+    gethomepage.dev/icon: homeassistant
+    gethomepage.dev/name: Home Assistant
 spec:
   rules:
     # DNS will be replaced by kustomize
