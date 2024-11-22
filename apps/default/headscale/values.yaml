@@ -1,10 +1,4 @@
 # https://artifacthub.io/packages/helm/gabe565/headscale
-sidecars:
-  ui:
-    image: ghcr.io/gurucomputing/headscale-ui:2024.10.10
-    ports:
-      - name: http
-        containerPort: 80
 
 serviceMonitor:
   main:
@@ -13,25 +7,29 @@ serviceMonitor:
 env:
   HEADSCALE_DISABLE_CHECK_UPDATES: "true"
   HEADSCALE_LOG_LEVEL: "warn"
-  # HEADSCALE_DNS_BASE_DOMAIN: "dsilva-vpn.lab.local"
+  HEADSCALE_DNS_BASE_DOMAIN: "dsilva-vpn.lab.local"
   # Set clients to use Pi-hole as DNS server (192.168.1.86)
   HEADSCALE_DNS_NAMESERVERS_GLOBAL: "192.168.1.86 1.1.1.1"
   HEADSCALE_SERVER_URL: "http://vpn.lab.local"
+
 persistence:
   config:
     enabled: true
     mountPath: /etc/headscale
 
+
+sidecars:
+  ui:
+    image: ghcr.io/gurucomputing/headscale-ui:2024.10.10
+    ports:
+      - name: http
+        containerPort: 80
+    # Set environment variables for the sidecar
+    env:
+      - name: HTTP_PORT
+        value: "80"
 service:
   main:
     ports:
       ui:
         port: 80
-      http:
-        port: 8081
-      metrics:
-        port: 9090
-      grpc:
-        enabled: false
-        port: 50443
-

@@ -49,10 +49,6 @@ config:
             icon: chatgpt
             href: https://chat.openai.com/
             description: Your favorite senior developer
-        - Tailscale:
-            icon: https://avatars.githubusercontent.com/u/48932923?s=200&v=4
-            href: https://login.tailscale.com/admin/machines
-            description: Tailscale VPN
               
     - Finance:
         - Coin Market Cap:

@@ -21,3 +21,10 @@ spec:
                 name: headscale
                 port:
                   name: http
+          - path: /web
+            pathType: Prefix
+            backend:
+              service:
+                name: headscale
+                port:
+                  name: ui
