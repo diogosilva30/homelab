@@ -1,0 +1,14 @@
+apiVersion: networking.cfargotunnel.com/v1alpha1
+kind: ClusterTunnel
+metadata:
+  name: homelab-cluster-tunnel
+spec:
+  newTunnel:
+    name: homelab-tunnel
+  # Number of replicas
+  size: 2                      
+  cloudflare:
+    email: diogosilv30@gmail.com
+    domain: dsilva.dev       
+    secret: cloudflare-secrets
+    accountId: 8f2f7b46178f7faf8e69b9f3ef8282bd
