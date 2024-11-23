@@ -26,7 +26,7 @@ spec:
                   name: git-credentials
                   key: GIT_TOKEN
             - name: SUBFOLDER_PATH
-              value: config
+              value: config/*
             - name: REPO_URL
               value: https://user:$(GIT_TOKEN)@github.com/diogosilva30/home-assistant.git
             - name: GIT_BRANCH
