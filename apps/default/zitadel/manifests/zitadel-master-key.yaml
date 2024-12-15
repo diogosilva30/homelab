@@ -1,0 +1,18 @@
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  annotations:
+    sealedsecrets.bitnami.com/cluster-wide: "true"
+  creationTimestamp: null
+  name: zitadel-master-key
+spec:
+  encryptedData:
+    masterkey: AgB9qfo3pKZ8m1fVce08PNU0T3Ow3fAV6d9B53V5CRG0arGIJVa11Yfjc/3G62iqx6cPAOIsamhb+5sIOXq7WlNQArZ6TU4z60pmRiuiMUF2nSYJ0mCd1AkIOjA/Cpf8FwT2Ws32ZzdydAHfGr7HO0UOLhg55WXstrTTH44fgztsr8bHjsFVldweNrOqREevGFDPkOZcPza7OCscuqE2ZN3L+DBMtdGhiNQU4vgCEmU25i43R2fiVPQfMlHsdkwTII4oh25KTzdlXxo5Yfl6ZuSzF8UdNlLgGZF8/mNOu0++EV1QZlp3chMaqP3pfr73XLaz4KNELqv7ZU4HbREXyBjQ18R6yvrKqtxHFhLdoHPf4QrE2d1yro+oINH5mhDZcjsEcCmZNNiM+hDMku84jgVlnym7YaI4tYxuZJdjAQYAqaDpg3Pv0/2NUb9VdPsR/atSdYOZnV9RzIl7WpPwWVI6HYRPnys2wrJCxTmQhD5dLSKHihAix42t3b/XJa998kw/X3EoFw+6o8OpZ7oSe+vfKX4tqMCx6YKcNAf3sJ/qsBJ6kOmUvPOMk6f2WnijlOUbCHEY76QhK+YNVpBniy+ku6ItZeprjnx967UC7Y/0xlDwyYSDNcZILc7dKZXDZ4lU+WS/blquqC4TVu2TmYPkewWiPqXAoAsnY638NqIulB3FVy3tEq1p+eMmpmwvjBNosd6y13g+zGIjvUL3Zo0fVTzHO5f88hsBy+CW0QcIVA==
+  template:
+    metadata:
+      annotations:
+        sealedsecrets.bitnami.com/cluster-wide: "true"
+      creationTimestamp: null
+      name: zitadel-master-key
+    type: Opaque

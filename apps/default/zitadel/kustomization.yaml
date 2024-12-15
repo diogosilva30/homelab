@@ -1,0 +1,33 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+helmGlobals:
+  chartHome: ../../charts
+
+resources:
+  - manifests/ingress.yaml
+  - manifests/zitadel-master-key.yaml
+
+helmCharts:
+  - name: zitadel
+    repo: https://charts.zitadel.com
+    namespace: zitadel
+    releaseName: zitadel
+    version: 8.8.0
+    valuesFile: values.yaml
+
+replacements:
+  - source:
+      kind: Ingress
+      name: zitadel
+      fieldPath: metadata.annotations.dns
+    targets:
+      - select:
+          kind: Ingress
+          name: zitadel
+        fieldPaths:
+          - spec.rules.0.host
+        options:
+          # This keeps the "idp." prefix
+          delimiter: "."
+          index: 1

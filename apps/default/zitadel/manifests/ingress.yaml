@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: zitadel
+  annotations:
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/description: Identity Provider authentication and authorization
+    gethomepage.dev/group: Identity
+    gethomepage.dev/icon: zitadel
+    gethomepage.dev/name: Zitadel (Identity Provider)
+spec:
+  rules:
+    # DNS will be replaced by kustomize
+    - host: idp.$(DNS)
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: zitadel
+                port:
+                  number: 8080
