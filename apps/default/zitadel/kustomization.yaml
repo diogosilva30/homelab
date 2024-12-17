@@ -9,6 +9,17 @@ resources:
   - manifests/zitadel-master-key.yaml
 
 helmCharts:
+  # Postgres database for Zitadel
+  # Taken from https://github.com/zitadel/zitadel-charts/tree/main/examples/1-postgres-insecure
+  - name: postgres
+    repo: https://charts.bitnami.com/bitnami
+    namespace: zitadel
+    releaseName: zitadel-postgres
+    version: 16.3.1
+    valuesInline:
+      primary:
+      pgHbaConfiguration: |
+        host all all all trust
   - name: zitadel
     repo: https://charts.zitadel.com
     namespace: zitadel
