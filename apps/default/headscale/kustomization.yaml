@@ -32,3 +32,18 @@ replacements:
           # This keeps the "vpn." prefix
           delimiter: "."
           index: 1
+
+patches:
+  # Add a new port to the headscale service
+  # called "https" that points to the container port 8080
+  - target:
+      kind: Service
+      name: headscale
+    patch: |-
+      - op: add
+        path: /spec/ports/-
+        value:
+          name: https
+          port: 8443
+          targetPort: http
+          protocol: TCP
