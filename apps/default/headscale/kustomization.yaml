@@ -7,8 +7,10 @@ helmGlobals:
 resources:
   - manifests/ingress.yaml
   - manifests/wireguard-peer.yaml
+  - manifests/tailscale-client.yaml
 
 helmCharts:
+  # Headscale control plane
   - name: headscale
     repo: https://charts.gabe565.com
     namespace: headscale
@@ -46,3 +48,11 @@ patches:
           port: 8443
           targetPort: http
           protocol: TCP
+  # Remove the hardcoded "TS_TAILSCALED_EXTRA_ARGS" environment variable
+  # otherwise we cant specify our own...
+  - target:
+      kind: DaemonSet
+      name: tailscale-client
+    patch: |-
+      - op: remove
+        path: /spec/template/spec/containers/0/env/1
