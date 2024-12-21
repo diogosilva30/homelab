@@ -10,17 +10,17 @@ metadata:
   namespace: argocd
 spec:
   clusterResourceWhitelist:
-  - group: '*'
-    kind: '*'
+    - group: "*"
+      kind: "*"
   description: default project
   destinations:
-  - namespace: '*'
-    server: '*'
+    - namespace: "*"
+      server: "*"
   namespaceResourceWhitelist:
-  - group: '*'
-    kind: '*'
+    - group: "*"
+      kind: "*"
   sourceRepos:
-  - '*'
+    - "*"
 status: {}
 
 ---
@@ -52,6 +52,8 @@ spec:
           # Need to manually set annotations for now: https://github.com/argoproj/argo-cd/issues/11213
           commonAnnotations:
             dns: lab.local
+            # Externally facing DNS from Cloudflare
+            external_dns: dsilva.dev
             name: LAB
             environment: LAB
             # Integration with external-dns

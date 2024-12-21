@@ -11,15 +11,16 @@ resources:
 helmCharts:
   # Postgres database for Zitadel
   # Taken from https://github.com/zitadel/zitadel-charts/tree/main/examples/1-postgres-insecure
-  - name: postgres
-    repo: https://charts.bitnami.com/bitnami
+  - name: postgresql
+    repo: oci://registry-1.docker.io/bitnamicharts
     namespace: zitadel
-    releaseName: zitadel-postgres
-    version: 16.3.1
+    releaseName: postgresql
+    version: 16.3.3
     valuesInline:
       primary:
-      pgHbaConfiguration: |
-        host all all all trust
+        pgHbaConfiguration: |
+          host all all all trust
+
   - name: zitadel
     repo: https://charts.zitadel.com
     namespace: zitadel
