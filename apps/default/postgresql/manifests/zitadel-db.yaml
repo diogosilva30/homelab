@@ -1,0 +1,65 @@
+# Example of definition of a test cluster using all the elements available
+# in the CRD. Please change values appropriately for your environment.
+# Remember that you can take advantage of convention over configuration
+# and normally you don't need to use all these definitions.
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  annotations:
+    sealedsecrets.bitnami.com/cluster-wide: "true"
+  creationTimestamp: null
+  name: zitadel-postgres-credentials
+spec:
+  encryptedData:
+    password: AgADcE9ASjLMReH7200tgHT3RMGgxDkE4EBcDFoLt3PsTscewRQ+ncWf6PPJZlQDpmjkgzh1L66i39GBE5t4yzg4mikomEqLQ1T2NIoPvyxJmePpM/o7zPbuEuE2MxvzOAHRaRpNv8s0vFjDQphTZ+TjpKN1/ijRw/kMlwTDRqb9P6CrunbPQKgeTOslZ3o6xOMJNT6f29ALy77CSQQDsMBbMgYjinrAOYaAKVD97Xn7j7PeNxQiiNev1KOqVcl8YqX5oYJ/a7r3GbfxfHD+DrboPJBO6jEQClggnL9qZEmfdJClxorazfCQTQr/ESReGEvuw2YZuxcsnddjKed4mhZJqeiex0hOK0U0m18JxKUJLPyLn54q1xdVjBxTv5NOKzxAr9IIUcDXXb2FWmAD+/d0qwuvvyWLb4671KAx7Pgx0NSNTONBaLgPlCc0gTpX579v16l7H62gzd1NBuNzieyH17ADmqVZfBcpIe+SjfFSBhel4Q4S8meogR0yQp1sJD50g+4ps0thE2/rQBFDrGfz3gPfd3HtWWJ2a3BNp+8wXVrI2kb/WHcwtQGxEwI5djwYQuU86q4VzW6WD+SRm7JPD3ac5EeAluigRfqzKNrQq/W4AgxG/qgiJtliuyX7dFIwkFHkHEFlqn+T+B2WCY5211h9G/mTG15bCUBgUCu5fDxTkpEL/kKXPP7p7/1jPI2lLpltHASn1knCqC1kZbNBCyovD6la7mi81tFFmF7Hgw==
+    username: AgBW/LW2brtqPcszJNoY3DXEEuPz+hFybzkCypwcqtAGOCBoVUF6aDuzFJ0sxK3+Jfpluu742cb/SWIA1sqBQb79IEqHglSWMPbE14HtJwDxYkqaVLzaaL7pMvk3JvcwVB/PY+aK4OFn8UdKRgczU0eUB7tnwTu+gsIS3Dad8alrujRY0mcdJZpDB6GYnfNX0KxgK9bRCNXta0t1BFoM4v/de6EJwf+Jh2sH+M9MbDZ4GGUE5ntEOurtqm++MCGFw2M53PlEGU+lU5n/Y8XQ7ALwCnAC7AAfetem+uQi5mvmgaeVK2oIEVhfhrZLByos0YEPj1Vi8hD3PPi46v1f+5OoLLjRKZ3T6w2VHWq78Xxw++L0CDEf6fdtq93N0244gAho+PSB2zFyB0wQ/ScaJgOfvSPkhwGWlNN2KPeA2fGCCBaTNkWHGLtJH3rXeTuyueC0wzN3M3p5Cn7PTM4RHd1inhjcH5tJ2NQXJJQe7jua7E8fJHfa3LCHxOAFbEsDEmUt1vJoV2mVnDeF25zE1QeaF/RVRn/3h8Fddfzsyyw0oVHLGVn/AIq1LxkhiQ1teAZx+y5lLQ7hcjNkSFfCQr1LHkdpfUvLkpjFi/oHmQGa4PCvsnqXdlUlxZLtF1a5SAeETBVw4XmfIO52NXJI2DoHzF9mRhzAjD4f0O36ramPYtc9evpkOHDN5P1A53pDTNR8TTZk/7/Q
+  template:
+    metadata:
+      annotations:
+        sealedsecrets.bitnami.com/cluster-wide: "true"
+      creationTimestamp: null
+      name: zitadel-postgres-credentials
+    type: kubernetes.io/basic-auth
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: zitadel-db
+spec:
+  description: "Database for Zitadel IDP"
+  imageName: ghcr.io/cloudnative-pg/postgresql:17.2
+  instances: 1
+  startDelay: 300
+  stopDelay: 300
+  primaryUpdateStrategy: unsupervised
+
+  postgresql:
+    parameters:
+      shared_buffers: 256MB
+      pg_stat_statements.max: "10000"
+      pg_stat_statements.track: all
+      auto_explain.log_min_duration: "10s"
+    pg_hba:
+      - host all all all md5
+
+  bootstrap:
+    initdb:
+      database: zitadel
+      owner: zitadel
+      secret:
+        name: zitadel-postgres-credentials
+
+  enableSuperuserAccess: true
+  superuserSecret:
+    name: zitadel-postgres-credentials
+
+  storage:
+    size: 4Gi
+
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "100m"
+    limits:
+      memory: "512Mi"

@@ -1,0 +1,17 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+helmGlobals:
+  chartHome: ../../charts
+
+resources:
+  - manifests/zitadel-db.yaml
+
+# Install Cloud Native PostgreSQL operator
+helmCharts:
+  - name: cloudnative-pg
+    includeCRDs: true
+    repo: https://cloudnative-pg.github.io/charts
+    namespace: postgresql
+    releaseName: pgnative-operator
+    version: 0.22.1
