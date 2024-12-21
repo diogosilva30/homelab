@@ -11,7 +11,7 @@ zitadel:
       Enabled: false
     Database:
       Postgres:
-        Host: postgresql.zitadel.svc.cluster.local
+        Host: zitadel-db-rw.postgresql.svc.cluster.local
         Port: 5432
         Database: zitadel
         MaxOpenConns: 20
@@ -19,18 +19,13 @@ zitadel:
         MaxConnLifetime: 30m
         MaxConnIdleTime: 5m
         User:
-          Username: postgres
+          Username: zitadel
           SSL:
             Mode: disable
         Admin:
-          Username: postgres
+          Username: zitadel
           SSL:
             Mode: disable
-
-  # The ZITADEL config under secretConfig is written to a Kubernetes Secret
-  # See all defaults here:
-  # https://github.com/zitadel/zitadel/blob/main/cmd/defaults.yaml
-  secretConfig:
 
   # ZITADEL uses the masterkey for symmetric encryption.
   # You can generate it for example with tr -dc A-Za-z0-9 </dev/urandom | head -c 32
@@ -56,38 +51,44 @@ image:
 
 # Additional environment variables
 env:
-  []
-  # - name: ZITADEL_DATABASE_POSTGRES_HOST
-  #   valueFrom:
-  #     secretKeyRef:
-  #       name: postgres-pguser-postgres
-  #       key: host
+  - name: ZITADEL_FIRSTINSTANCE_ORG_HUMAN_USERNAME
+    value: "admin"
+  - name: ZITADEL_FIRSTINSTANCE_ORG_HUMAN_PASSWORD
+    value: "admin-changeme"
+  - name: ZITADEL_DATABASE_POSTGRES_USER_USERNAME
+    valueFrom:
+      secretKeyRef:
+        name: zitadel-postgres-credentials
+        key: username
+  - name: ZITADEL_DATABASE_POSTGRES_USER_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: zitadel-postgres-credentials
+        key: password
+  - name: ZITADEL_DATABASE_POSTGRES_ADMIN_USERNAME
+    valueFrom:
+      secretKeyRef:
+        name: zitadel-postgres-credentials
+        key: username
 
-# Additional environment variables from the given secret name
-# Zitadel can be configured using environment variables from a secret.
-# Reference: https://zitadel.com/docs/self-hosting/manage/configure#configure-by-environment-variables
-envVarsSecret: ""
-
+# Make sure both jobs are in the "Sync" phase so we can assign
+# a lower wave number to the "db-credentials" SealedSecret so
+# it is created before the ZITADEL initJob.
 initJob:
   # Once ZITADEL is installed, the initJob can be disabled.
   enabled: true
   annotations:
-    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook: pre-install,pre-upgrade
     helm.sh/hook-delete-policy: before-hook-creation
     helm.sh/hook-weight: "1"
-  resources: {}
-  backoffLimit: 5
-  activeDeadlineSeconds: 300
-  extraContainers: []
-  podAnnotations: {}
-  podAdditionalLabels: {}
-  # Available init commands :
-  # "": initialize ZITADEL instance (without skip anything)
-  # database: initialize only the database
-  # grant: set ALL grant to user
-  # user: initialize only the database user
-  # zitadel: initialize ZITADEL internals (skip "create user" and "create database")
-  command: ""
+    argocd.argoproj.io/hook: Sync
+
+setupJob:
+  annotations:
+    helm.sh/hook: pre-install,pre-upgrade
+    helm.sh/hook-delete-policy: before-hook-creation
+    helm.sh/hook-weight: "2"
+    argocd.argoproj.io/hook: Sync
 
 metrics:
   enabled: true
