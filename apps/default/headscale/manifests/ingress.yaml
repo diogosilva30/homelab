@@ -45,3 +45,25 @@ spec:
                 name: headscale
                 port:
                   name: http
+---
+# Create an Ingress for the headscale service that will be exposed outside
+# using wireguard tunnel and use the valid certificate
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: headscale-outside
+  labels:
+    name: headscale-outside
+spec:
+  rules:
+    # Use the outside domain for the VPN
+    - host: vpn.dsilva.dev
+      http:
+        paths:
+          - pathType: Prefix
+            path: "/"
+            backend:
+              service:
+                name: headscale
+                port:
+                  name: http
