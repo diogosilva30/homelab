@@ -9,6 +9,9 @@ dnsmasq:
     # otherwise no television :(
     # https://gist.github.com/andrepcg/5999203519c722004c463eb1494559f8
     - dhcp-host=38:e1:f4:4c:e8:ec,set:meo
+    # Same for Playstation 5 (LAN cable and Wi-Fi)
+    - dhcp-host=e8:6e:3a:7d:51:9d,set:meo
+    - dhcp-host=04:f7:78:fa:4e:c2,set:meo
     - dhcp-option=tag:meo,option:dns-server,192.168.1.254
 
 admin:
@@ -16,7 +19,6 @@ admin:
   enabled: true
   existingSecret: "pihole-admin-password"
   passwordKey: "password"
-
 
 # Following settings are required for running pihole as DHCP server
 # https://docs.pi-hole.net/docker/dhcp/
@@ -28,7 +30,7 @@ webHttp: "55080" # Random HTTP port to prevent clash (because the pod will be on
 webHttps: "55443" # Random HTTPS port to prevent clash (because the pod will be on the host network)
 capabilities:
   add:
-  - NET_ADMIN
+    - NET_ADMIN
 
 extraEnvVars:
   DNSMASQ_LISTENING: "all" # Listen on all interfaces
@@ -47,9 +49,7 @@ extraEnvVars:
 doh:
   enabled: true
   pullPolicy: Always
-  envVars: {
-    DOH_UPSTREAM: "https://1.1.1.1/dns-query"
-  }
+  envVars: { DOH_UPSTREAM: "https://1.1.1.1/dns-query" }
 persistentVolumeClaim:
   enabled: true
 
@@ -57,5 +57,5 @@ podDnsConfig:
   enabled: true
   policy: "None"
   nameservers:
-  - 127.0.0.1
-  - 1.1.1.1
+    - 127.0.0.1
+    - 1.1.1.1
