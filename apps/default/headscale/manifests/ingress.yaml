@@ -38,3 +38,10 @@ spec:
                 name: headscale-ui
                 port:
                   name: ui
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: headscale
+                port:
+                  name: http

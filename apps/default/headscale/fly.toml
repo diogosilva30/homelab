@@ -12,26 +12,31 @@ primary_region = 'arn'
 
 [env]
   DOMAIN = 'dsilva-vpn-gateway.fly.dev'
-  PEERS = '1'
-  SERVICES = 'peer1:headscale.headscale.svc.cluster.local:8080:80'
+  PEERS = "1"
+  SERVICES = "peer1:headscale.headscale.svc.cluster.local:8080:80,peer1:headscale.headscale.svc.cluster.local:8443:443"
 
 [[mounts]]
-  source = 'wireguard_data'
-  destination = '/etc/wireguard'
+  source = "wireguard_data"
+  destination = "/etc/wireguard"
 
 [[services]]
-  protocol = 'udp'
+  protocol = "udp"
   internal_port = 51820
 
   [[services.ports]]
     port = 51820
 
 [[services]]
-  protocol = 'tcp'
+  protocol = "tcp"
   internal_port = 80
 
   [[services.ports]]
     port = 80
+
+[[services]]
+  protocol = "tcp"
+  internal_port = 443
+
   [[services.ports]]
     port = 443
 
