@@ -27,29 +27,29 @@ controller:
 # All the config files for Homepage can be specified under their relevant config block.
 config:
   settings:
-      title: Diogo's Silva Lab
-      headerStyle: boxed
-      layout:
-          Quick Access:
-              style: row
-              columns: 4
-          Monitoring:
-              style: row
-              columns: 4
+    title: Diogo's Silva Lab
+    headerStyle: boxed
+    layout:
+      Quick Access:
+        style: row
+        columns: 4
+      Monitoring:
+        style: row
+        columns: 4
 
   services:
-    - Monitoring:                
+    - Networking:
         - Router Configuration:
             icon: router
             href: http://192.168.1.254/index.asp
             description: Manage and configure router
 
-    - Quick Access: 
+    - Quick Access:
         - Chat GPT:
             icon: chatgpt
             href: https://chat.openai.com/
             description: Your favorite senior developer
-              
+
     - Finance:
         - Coin Market Cap:
             icon: https://seeklogo.com/images/C/coinmarketcap-logo-064D167A0E-seeklogo.com.png
@@ -64,10 +64,8 @@ config:
         - Degiro:
             icon: mdi-chart-areaspline
             description: Stock portfolio
-            href: https://trader.degiro.nl/  
+            href: https://trader.degiro.nl/
 
-    
-  
   # To use an existing ConfigMap uncomment this line and specify the name
   bookmarks:
     - Git:
@@ -77,7 +75,7 @@ config:
         - Github:
             - icon: github-light
               href: https://github.com/diogosilva30
-  
+
     - Developer Tools:
         - Homepage Documentation:
             - icon: mdi-bookshelf
@@ -101,13 +99,11 @@ config:
             - icon: netflix
               href: https://netflix.com/
 
-
-
   widgets:
     - greeting:
         text_size: xl
         text: Welcome Diogo Silva!
-  
+
     # Widget for weather
     - openmeteo:
         label: Weather # optional
@@ -138,7 +134,6 @@ config:
     # change mode to 'cluster' to use RBAC service account
     mode: cluster
   docker:
-    
 
 persistence:
   logs:

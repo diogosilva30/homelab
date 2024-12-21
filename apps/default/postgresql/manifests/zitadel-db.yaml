@@ -18,6 +18,25 @@ spec:
       name: zitadel-postgres-credentials
     type: kubernetes.io/basic-auth
 ---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  annotations:
+    sealedsecrets.bitnami.com/cluster-wide: "true"
+  creationTimestamp: null
+  name: zitadel-postgres-admin-credentials
+spec:
+  encryptedData:
+    password: AgAqOlD9pwKuYrPctTOTXGe0ByeOWhVzCaAJpZZCxnVj/z61y/jZnMMXqy5ScvrdgEX09ZlO/Cqpn0x3yRFsIS52Z7S990mxQmOMu+5u5QOSM9QUAi8hxmWPsHk4B/uMQE0EXh04drvDXG6uBtDy+D+gJ8LWOlWWfJqpmmUvwRQjC5nWzldmCPUAq1kkXSlfPoyB0I6lFfpwRVNLRl8QIiSRVztV+Sk+79HuBbIX+LhqGJtJ2qUxC2tZl7SsTK3SSHeCysp5lHnNUqlnVGCaekPSdtgUFxG0r2AMW9ipb39Hp6dvK+D9nHcCxtpfmU8CNiz+XYCg2KJ5kH6n8PkJXbaZkTH2/3ymizO1XLuPHZhAmlcHXqYHM/G6ru/rExBNydsNsMyVJtJ0W/bR/NbOeaMPOZKtaKGOzJlg3X8JveOEHOLczF8jdfmjFm6V1BTujwYStOONZaMNtXu2QJfM1Txl8mSGV+KqyrTB2WdCj/D3teX/rmoOpLhEufS/7+y8kfpEcxnfPGqTQnjz6lykfjnLDnlSBuvpmfcLz3E8VD1FdizYYPKLUcwGxsMeOHF8SWU1bCkPH8Gv7DKaPf4posDW8eF6emF9skxzJxMTRl50W7k+yHoE7V/zEyY6uuEq1emWQRWEfP36zuIvFUY85o7Xu8PRWpDUsbWyOY1s6utZCTndHivOUXxJpBf5VeCtm7w6S2fyXRIuGbrNs842OQ9N/uPID33/PlbqcJ9xKFK5HtJs+fIvOZJC9w==
+    username: AgB/OMFv5SPpcToojsUUAhTtco1dbyuecDNiMpDWIDwPKrRjYZ5StX1/sCRtnyKjLnkk4tNR8B9h4rZZbwzMuKIhFOabIIpjVgXDORpGgNSZHcCDM26k5q2Nt+G4eWO+5aZGU2otms0B4aLX9qP8+AkkmuG51rZRsl0WUBSHkva4rWWazKmrQdnq3+2uSJeC0P98r+xD/k2n1R3gqaSumn3Nq1bmuBt+JfEOsSO8Yj5kkdbPJTK2kVl8OTApVbnZf9VXXomUAyxgUiLyg/gmKtUA0gyNYQRFhT0tnCRD9O383yGx5tvEzR31zlW9vKAb03NDn0Af4/UXgI73FKyh/sm97r3DV74YZ1KMAzLUUM1Y7DfNCkc+LUCFNEoW4Y8Mqx3bb/vZezMaHfYG0nqXO0yOtdTYqvl0YsPaq34VIIhWijK44jBN0vr6F+X63AokSlWLZyr+ls5ciYIj806WoOQ/K58aZBrpUiWZHWS5HJRyJ450IsnISt9wIdf+HdW+HPM69ysiFV7HeybvgwYcvDjfdwYcYoMCdBl2bdzUwv4mW8dQtfXqvrcpzqqeIUHsep1R6dTrsggzQ8riDsTPD+Tn7udA6JLweve2VePP1+fgpwxsnUDyIHpr9z7VcUChA9eLW3r+XgMrpDon6HX5bUf5p82ljtRtnbs1rkxC6QqHhH9d3ro2QekcJ7GlVXCLXBf9FSYa6VsZUQ==
+  template:
+    metadata:
+      annotations:
+        sealedsecrets.bitnami.com/cluster-wide: "true"
+      creationTimestamp: null
+      name: zitadel-postgres-admin-credentials
+    type: kubernetes.io/basic-auth
+---
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
@@ -48,7 +67,7 @@ spec:
 
   enableSuperuserAccess: true
   superuserSecret:
-    name: zitadel-postgres-credentials
+    name: zitadel-postgres-admin-credentials
 
   storage:
     size: 4Gi

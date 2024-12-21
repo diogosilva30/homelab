@@ -9,23 +9,6 @@ zitadel:
     ExternalDomain: idp.lab.local
     TLS:
       Enabled: false
-    Database:
-      Postgres:
-        Host: zitadel-db-rw.postgresql.svc.cluster.local
-        Port: 5432
-        Database: zitadel
-        MaxOpenConns: 20
-        MaxIdleConns: 10
-        MaxConnLifetime: 30m
-        MaxConnIdleTime: 5m
-        User:
-          Username: zitadel
-          SSL:
-            Mode: disable
-        Admin:
-          Username: zitadel
-          SSL:
-            Mode: disable
 
   # ZITADEL uses the masterkey for symmetric encryption.
   # You can generate it for example with tr -dc A-Za-z0-9 </dev/urandom | head -c 32
@@ -51,10 +34,27 @@ image:
 
 # Additional environment variables
 env:
+  - name: ZITADEL_FIRSTINSTANCE_ORG_NAME
+    value: "LAB"
+  - name: ZITADEL_FIRSTINSTANCE_ORG_HUMAN_FIRSTNAME
+    value: "Diogo"
+  - name: ZITADEL_FIRSTINSTANCE_ORG_HUMAN_LASTNAME
+    value: "Silva"
+  - name: ZITADEL_FIRSTINSTANCE_ORG_HUMAN_NICKNAME
+    value: "dsilva"
+  # Login with "dsilva@lab.idp.lab.local"
   - name: ZITADEL_FIRSTINSTANCE_ORG_HUMAN_USERNAME
-    value: "admin"
+    value: "dsilva"
   - name: ZITADEL_FIRSTINSTANCE_ORG_HUMAN_PASSWORD
-    value: "admin-changeme"
+    value: "AdminChangeMe1!"
+  - name: ZITADEL_DATABASE_POSTGRES_USER_SSL_MODE
+    value: "disable"
+  - name: ZITADEL_DATABASE_POSTGRES_HOST
+    value: zitadel-db-rw.postgresql.svc.cluster.local
+  - name: ZITADEL_DATABASE_POSTGRES_PORT
+    value: "5432"
+  - name: ZITADEL_DATABASE_POSTGRES_DATABASE
+    value: zitadel
   - name: ZITADEL_DATABASE_POSTGRES_USER_USERNAME
     valueFrom:
       secretKeyRef:
@@ -68,12 +68,16 @@ env:
   - name: ZITADEL_DATABASE_POSTGRES_ADMIN_USERNAME
     valueFrom:
       secretKeyRef:
-        name: zitadel-postgres-credentials
+        name: zitadel-postgres-admin-credentials
         key: username
+  - name: ZITADEL_DATABASE_POSTGRES_ADMIN_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: zitadel-postgres-admin-credentials
+        key: password
+  - name: ZITADEL_DATABASE_POSTGRES_ADMIN_SSL_MODE
+    value: "disable"
 
-# Make sure both jobs are in the "Sync" phase so we can assign
-# a lower wave number to the "db-credentials" SealedSecret so
-# it is created before the ZITADEL initJob.
 initJob:
   # Once ZITADEL is installed, the initJob can be disabled.
   enabled: true
@@ -81,14 +85,14 @@ initJob:
     helm.sh/hook: pre-install,pre-upgrade
     helm.sh/hook-delete-policy: before-hook-creation
     helm.sh/hook-weight: "1"
-    argocd.argoproj.io/hook: Sync
+    #argocd.argoproj.io/hook: Sync
 
 setupJob:
   annotations:
     helm.sh/hook: pre-install,pre-upgrade
     helm.sh/hook-delete-policy: before-hook-creation
     helm.sh/hook-weight: "2"
-    argocd.argoproj.io/hook: Sync
+    #argocd.argoproj.io/hook: Sync
 
 metrics:
   enabled: true

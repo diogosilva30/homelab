@@ -5,7 +5,7 @@ metadata:
   annotations:
     gethomepage.dev/enabled: "true"
     gethomepage.dev/description: Identity Provider authentication and authorization
-    gethomepage.dev/group: Identity
+    gethomepage.dev/group: Security
     gethomepage.dev/icon: zitadel
     gethomepage.dev/name: Zitadel (Identity Provider)
 spec:
