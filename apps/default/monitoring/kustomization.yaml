@@ -1,0 +1,14 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+helmGlobals:
+  chartHome: ../../charts
+
+helmCharts:
+  # Install LGTM stack. Grafana for visualization, Loki for logs, Tempo for traces, and Mimir for metrics.
+  - name: lgtm-distributed
+    repo: https://grafana.github.io/helm-charts
+    namespace: monitoring
+    releaseName: monitoring
+    version: 2.1.0
+    valuesFile: values.yaml
