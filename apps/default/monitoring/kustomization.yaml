@@ -4,6 +4,9 @@ kind: Kustomization
 helmGlobals:
   chartHome: ../../charts
 
+resources:
+  - manifests/ingress.yaml
+
 helmCharts:
   # Install LGTM stack. Grafana for visualization, Loki for logs, Tempo for traces, and Mimir for metrics.
   - name: lgtm-distributed
@@ -12,3 +15,19 @@ helmCharts:
     releaseName: monitoring
     version: 2.1.0
     valuesFile: values.yaml
+
+replacements:
+  - source:
+      kind: Ingress
+      name: grafana
+      fieldPath: metadata.annotations.dns
+    targets:
+      - select:
+          kind: Ingress
+          name: grafana
+        fieldPaths:
+          - spec.rules.0.host
+        options:
+          # This keeps the "grafana." prefix
+          delimiter: "."
+          index: 1

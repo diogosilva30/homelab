@@ -1,0 +1,23 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: grafana
+  annotations:
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/description: Grafana for visualization
+    gethomepage.dev/group: Monitoring
+    gethomepage.dev/icon: grafana
+    gethomepage.dev/name: Grafana
+spec:
+  rules:
+    - host: grafana.$(DNS) # DNS will be replaced by kustomize
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: monitoring-grafana
+                port:
+                  name: service
