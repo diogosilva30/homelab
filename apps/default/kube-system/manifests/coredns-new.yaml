@@ -1,0 +1,35 @@
+kind: ConfigMap
+metadata:
+  name: coredns
+  namespace: kube-system
+apiVersion: v1
+data:
+  Corefile: |
+    .:53 {
+        errors
+        health
+        ready
+        kubernetes cluster.local in-addr.arpa ip6.arpa {
+          pods insecure
+          fallthrough in-addr.arpa ip6.arpa
+        }
+        hosts /etc/coredns/NodeHosts {
+          ttl 60
+          reload 15s
+          fallthrough
+        }
+        prometheus :9153
+        forward . /etc/resolv.conf
+        cache 30
+        loop
+        reload
+        loadbalance
+    }
+    # Custom entry to forward all request of our internal DNS
+    # to the internal DNS server
+    lab.local:53 {
+        forward . 192.168.1.86
+    }
+  NodeHosts: |
+    192.168.1.86 homelab001
+    2001:8a0:e476:da00:1a66:daff:fe3b:884a homelab001
