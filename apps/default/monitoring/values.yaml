@@ -1,6 +1,56 @@
 grafana:
   enabled: true
+  replicas: 3
+  plugins:
+    # Install the "grafana-piechart-panel" plugin
+    # https://grafana.com/grafana/plugins/grafana-piechart-panel
+    - grafana-piechart-panel
 
+  # Inject the variables from the secret into the Grafana configuration
+  # This secret was created with "ClusterSecret" in Terraform
+  envFromSecret: grafana-oidc-credentials
+
+  # https://artifacthub.io/packages/helm/grafana/grafana#how-to-securely-reference-secrets-in-grafana-ini
+  extraSecretMounts:
+    - name: grafana-oidc-credentials
+      secretName: grafana-oidc-credentials
+      defaultMode: 0440
+      mountPath: /etc/secrets/grafana-oidc-credentials
+      readOnly: true
+
+  grafana.ini:
+    # Need to configure the following for the Oauth2 redirect URI to be correctly
+    # set
+    server:
+      domain: "grafana.lab.local"
+      root_url: "http://%(domain)s/"
+      serve_from_sub_path: false
+    log:
+      level: debug
+      filters: "oauth.generic_oauth:debug"
+    # Configure OIDC. The client id and secret should be read automatically
+    # from the "grafana-oidc-credentials" secret
+    auth.basic:
+      enabled: false
+    auth.generic_oauth:
+      auto_login: true
+      enabled: true
+      name: IDP
+      allow_sign_up: true
+      # Read the client id and secret from the mounted secret
+      client_id: $__file{/etc/secrets/grafana-oidc-credentials/GF_AUTH_GENERIC_CLIENT_ID}
+      client_secret: $__file{/etc/secrets/grafana-oidc-credentials/GF_AUTH_GENERIC_CLIENT_SECRET}
+      scopes: openid email profile offline_access roles
+      email_attribute_path: email
+      login_attribute_path: username
+      name_attribute_path: full_name
+      auth_url: http://idp.lab.local/oauth/v2/authorize
+      token_url: http://idp.lab.local/oauth/v2/token
+      api_url: http://idp.lab.local/oidc/v1/userinfo
+      # Role mapping:
+      # - 'GrafanaAdmin' --> Will be granted 'Admin'
+      # - 'ReadOnly' --> Will be granted 'Viewer'
+      role_attribute_path: contains(groups[*], 'GrafanaAdmin') && 'GrafanaAdmin' || contains(groups[*], 'ReadOnly') && 'Viewer'
 loki:
   enabled: true
 

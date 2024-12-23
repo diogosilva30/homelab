@@ -6,6 +6,7 @@ helmGlobals:
 
 resources:
   - manifests/ingress.yaml
+  - manifests/grafana-oidc-credentials.yaml
 
 helmCharts:
   # Install LGTM stack. Grafana for visualization, Loki for logs, Tempo for traces, and Mimir for metrics.
