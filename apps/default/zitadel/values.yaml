@@ -104,6 +104,12 @@ setupJob:
     helm.sh/hook-weight: "2"
     #argocd.argoproj.io/hook: Sync
 
+service:
+  annotations:
+    # Required for GRPC to work
+    #  https://community.traefik.io/t/grpc-with-tls-receiving-plain-text-response/1929/14
+    traefik.ingress.kubernetes.io/service.serversscheme: h2c
+
 metrics:
   enabled: true
   serviceMonitor:
