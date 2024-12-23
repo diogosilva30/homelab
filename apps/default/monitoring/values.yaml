@@ -48,9 +48,10 @@ grafana:
       token_url: http://idp.lab.local/oauth/v2/token
       api_url: http://idp.lab.local/oidc/v1/userinfo
       # Role mapping:
-      # - 'GrafanaAdmin' --> Will be granted 'Admin'
+      # - 'grafana-admin' --> Will be granted 'Admin'
       # - 'ReadOnly' --> Will be granted 'Viewer'
-      role_attribute_path: contains(groups[*], 'GrafanaAdmin') && 'GrafanaAdmin' || contains(groups[*], 'ReadOnly') && 'Viewer'
+      role_attribute_path: contains(urn:zitadel:iam:org:project:299425082244071627:roles.grafana-admin[*], 'grafana-admin') && 'Admin' || contains(urn:zitadel:iam:org:project:299425082244071627:roles.grafana-viewer[*], 'grafana-viewer') && 'Viewer'
+
 loki:
   enabled: true
 
