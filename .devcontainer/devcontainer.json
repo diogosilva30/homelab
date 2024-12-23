@@ -1,0 +1,73 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/docker-existing-docker-compose
+{
+  "name": "Local",
+  // Update the 'dockerComposeFile' list if you have more compose files or use different names.
+  // The .devcontainer/docker-compose.yml file contains any overrides you need/want to make.
+  "dockerComposeFile": [
+    "docker-compose.yml"
+  ],
+  "workspaceFolder": "/workspace",
+  "remoteEnv": {
+    "TF_BACKEND_GIT_ACCESSLOGS": "true"
+  },
+  "postCreateCommand": "/bin/bash /workspace/.devcontainer/setup.sh",
+  "service": "workspace",
+  // commands to execute after container has successfully started
+  "remoteUser": "root",
+  // Configure tool-specific properties.
+  // Uncomment to connect as an existing user other than the container default. More info: https://aka.ms/dev-containers-non-root.
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "GitHub.copilot",
+        "GitHub.copilot-chat",
+        "ms-vscode-remote.remote-containers",
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-python.black-formatter",
+        "ms-python.pylint",
+        "ms-python.isort",
+        "VisualStudioExptTeam.vscodeintellicode",
+        "eamodio.gitlens",
+        "ms-vsliveshare.vsliveshare",
+        "HashiCorp.HCL",
+        "HashiCorp.terraform",
+        "redhat.vscode-yaml",
+        "hashicorp.terraform",
+        "hashicorp.hcl"
+      ],
+      "settings": {
+        "terminal.integrated.shell.linux": "/bin/bash",
+        "terminal.integrated.profiles.linux": {
+          "bash": {
+            "path": "bash",
+            "icon": "terminal-bash",
+            // Ensure the shell loads the user's bashrc file
+            // https://stackoverflow.com/a/55965399
+            "args": [
+              "-l"
+            ]
+          }
+        },
+        "python.defaultInterpreterPath": ".env/bin/python",
+        "python.terminal.activateEnvInCurrentTerminal": true,
+        "editor.codeActionsOnSave": {
+          "source.organizeImports": "always"
+        },
+        "editor.formatOnSave": true,
+        "[python]": {
+          "diffEditor.ignoreTrimWhitespace": false,
+          "editor.formatOnSave": true,
+          "editor.wordBasedSuggestions": "matchingDocuments",
+          "formatting.provider": "black",
+          "linting.enabled": true,
+          "linting.pylintEnabled": true,
+          "linting.pylintArgs": [
+            "--load-plugins"
+          ]
+        }
+      }
+    }
+  }
+}

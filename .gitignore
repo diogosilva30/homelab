@@ -1,2 +1,6 @@
 .DS_Store
 private.key
+terraform/zitadel-credentials.json
+*.auto.tf
+.env
+.terraform/
