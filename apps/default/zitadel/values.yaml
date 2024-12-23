@@ -10,6 +10,29 @@ zitadel:
     TLS:
       Enabled: false
 
+    FirstInstance:
+      Org:
+        Name: LAB
+        Human:
+          # # Login with "dsilva@lab.idp.lab.local"
+          FirstName: Diogo
+          LastName: Silva
+          Nickname: dsilva
+          Username: dsilva
+          Password: AdminChangeMe1!
+        # Create machine key for programatic access in Terraform
+        # From: https://github.com/telia-oss/team-alliance-zitadel-charts/blob/main/examples/6-machine-user/zitadel-values.yaml
+        Machine:
+          Machine:
+            Username: zitadel-admin-sa
+            Name: Admin
+          MachineKey:
+            ExpirationDate: "2026-01-01T00:00:00Z"
+            # Type: 1 means JSON. This is currently the only supported machine key type.
+            Type: 1
+        # PAT:
+        #   ExpirationDate: "2026-01-01T00:00:00Z"
+
   # ZITADEL uses the masterkey for symmetric encryption.
   # You can generate it for example with tr -dc A-Za-z0-9 </dev/urandom | head -c 32
   masterkeySecretName: "zitadel-master-key" # The secret we created in "manifests.zitadel-master-key.yaml" file
@@ -34,19 +57,6 @@ image:
 
 # Additional environment variables
 env:
-  - name: ZITADEL_FIRSTINSTANCE_ORG_NAME
-    value: "LAB"
-  - name: ZITADEL_FIRSTINSTANCE_ORG_HUMAN_FIRSTNAME
-    value: "Diogo"
-  - name: ZITADEL_FIRSTINSTANCE_ORG_HUMAN_LASTNAME
-    value: "Silva"
-  - name: ZITADEL_FIRSTINSTANCE_ORG_HUMAN_NICKNAME
-    value: "dsilva"
-  # Login with "dsilva@lab.idp.lab.local"
-  - name: ZITADEL_FIRSTINSTANCE_ORG_HUMAN_USERNAME
-    value: "dsilva"
-  - name: ZITADEL_FIRSTINSTANCE_ORG_HUMAN_PASSWORD
-    value: "AdminChangeMe1!"
   - name: ZITADEL_DATABASE_POSTGRES_USER_SSL_MODE
     value: "disable"
   - name: ZITADEL_DATABASE_POSTGRES_HOST
