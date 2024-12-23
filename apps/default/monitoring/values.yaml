@@ -1,6 +1,6 @@
 grafana:
   enabled: true
-  replicas: 3
+  replicas: 1
   plugins:
     # Install the "grafana-piechart-panel" plugin
     # https://grafana.com/grafana/plugins/grafana-piechart-panel
@@ -23,8 +23,7 @@ grafana:
     # set
     server:
       domain: "grafana.lab.local"
-      root_url: "http://%(domain)s/"
-      serve_from_sub_path: false
+      root_url: "http://grafana.lab.local/"
     log:
       level: debug
       filters: "oauth.generic_oauth:debug"
@@ -40,20 +39,21 @@ grafana:
       # Read the client id and secret from the mounted secret
       client_id: $__file{/etc/secrets/grafana-oidc-credentials/GF_AUTH_GENERIC_CLIENT_ID}
       client_secret: $__file{/etc/secrets/grafana-oidc-credentials/GF_AUTH_GENERIC_CLIENT_SECRET}
-      scopes: openid email profile offline_access roles
-      email_attribute_path: email
-      login_attribute_path: username
-      name_attribute_path: full_name
+      scopes: openid email profile
       auth_url: http://idp.lab.local/oauth/v2/authorize
       token_url: http://idp.lab.local/oauth/v2/token
       api_url: http://idp.lab.local/oidc/v1/userinfo
+      email_attribute_path: email
+      login_attribute_path: email
+      name_attribute_path: name
       # Role mapping from Zitadel IDP to Grafana roles
       # 299425082244071627 is the project ID of Grafana in Zitadel
-      role_attribute_path: |-
-        contains(urn:zitadel:iam:org:project:299425082244071627:roles, 'grafana-admin') && 'admin' ||
-        contains(urn:zitadel:iam:org:project:299425082244071627:roles, 'grafana-editor') && 'editor' ||
-        contains(urn:zitadel:iam:org:project:299425082244071627:roles, 'grafana-viewer') && 'viewer' ||
-        'guest'
+      role_attribute_path: >
+        (contains(keys(@."urn:zitadel:iam:org:project:299425082244071627:roles"), 'grafana-viewer') && 'Viewer')
+        ||
+        (contains(keys(@."urn:zitadel:iam:org:project:299425082244071627:roles"), 'grafana-editor') && 'Editor')
+        ||
+        (contains(keys(@."urn:zitadel:iam:org:project:299425082244071627:roles"), 'grafana-admin') && 'Admin')
 
 loki:
   enabled: true
