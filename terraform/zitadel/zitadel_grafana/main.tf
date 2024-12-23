@@ -9,12 +9,17 @@ terraform {
 }
 
 variable "project_id" {
+  type        = string
   description = "The project id"
 }
 variable "org_id" {
+  type        = string
   description = "The org id"
 }
-
+variable "me_user_id" {
+  type        = string
+  description = "The user id"
+}
 //////////////////////////////////////////////////////////////////////////////////////
 // Grafana
 //////////////////////////////////////////////////////////////////////////////////////
@@ -36,16 +41,23 @@ resource "zitadel_project_role" "grafana_viewer" {
   group        = "role_grafana_viewer"
 }
 
+// Grant role "Grafana Admin" to our user
+resource "zitadel_user_grant" "default" {
+  project_id = var.project_id
+  org_id     = var.org_id
+  role_keys  = [zitadel_project_role.grafana_admin.role_key]
+  user_id    = var.me_user_id
+}
 
 // Create application for Grafana
 resource "zitadel_application_oidc" "default" {
   project_id                  = var.project_id
   org_id                      = var.org_id
   name                        = "grafana"
-  redirect_uris               = ["http://grafana.lab.local"]
+  redirect_uris               = ["http://grafana.lab.local/login/generic_oauth"]
   response_types              = ["OIDC_RESPONSE_TYPE_CODE"]
   grant_types                 = ["OIDC_GRANT_TYPE_AUTHORIZATION_CODE"]
-  post_logout_redirect_uris   = ["http://grafana.lab.local"]
+  post_logout_redirect_uris   = ["http://grafana.lab.local/logout"]
   app_type                    = "OIDC_APP_TYPE_WEB"
   auth_method_type            = "OIDC_AUTH_METHOD_TYPE_BASIC"
   version                     = "OIDC_VERSION_1_0"
