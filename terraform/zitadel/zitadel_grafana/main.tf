@@ -32,6 +32,14 @@ resource "zitadel_project_role" "grafana_admin" {
   group        = "role_grafana_admin"
 }
 
+// Create role "Grafana Editor"
+resource "zitadel_project_role" "grafana_editor" {
+  org_id       = var.org_id
+  project_id   = var.project_id
+  role_key     = "grafana-editor"
+  display_name = "Grafana Editor"
+  group        = "role_grafana_editor"
+}
 // Create role "Grafana Viewer"
 resource "zitadel_project_role" "grafana_viewer" {
   org_id       = var.org_id
@@ -63,9 +71,9 @@ resource "zitadel_application_oidc" "default" {
   version                     = "OIDC_VERSION_1_0"
   clock_skew                  = "0s"
   dev_mode                    = true // Required for HTTP
-  access_token_type           = "OIDC_TOKEN_TYPE_BEARER"
-  access_token_role_assertion = false
-  id_token_role_assertion     = false
-  id_token_userinfo_assertion = false
+  access_token_type           = "OIDC_TOKEN_TYPE_JWT"
+  access_token_role_assertion = true
+  id_token_role_assertion     = true
+  id_token_userinfo_assertion = true
   additional_origins          = []
 }
