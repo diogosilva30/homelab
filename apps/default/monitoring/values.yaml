@@ -68,3 +68,6 @@ mimir:
 
 tempo:
   enabled: true
+  ingester:
+    config:
+      replication_factor: 1
