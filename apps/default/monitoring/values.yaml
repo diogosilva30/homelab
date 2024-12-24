@@ -60,6 +60,11 @@ loki:
 
 mimir:
   enabled: true
+  # https://github.com/grafana/mimir/discussions/5158#discussioncomment-6413922
+  structuredConfig:
+    memberlist:
+      cluster_label: "mimir"
+      cluster_label_verification_disabled: true
 
 tempo:
   enabled: true
