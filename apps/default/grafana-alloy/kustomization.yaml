@@ -12,19 +12,19 @@ helmCharts:
   - name: alloy
     repo: https://grafana.github.io/helm-charts
     namespace: grafana-alloy
-    releaseName: grafana-alloy
+    releaseName: alloy
     version: 0.10.1
     valuesFile: values.yaml
 
 replacements:
   - source:
       kind: Ingress
-      name: grafana-alloy
+      name: alloy
       fieldPath: metadata.annotations.dns
     targets:
       - select:
           kind: Ingress
-          name: grafana-alloy
+          name: alloy
         fieldPaths:
           - spec.rules.0.host
         options:

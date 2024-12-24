@@ -2,12 +2,12 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: grafana-alloy
+  name: alloy
   annotations:
     gethomepage.dev/enabled: "true"
     gethomepage.dev/description: Grafana Alloy (OpenTelemetry Collector) for logs, metrics, and traces
     gethomepage.dev/group: Monitoring
-    gethomepage.dev/icon: https://avatars.githubusercontent.com/u/49998002?s=200&v=4
+    gethomepage.dev/icon: alloy
     gethomepage.dev/name: Grafana Alloy
 spec:
   rules:
@@ -18,6 +18,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: grafana-alloy
+                name: alloy
                 port:
                   number: 12345
