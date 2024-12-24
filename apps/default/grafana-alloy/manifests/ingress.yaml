@@ -21,3 +21,39 @@ spec:
                 name: alloy
                 port:
                   number: 12345
+---
+# Create ingress for open telemetry collector HTTP port
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: otel-collector-http
+spec:
+  rules:
+    - host: http.otel-collector.$(DNS) # DNS will be replaced by kustomize
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: alloy
+                port:
+                  name: otelhttp
+---
+# Create ingress for open telemetry collector gRPC port
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: otel-collector-grpc
+spec:
+  rules:
+    - host: grpc.otel-collector.$(DNS) # DNS will be replaced by kustomize
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: alloy
+                port:
+                  name: otelgrpc

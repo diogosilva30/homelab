@@ -31,3 +31,21 @@ replacements:
           # This keeps the "alloy." prefix
           delimiter: "."
           index: 1
+      - select:
+          kind: Ingress
+          name: otel-collector-http
+        fieldPaths:
+          - spec.rules.0.host
+        options:
+          # This keeps the "http.otel-collector." prefix
+          delimiter: "."
+          index: 2
+      - select:
+          kind: Ingress
+          name: otel-collector-grpc
+        fieldPaths:
+          - spec.rules.0.host
+        options:
+          # This keeps the "grpc.otel-collector." prefix
+          delimiter: "."
+          index: 2
