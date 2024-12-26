@@ -6,7 +6,7 @@ helmGlobals:
 
 resources:
   - manifests/ingress.yaml
-  - manifests/wireguard-peer.yaml
+  # - manifests/wireguard-peer.yaml
   - manifests/tailscale-client.yaml
 
 helmCharts:

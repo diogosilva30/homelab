@@ -13,34 +13,32 @@ primary_region = 'arn'
 [env]
   DOMAIN = 'dsilva-vpn-gateway.fly.dev'
   PEERS = "1"
-  SERVICES = "peer1:headscale.headscale.svc.cluster.local:8080:8080"
+  SERVICES = "peer1:headscale:80:80,peer1:headscale:443:443"
 
 [[mounts]]
   source = "wireguard_data"
   destination = "/etc/wireguard"
 
 [[services]]
-  internal_port = 8080
-  protocol = "tcp"
-  [services.concurrency]
-    hard_limit = 25
-    soft_limit = 20
-    type = "connections"
+  protocol = "udp"
+  internal_port = 51820
 
   [[services.ports]]
-    force_https = true
-    handlers = ["http"]
+    port = 51820
+
+[[services]]
+  protocol = "tcp"
+  internal_port = 80
+
+  [[services.ports]]
     port = 80
 
-  [[services.ports]]
-    handlers = ["tls", "http"]
-    port = 443
+[[services]]
+  protocol = "tcp"
+  internal_port = 443
 
-  [[services.tcp_checks]]
-    grace_period = "1s"
-    interval = "15s"
-    restart_limit = 0
-    timeout = "2s"
+  [[services.ports]]
+    port = 443
 
 [[vm]]
   memory = '1gb'
