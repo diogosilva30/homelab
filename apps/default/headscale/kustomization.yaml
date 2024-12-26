@@ -1,0 +1,54 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+helmGlobals:
+  chartHome: ../../charts
+
+resources:
+  # - manifests/ingress.yaml
+  # - manifests/wireguard-peer.yaml
+  - manifests/tailscale-client.yaml
+
+helmCharts:
+  # Headscale control plane
+  - name: headscale-ui
+    repo: oci://codeberg.org/wrenix/helm-charts/
+    namespace: headscale
+    releaseName: headscale-ui
+    version: 0.2.1
+
+# replacements:
+#   - source:
+#       kind: Ingress
+#       name: headscale
+#       fieldPath: metadata.annotations.external_dns
+#     targets:
+#       - select:
+#           kind: Ingress
+#           name: headscale
+#         fieldPaths:
+#           - spec.rules.0.host
+#         options:
+#           # This keeps the "vpn." prefix
+#           delimiter: "."
+#           index: 1
+
+patches:
+  # Remove the hardcoded "TS_TAILSCALED_EXTRA_ARGS" environment variable
+  # otherwise we cant specify our own...
+  - target:
+      kind: DaemonSet
+      name: tailscale-client
+    patch: |-
+      - op: remove
+        path: /spec/template/spec/containers/0/env/1
+
+# # https://github.com/kubernetes-sigs/kustomize/issues/3046#issuecomment-701480499
+# patchesJson6902:
+#   - patch: |-
+#       - op: remove
+#         path: /metadata/annotations/external-dns.alpha.kubernetes.io~1target
+#     target:
+#       version: v1
+#       kind: Ingress
+#       name: headscale

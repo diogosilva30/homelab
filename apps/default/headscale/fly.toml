@@ -1,0 +1,45 @@
+# fly.toml app configuration file generated for vpn-gw-dsilva on 2024-12-26T18:55:48Z
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'vpn-gw-dsilva'
+primary_region = 'arn'
+
+[build]
+  image = 'ghcr.io/digitallyrefined/docker-wireguard-tunnel:v3'
+
+[env]
+  DOMAIN = 'vpn-gw-dsilva.fly.dev'
+  PEERS = '1'
+  SERVICES = 'peer1:headscale:80:80,peer1:headscale:443:443'
+
+[[mounts]]
+  source = 'wireguard_data'
+  destination = '/etc/wireguard'
+
+[[services]]
+  protocol = 'udp'
+  internal_port = 51820
+
+  [[services.ports]]
+    port = 51820
+
+[[services]]
+  protocol = 'tcp'
+  internal_port = 80
+
+  [[services.ports]]
+    port = 80
+
+[[services]]
+  protocol = 'tcp'
+  internal_port = 443
+
+  [[services.ports]]
+    port = 443
+
+[[vm]]
+  memory = '1gb'
+  cpu_kind = 'shared'
+  cpus = 1
