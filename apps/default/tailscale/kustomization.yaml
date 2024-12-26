@@ -1,0 +1,18 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+helmGlobals:
+  chartHome: ../../charts
+
+resources:
+  - manifests/tailscale-client.yaml
+
+patches:
+  # Remove the hardcoded "TS_TAILSCALED_EXTRA_ARGS" environment variable
+  # otherwise we cant specify our own...
+  - target:
+      kind: DaemonSet
+      name: tailscale-client
+    patch: |-
+      - op: remove
+        path: /spec/template/spec/containers/0/env/1

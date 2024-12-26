@@ -4,11 +4,10 @@ kind: SealedSecret
 metadata:
   annotations:
     sealedsecrets.bitnami.com/cluster-wide: "true"
-  creationTimestamp: null
   name: tailscale-authkey
 spec:
   encryptedData:
-    authkey: AgAgZe6x80Wj3gfq5+eEbbAlNkRYy7uZncGxAw/KREGFuahBNCcm8Gyct5NJarEq+0jqH/cvImFhlliux7K5vBokXpUZ2D0RBIGVWWvSmD2Zp11s0Uod5tJfG7Z/Ks7b5pZ3/bAsTvc+Fg7QDW8IyW3mN5iR1NvZIiBCAkuSLj3YvTsR/SaO9qn0ARwd/cJ+Z/zy6nh7lZ1nZV+Pg8PU0rgswtgmJ4loTon08UQUXDz6FDgrTp6MYnLDvMvb2+D6kOKVAB+Grr88XkleskEzX03L8yQxYgzZJNboHih6zSIO6Shy3heYySjDmXbOeS36WD1n3pxX0BkJpMZnCX16G4c+cehweo0PkKWALjYFm3ybrTTzGFu1FkGUIR/hW4gvWQSWw+EbIS8O8h5rooKTyPzmjLv98lHnXb9foQsuPRXD2vt43nAlH126OrQgHeXHgaMVGY0EYA3t+vOhQYEQYFijqTZ5bGZjasRcUFxbDSkxmPBrtQ8L6jiad3gx/z5I/qYSvFck/eu0K2jPDQFpM53ZG5WpiHJOt5m3o2eeWdO58N7CpaCw/rdEONKgzj0gQe1vJevd9k5/O45wT9cI92FOPoJF/S18iQVbvVILFntTiRruHlhOW5iExXILUsbdTcIl6K79M6vIxovcz5wBiAV04Prmky2+TBKeF9IWqxc04Wm6MMOzOsQit+31bVqRcBRf0oDqVknE8rEHtEIKRdfNrTwrolU6rXVQwZe1I7TbELWR7/wCLHfGDaN41BGPpm8=
+    authkey: AgAbEmIAhL+Cn296KL78LCPR5bYsdXfS/KzOTE00cM2Hm+kmMXtptwHOBdOclPg5Sp/u0kMfHD6C4B5otJoU7iL1Oou5afUFkQT5eTYcTcqNLppvC051LLBI210cQSWihjKQOmSiySf3/5oeygPiTZoV7FTKzXAhyw1jR6Bn4rQgkK9RNzbImR7iFmbO7qdtVTgtG5TCXCpf2tU9qr3OIJWKtFGP925RYk4dTOoed68y5Q5eVrxAySlj/dA4QyW6l0hW2Lxt7iHs+pMwds0RcHC1jbUNgut6rKpZE0ZNuZKD+4oHKm7P2BSra7DzpgrSYwdTAtTUDHoV37ADsPn3Hs2l1X5Y/qHruhkhUi3WILA/yu07JSFrpG9pfv+of29BEAGofRP/lDd5ABpBXbo+OKo/iyp1sU64B8VugQljicdBDdnNhv4fcAJOx5kcLHClSCbgmA+u9rNOR1Q/7L7AmkL51WoOYksdOLc9d62dgHP9vAqYkpxqdF53ni7TxwXHa7Q/VheTcQnbqKd84kQo32KBbjzLEwE/o3HDIukMwW736ZztDirZWQhXnotEthTuNkvRpNqGlHXPRGTQMEsNQKBuUozOI7CvAhUIpHocqYy0zkT2KbEnPEy5oJ5uno5ltq5veGTTN+KLmJD/H4yS/LkRMZIH9tPb6c1CspPQY0byAQxyLNHuhMTUUEYCKO/ZBLCxYdKcJFMTa/BRI4zOsJOHyGNE84Gc2FOCdx88EnQbxwkIOR9ft2zVSnqUzFg/+us=
   template:
     metadata:
       annotations:
@@ -105,7 +104,7 @@ spec:
               value: "/var/lib/tailscale"
             - name: TS_EXTRA_ARGS
               value: >-
-                --login-server=http://vpn.dsilva.dev 
+                --login-server=https://vpn-gw-dsilva.fly.dev
                 --advertise-exit-node
                 --advertise-routes=192.168.1.0/24 
                 --accept-dns=true
