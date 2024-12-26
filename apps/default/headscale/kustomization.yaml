@@ -5,18 +5,17 @@ helmGlobals:
   chartHome: ../../charts
 
 resources:
-  - manifests/ingress.yaml
+  # - manifests/ingress.yaml
   # - manifests/wireguard-peer.yaml
   - manifests/tailscale-client.yaml
 
 helmCharts:
   # Headscale control plane
-  - name: headscale
-    repo: https://charts.gabe565.com
+  - name: headscale-ui
+    repo: oci://codeberg.org/wrenix/helm-charts/
     namespace: headscale
-    releaseName: headscale
-    version: 0.14.0
-    valuesFile: values.yaml
+    releaseName: headscale-ui
+    version: 0.2.1
 
 replacements:
   - source:
@@ -44,12 +43,12 @@ patches:
       - op: remove
         path: /spec/template/spec/containers/0/env/1
 
-# https://github.com/kubernetes-sigs/kustomize/issues/3046#issuecomment-701480499
-patchesJson6902:
-  - patch: |-
-      - op: remove
-        path: /metadata/annotations/external-dns.alpha.kubernetes.io~1target
-    target:
-      version: v1
-      kind: Ingress
-      name: headscale
+# # https://github.com/kubernetes-sigs/kustomize/issues/3046#issuecomment-701480499
+# patchesJson6902:
+#   - patch: |-
+#       - op: remove
+#         path: /metadata/annotations/external-dns.alpha.kubernetes.io~1target
+#     target:
+#       version: v1
+#       kind: Ingress
+#       name: headscale

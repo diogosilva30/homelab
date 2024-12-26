@@ -15,17 +15,10 @@ spec:
     - host: vpn.$(DNS) # DNS will be replaced by kustomize
       http:
         paths:
-          # - path: /web
-          #   pathType: Prefix
-          #   backend:
-          #     service:
-          #       name: headscale-ui
-          #       port:
-          #         name: ui
-          - path: /
+          - path: /web
             pathType: Prefix
             backend:
               service:
-                name: headscale
+                name: headscale-ui
                 port:
-                  name: https
+                  name: ui
