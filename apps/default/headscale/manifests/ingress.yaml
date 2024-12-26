@@ -8,6 +8,8 @@ metadata:
     gethomepage.dev/group: Networking
     gethomepage.dev/icon: tailscale
     gethomepage.dev/name: Headscale
+    # Dont generate pihole record for this ingress
+    external-dns.alpha.kubernetes.io/ingress-hostname-source: "annotation-only"
 spec:
   rules:
     - host: vpn.$(DNS) # DNS will be replaced by kustomize
