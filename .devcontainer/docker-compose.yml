@@ -13,7 +13,7 @@ services:
       - ../.env
     dns:
       - 192.168.1.86 # Our pihole server, otherwise terraform will not reach Zitadel IDP
-    network_mode: host
+    # network_mode: host
     # Overrides default command so things don't shut down after the process ends.
     command: /bin/bash -c "while sleep 1000; do :; done"
     user: root

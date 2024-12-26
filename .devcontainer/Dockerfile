@@ -84,4 +84,9 @@ ARG PIP_VERSION=24.3.1
 RUN apk add --no-cache python3=${PYTHON_VERSION} py3-pip \
     && pip3 install --upgrade --break-system-packages pip==${PIP_VERSION}
 
+################################################################################
+# Install Fly.io CTL
+RUN curl -L https://fly.io/install.sh | sh
+ENV PATH=$PATH:/root/.fly/bin
+
 CMD ["/bin/bash"]

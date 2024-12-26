@@ -39,7 +39,7 @@ spec:
           env:
             # Use the FQDN of the headscale service here
             - name: SERVICES
-              value: "peer1:headscale.headscale.svc.cluster.local:8080:80,peer1:headscale.headscale.svc.cluster.local:8443:443"
+              value: "peer1:headscale.headscale.svc.cluster.local:8080:8080"
           volumeMounts:
             - name: wireguard-config
               mountPath: /etc/wireguard/wg0.conf

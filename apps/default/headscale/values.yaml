@@ -10,14 +10,20 @@ env:
   HEADSCALE_DNS_BASE_DOMAIN: "lab"
   # Set clients to use Pi-hole as DNS server (192.168.1.86)
   HEADSCALE_DNS_NAMESERVERS_GLOBAL: "192.168.1.86 1.1.1.1"
-  HEADSCALE_SERVER_URL: "https://vpn.dsilva.dev"
+  HEADSCALE_SERVER_URL: "https://vpn.dsilva.dev:443"
   HEADSCALE_LISTEN_ADDR: "0.0.0.0:8080"
-  HEADSCALE_TLS_LETSENCRYPT_HOSTNAME: "vpn.dsilva.dev"
+  #HEADSCALE_TLS_LETSENCRYPT_HOSTNAME: "vpn.dsilva.dev"
 
 persistence:
   config:
     enabled: true
     mountPath: /etc/headscale
+
+service:
+  main:
+    ports:
+      ui:
+        port: 81
 
 sidecars:
   ui:

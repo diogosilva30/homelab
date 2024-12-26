@@ -19,7 +19,7 @@ resource "cloudflare_record" "record_vpn" {
   content = "50.31.246.185" # Address of gateway
   type    = "A"
   ttl     = 1
-  proxied = true
+  proxied = false
   comment = "Record to proxy to fly.io VPN gateway machine"
 }
 
