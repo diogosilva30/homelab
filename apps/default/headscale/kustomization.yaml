@@ -22,7 +22,7 @@ replacements:
   - source:
       kind: Ingress
       name: headscale
-      fieldPath: metadata.annotations.dns
+      fieldPath: metadata.annotations.external_dns
     targets:
       - select:
           kind: Ingress
@@ -56,3 +56,13 @@ patches:
     patch: |-
       - op: remove
         path: /spec/template/spec/containers/0/env/1
+
+# https://github.com/kubernetes-sigs/kustomize/issues/3046#issuecomment-701480499
+patchesJson6902:
+  - patch: |-
+      - op: remove
+        path: /metadata/annotations/external-dns.alpha.kubernetes.io~1target
+    target:
+      version: v1
+      kind: Ingress
+      name: headscale

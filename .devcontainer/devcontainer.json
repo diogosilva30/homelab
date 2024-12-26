@@ -35,7 +35,9 @@
         "HashiCorp.terraform",
         "redhat.vscode-yaml",
         "hashicorp.terraform",
-        "hashicorp.hcl"
+        "hashicorp.hcl",
+        "ipedrazas.kubernetes-snippets",
+        "ms-kubernetes-tools.vscode-kubernetes-tools"
       ],
       "settings": {
         "terminal.integrated.shell.linux": "/bin/bash",

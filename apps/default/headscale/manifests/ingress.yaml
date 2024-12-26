@@ -1,6 +1,3 @@
-# Create a dedicated service for UI, because
-# we are exposing "headscale" service through the tunnel
-# and don't want to expose the UI through the tunnel
 apiVersion: v1
 kind: Service
 metadata:
@@ -25,45 +22,21 @@ metadata:
     gethomepage.dev/name: Headscale
 spec:
   rules:
-    # These are the paths for internal usage
-    # outside access will be done through the tunnel
-    # created in the tunnel-binding.yaml
     - host: vpn.$(DNS) # DNS will be replaced by kustomize
       http:
         paths:
-          - path: /web
-            pathType: Prefix
-            backend:
-              service:
-                name: headscale-ui
-                port:
-                  name: ui
+          # - path: /web
+          #   pathType: Prefix
+          #   backend:
+          #     service:
+          #       name: headscale-ui
+          #       port:
+          #         name: ui
           - path: /
             pathType: Prefix
             backend:
               service:
                 name: headscale
                 port:
-                  name: http
----
-# Create an Ingress for the headscale service that will be exposed outside
-# using wireguard tunnel and use the valid certificate
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: headscale-outside
-  labels:
-    name: headscale-outside
-spec:
-  rules:
-    # Use the outside domain for the VPN
-    - host: vpn.dsilva.dev
-      http:
-        paths:
-          - pathType: Prefix
-            path: "/"
-            backend:
-              service:
-                name: headscale
-                port:
-                  name: http
+                  name: https
+
