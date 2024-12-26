@@ -1,0 +1,145 @@
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  annotations:
+    sealedsecrets.bitnami.com/cluster-wide: "true"
+  creationTimestamp: null
+  name: tailscale-authkey
+spec:
+  encryptedData:
+    authkey: AgAgZe6x80Wj3gfq5+eEbbAlNkRYy7uZncGxAw/KREGFuahBNCcm8Gyct5NJarEq+0jqH/cvImFhlliux7K5vBokXpUZ2D0RBIGVWWvSmD2Zp11s0Uod5tJfG7Z/Ks7b5pZ3/bAsTvc+Fg7QDW8IyW3mN5iR1NvZIiBCAkuSLj3YvTsR/SaO9qn0ARwd/cJ+Z/zy6nh7lZ1nZV+Pg8PU0rgswtgmJ4loTon08UQUXDz6FDgrTp6MYnLDvMvb2+D6kOKVAB+Grr88XkleskEzX03L8yQxYgzZJNboHih6zSIO6Shy3heYySjDmXbOeS36WD1n3pxX0BkJpMZnCX16G4c+cehweo0PkKWALjYFm3ybrTTzGFu1FkGUIR/hW4gvWQSWw+EbIS8O8h5rooKTyPzmjLv98lHnXb9foQsuPRXD2vt43nAlH126OrQgHeXHgaMVGY0EYA3t+vOhQYEQYFijqTZ5bGZjasRcUFxbDSkxmPBrtQ8L6jiad3gx/z5I/qYSvFck/eu0K2jPDQFpM53ZG5WpiHJOt5m3o2eeWdO58N7CpaCw/rdEONKgzj0gQe1vJevd9k5/O45wT9cI92FOPoJF/S18iQVbvVILFntTiRruHlhOW5iExXILUsbdTcIl6K79M6vIxovcz5wBiAV04Prmky2+TBKeF9IWqxc04Wm6MMOzOsQit+31bVqRcBRf0oDqVknE8rEHtEIKRdfNrTwrolU6rXVQwZe1I7TbELWR7/wCLHfGDaN41BGPpm8=
+  template:
+    metadata:
+      annotations:
+        sealedsecrets.bitnami.com/cluster-wide: "true"
+      creationTimestamp: null
+      name: tailscale-authkey
+    type: Opaque
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: tailscale-data
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+# Generated using Makefile from
+# https://github.com/tailscale/tailscale/tree/main/docs/k8s
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: tailscale
+rules:
+  - apiGroups: [""] # "" indicates the core API group
+    resources: ["secrets"]
+    # Create can not be restricted to a resource name.
+    verbs: ["create"]
+  - apiGroups: [""] # "" indicates the core API group
+    resources: ["secrets"]
+    resourceNames: ["tailscale"]
+    verbs: ["get", "update", "patch"]
+  - apiGroups: [""] # "" indicates the core API group
+    resourceNames: ["tailscale-authkey"]
+    resources: ["secrets"]
+    verbs: ["get", "update", "patch"]
+  - apiGroups: [""] # "" indicates the core API group
+    resources: ["events"]
+    verbs: ["get", "create", "patch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: tailscale
+subjects:
+  - kind: ServiceAccount
+    name: "tailscale"
+roleRef:
+  kind: Role
+  name: tailscale
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: tailscale
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: tailscale
+  labels:
+    app: tailscale
+spec:
+  selector:
+    matchLabels:
+      app: tailscale
+  template:
+    metadata:
+      labels:
+        app: tailscale
+    spec:
+      serviceAccountName: tailscale
+      containers:
+        - name: tailscale
+          image: tailscale/tailscale:v1.78.3
+          securityContext:
+            privileged: true
+            capabilities:
+              add:
+                - NET_ADMIN
+                - NET_RAW
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+          env:
+            - name: TS_STATE_DIR
+              value: "/var/lib/tailscale"
+            - name: TS_EXTRA_ARGS
+              value: >-
+                --login-server=http://vpn.dsilva.dev 
+                --advertise-exit-node
+                --advertise-routes=192.168.1.0/24 
+                --accept-dns=true
+                --hostname=homelab
+            - name: TS_NO_LOGS_NO_SUPPORT
+              value: "true"
+            # Use node name as hostname
+            - name: HOSTNAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+            - name: TS_AUTHKEY
+              valueFrom:
+                secretKeyRef:
+                  name: tailscale-authkey
+                  key: authkey
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: POD_UID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.uid
+          volumeMounts:
+            - name: data-volume
+              mountPath: "/var/lib/tailscale"
+            - name: dev-net-tun
+              mountPath: "/dev/net/tun"
+      volumes:
+        - name: data-volume
+          persistentVolumeClaim:
+            claimName: tailscale-data
+        - name: dev-net-tun
+          hostPath:
+            path: "/dev/net/tun"
+      restartPolicy: Always
