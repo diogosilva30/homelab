@@ -65,7 +65,15 @@ data:
 
     otelcol.exporter.otlp "grafana_lab_traces" {
       client {
-        endpoint = "http://monitoring-tempo-distributor.monitoring.svc.cluster.local"
+        // Send to the locally running Tempo instance, on port 4317 (OTLP gRPC).
+        endpoint = "http://monitoring-tempo-distributor.monitoring.svc.cluster.local:4317"
+        // Disable TLS for OTLP remote write.
+        tls {
+            // The connection is insecure.
+            insecure = true
+            // Do not verify TLS certificates when connecting.
+            insecure_skip_verify = true
+        }
       }
     }
 
