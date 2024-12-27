@@ -10,7 +10,7 @@ resources:
   - manifests/tailscale-client.yaml
 
 helmCharts:
-  # Headscale control plane
+  # Headscale UI
   - name: headscale-ui
     repo: oci://codeberg.org/wrenix/helm-charts/
     namespace: headscale

@@ -1,36 +1,7 @@
-# Create a basic auth middleware for loki backend
-# passwords hashed with 'htpasswd -nb user password'
-# htpasswd -nb loki ulTioNYMaInGtoRkyloMBOada
----
-apiVersion: bitnami.com/v1alpha1
-kind: SealedSecret
-metadata:
-  annotations:
-    sealedsecrets.bitnami.com/cluster-wide: "true"
-  creationTimestamp: null
-  name: headscale-basic-auth-secret
-spec:
-  encryptedData:
-    users: AgCXLGXDKjYzhWM6LPxcnsQdlmI8VmDyIQFTqhaUxzlV2eGNavUkhnGqxH9c12yKciahnmAl7x1IYdQEgu5ApCbHPyZhhIGwnDkAomLsdrfNR9QvdvPWmQ1FB9vhIbt9/sYwgBxSOY9H+UqIaZfSuJtbwV/VhUXo2S/Ug72lj6x/6CkFylnIFmSTxmRopvta0+fgsICJUUsEl2MElUL2ZXyUcH4TSx+zZXe38AbA4VHdeLnW6FV7W6QPGroi0KIcYRlRPMBI2j2T1fRNEE9rcTA+Krzkh8OfocBpxhw11JWjQxKjc+urRjpzgwuegzmViOaFF/vCs5dg/3xTy9As5B+/V/cQxJUDPnD4aJYHFLU+6tlzcWa1oNO94S5yBR1kv1B7ZRnsehrkLDjoraAu3zP7oivKBamgr7v9tm36ctyMtlM/KKQXgHTJMfEz606c68LsA1LYjc0+6/ahny/BNu/DGbtoowfQW1Eql9NtOkAffcYJbrcSw72nrzbhFOHXzjbrUvF6TvqAf2G2MWf9FY4SZZmJ0cjFuSo1mm05hSPYM/4nP5UhXKmQSDhVQM2STY1sTFd4NEs/FmDIiBwt99muxevH4sVn0Gg1xeuO/1R5YvAzodDtBiCb7FMzvtvcjepfjsjucm7bwlf0feCLj5NSEKdU9gozIFBhKoilMSCeUd+EoPIheVGTSnPRyN1UpEGjJcUncQYOsJmlAvHlhnZf8btbBFuAxQm3W6h3y3lDU30toZGUvJEWaCDitK4=
-  template:
-    metadata:
-      annotations:
-        sealedsecrets.bitnami.com/cluster-wide: "true"
-      creationTimestamp: null
-      name: headscale-basic-auth-secret
----
-apiVersion: traefik.io/v1alpha1
-kind: Middleware
-metadata:
-  name: headscale-basic-auth
-spec:
-  basicAuth:
-    secret: headscale-basic-auth-secret
----
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: headscale-ui
+  name: headscale
   annotations:
     gethomepage.dev/enabled: "true"
     gethomepage.dev/description: VPN management
@@ -39,8 +10,6 @@ metadata:
     gethomepage.dev/name: Headscale
     # Dont generate pihole record for this ingress
     external-dns.alpha.kubernetes.io/ingress-hostname-source: "annotation-only"
-    # Add the basic auth middleware to the ingress
-    traefik.ingress.kubernetes.io/router.middlewares: headscale-headscale-basic-auth@kubernetescrd
 spec:
   rules:
     - host: vpn.$(DNS) # DNS will be replaced by kustomize
@@ -53,23 +22,10 @@ spec:
                 name: headscale-ui
                 port:
                   name: http
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: headscale
-  annotations:
-    # Dont generate pihole record for this ingress
-    external-dns.alpha.kubernetes.io/ingress-hostname-source: "annotation-only"
-spec:
-  rules:
-    - host: vpn.$(DNS) # DNS will be replaced by kustomize
-      http:
-        paths:
           - path: /
             pathType: Prefix
             backend:
               service:
                 name: headscale
                 port:
-                  name: https
+                  name: http

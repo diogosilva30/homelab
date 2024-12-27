@@ -2,6 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: headscale
+  annotations:
+    configmap.reloader.stakater.com/reload: "headscale-config"
 spec:
   replicas: 1
   selector:
@@ -49,7 +51,7 @@ spec:
     - protocol: TCP
       port: 80
       name: http
-      targetPort: 80
+      targetPort: 8080
     - protocol: TCP
       port: 443
       name: https
@@ -91,7 +93,7 @@ data:
     #
     # For production:
     # listen_addr: 0.0.0.0:8080
-    listen_addr: 0.0.0.0:443
+    listen_addr: 0.0.0.0:8080
 
     # Address to listen to /metrics, you may want
     # to keep this endpoint private to your internal
@@ -280,7 +282,7 @@ data:
     acme_email: "diogosilv30@gmail.com"
 
     # Domain name to request a TLS certificate for:
-    tls_letsencrypt_hostname: "vpn.dsilva.dev"
+    # tls_letsencrypt_hostname: "vpn.dsilva.dev"
 
     # Path to store certificates and metadata needed by
     # letsencrypt

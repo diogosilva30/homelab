@@ -7,14 +7,14 @@ metadata:
   name: tailscale-authkey
 spec:
   encryptedData:
-    authkey: AgAbEmIAhL+Cn296KL78LCPR5bYsdXfS/KzOTE00cM2Hm+kmMXtptwHOBdOclPg5Sp/u0kMfHD6C4B5otJoU7iL1Oou5afUFkQT5eTYcTcqNLppvC051LLBI210cQSWihjKQOmSiySf3/5oeygPiTZoV7FTKzXAhyw1jR6Bn4rQgkK9RNzbImR7iFmbO7qdtVTgtG5TCXCpf2tU9qr3OIJWKtFGP925RYk4dTOoed68y5Q5eVrxAySlj/dA4QyW6l0hW2Lxt7iHs+pMwds0RcHC1jbUNgut6rKpZE0ZNuZKD+4oHKm7P2BSra7DzpgrSYwdTAtTUDHoV37ADsPn3Hs2l1X5Y/qHruhkhUi3WILA/yu07JSFrpG9pfv+of29BEAGofRP/lDd5ABpBXbo+OKo/iyp1sU64B8VugQljicdBDdnNhv4fcAJOx5kcLHClSCbgmA+u9rNOR1Q/7L7AmkL51WoOYksdOLc9d62dgHP9vAqYkpxqdF53ni7TxwXHa7Q/VheTcQnbqKd84kQo32KBbjzLEwE/o3HDIukMwW736ZztDirZWQhXnotEthTuNkvRpNqGlHXPRGTQMEsNQKBuUozOI7CvAhUIpHocqYy0zkT2KbEnPEy5oJ5uno5ltq5veGTTN+KLmJD/H4yS/LkRMZIH9tPb6c1CspPQY0byAQxyLNHuhMTUUEYCKO/ZBLCxYdKcJFMTa/BRI4zOsJOHyGNE84Gc2FOCdx88EnQbxwkIOR9ft2zVSnqUzFg/+us=
+    authkey: AgCOrOef1hF0ZjtBEEdIfH2pVjpM7FaGRTdf+XWv0KlqpwyZLlMAYTFAKQDAcr9kFVYMEqmDF/hQzdckoJdi/wpD8FKheIKcxtD5zLTmKuCVtD4SayTec7TLgmfZFMU3cD5FgeUHCJ0RXeGhh6EIGgxChsFjDfkWwQRPMWDJR6fKuKkLTT9W56/msebUlhAm+w37rNKCR0eNviQ9mHRlsEVjiK/av3BiqHC0bw73s5A9TCUQfHkOn5bupZWngM795yqBxMtsFnBhHsi6WHZVGfKDPjWzzUmfUrOFVL20FXbdFwGqhKdWkaZzZHpobfs3/YlC0U0b1IAxUW0m9bAY/k9z4UKBPAgC8SuHn+I8PI4pDHR03w4gJ/uCMcj+UChf73eM5jOCspxCFaojrktNyGYtMQOHC5eRo9p1k1N64srGAga5292VnPDDohHTU7yTnTL3/bsRiR9D9wQf461xy7v4fpL+lWYS5zJCicZ6sBNZDoe588Est+ofvk+gL58OD4B+WdJG3MMCXa3GlmsBgHJAYLJ1HJqFW4c3WtQkZPo1n7mgx4hYV65m8ahjPXAkxd+jiu9jXT8KZ45eEvstn+aqmsAYm1MDjboe3C6lEJ6qdG0VdaYhoBuJIYt9gVlyIRaymvQKsKZP+NcD85AVsdtpROy7yOFM6W8qK4+jaECeys9J4MtkNYKiZZauXNTtXjKJArBPWlbwSB7v5fiaj3GfbFTJldwtbv0Br8TrIExjghiNY5neOYZ2XKP6+5Yt/Ng=
   template:
     metadata:
       annotations:
         sealedsecrets.bitnami.com/cluster-wide: "true"
       creationTimestamp: null
       name: tailscale-authkey
-    type: Opaque
+      type: Opaque
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -104,7 +104,7 @@ spec:
               value: "/var/lib/tailscale"
             - name: TS_EXTRA_ARGS
               value: >-
-                --login-server=http://vpn.dsilva.dev 
+                --login-server=https://vpn.dsilva.dev 
                 --advertise-exit-node
                 --advertise-routes=192.168.1.0/24 
                 --accept-dns=true
