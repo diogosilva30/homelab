@@ -7,7 +7,6 @@ helmGlobals:
 resources:
   - manifests/headscale.yaml
   - manifests/ingress.yaml
-  # - manifests/wireguard-peer.yaml
   - manifests/tailscale-client.yaml
 
 helmCharts:
@@ -24,6 +23,15 @@ replacements:
       name: headscale
       fieldPath: metadata.annotations.external_dns
     targets:
+      - select:
+          kind: Ingress
+          name: headscale-ui
+        fieldPaths:
+          - spec.rules.0.host
+        options:
+          # This keeps the "vpn." prefix
+          delimiter: "."
+          index: 1
       - select:
           kind: Ingress
           name: headscale
