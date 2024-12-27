@@ -82,6 +82,8 @@ spec:
       labels:
         app: tailscale
     spec:
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
       serviceAccountName: tailscale
       containers:
         - name: tailscale
@@ -106,7 +108,7 @@ spec:
               value: >-
                 --login-server=https://vpn.dsilva.dev 
                 --advertise-exit-node
-                --advertise-routes=192.168.1.0/24 
+                --advertise-routes=192.168.1.0/24,192.168.0.0/24,10.40.0.0/14
                 --accept-dns=true
                 --hostname=homelab
             - name: TS_NO_LOGS_NO_SUPPORT
