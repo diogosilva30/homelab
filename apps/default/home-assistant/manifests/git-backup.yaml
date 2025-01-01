@@ -1,0 +1,52 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: home-assistant-config-backup
+spec:
+  # Every day at 1AM
+  schedule: "0 1 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: git-backup
+              image: alpine/git:latest
+              env:
+                - name: GIT_TOKEN
+                  valueFrom:
+                    secretKeyRef:
+                      name: git-credentials
+                      key: GIT_TOKEN
+              command:
+                - /bin/sh
+                - -c
+                - |
+                  set -e
+                  cd /app/config
+                  git config --global user.name "Home Assistant Backup Bot"
+                  git config --global user.email "backupbot@lab.local"
+                  git init
+                  echo "Running backup at $(date)"
+                  if git remote | grep -q origin; then
+                    git remote set-url origin https://user:$(GIT_TOKEN)@github.com/diogosilva30/home-assistant.git
+                  else
+                    git remote add origin https://user:$(GIT_TOKEN)@github.com/diogosilva30/home-assistant.git
+                  fi
+                  git fetch origin
+                  git checkout main || git checkout -b main
+                  git add .
+                  if ! git diff-index --quiet HEAD; then
+                    git commit -m "Automated backup: $(date)"
+                    git push origin main
+                  else
+                    echo "No changes to commit"
+                  fi
+              volumeMounts:
+                - name: config
+                  mountPath: /app/config
+          restartPolicy: OnFailure
+          volumes:
+            - name: config
+              persistentVolumeClaim:
+                claimName: homeassistant-config

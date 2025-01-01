@@ -8,7 +8,7 @@ resources:
   - manifests/ingress.yaml
   - manifests/git-credentials.yaml
   - manifests/config-pvc.yaml
-  - manifests/git-sync.yaml
+  - manifests/git-backup.yaml
 
 helmCharts:
   - name: homeassistant
