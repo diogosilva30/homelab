@@ -1,0 +1,44 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: home-assistant-config-restore
+spec:
+  template:
+    spec:
+      containers:
+        - name: git-restore
+          image: alpine/git:latest
+          env:
+            - name: GIT_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: git-credentials
+                  key: GIT_TOKEN
+            # Replace this with the commit hash you want to restore to
+            # then apply the manifest
+            - name: COMMIT_HASH
+              value: xxxxxxx
+          command:
+            - /bin/sh
+            - -c
+            - |
+              set -e
+              cd /app/config
+              git init
+              if git remote | grep -q origin; then
+                git remote set-url origin https://user:$(GIT_TOKEN)@github.com/diogosilva30/home-assistant.git
+              else
+                git remote add origin https://user:$(GIT_TOKEN)@github.com/diogosilva30/home-assistant.git
+              fi
+              git fetch origin
+              git checkout main
+              git reset --hard $COMMIT_HASH
+              echo "Restored to commit $COMMIT_HASH"
+          volumeMounts:
+            - name: config
+              mountPath: /app/config
+      restartPolicy: OnFailure
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: homeassistant-config

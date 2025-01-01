@@ -9,6 +9,7 @@ resources:
   - manifests/git-credentials.yaml
   - manifests/config-pvc.yaml
   - manifests/git-backup.yaml
+  - manifests/git-restore.yaml
 
 helmCharts:
   - name: homeassistant
