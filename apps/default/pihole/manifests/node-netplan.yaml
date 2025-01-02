@@ -1,4 +1,4 @@
-# This file is not included as k8s workload manifest, but 
+# This file is not included as k8s workload manifest, but
 # kept here for reference. This file is used to configure
 # the network settings of the node where the pihole pod
 # is running. This makes sure the node is assigned
@@ -7,11 +7,11 @@
 # https://pimylifeup.com/ubuntu-20-04-static-ip-address/#staticipubuntu
 network:
   version: 2
-  renderer: networkd
+  renderer: NetworkManager
   ethernets:
     enp0s31f6:
       dhcp4: no
       addresses: [192.168.1.86/24]
       gateway4: 192.168.1.254
       nameservers:
-        addresses: [1.1.1.1,8.8.8.8]
+        addresses: [1.1.1.1, 8.8.8.8]
