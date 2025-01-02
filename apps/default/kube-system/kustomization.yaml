@@ -3,13 +3,3 @@ kind: Kustomization
 
 resources:
   - manifests/coredns-new.yaml
-
-patches:
-  # Add extra arg to traefik to allow ExternalName services
-  - target:
-      kind: Deployment
-      name: traefik
-    patch: |-
-      - op: add
-        path: /spec/template/spec/containers/0/args/-
-        value: "--providers.kubernetescrd.allowExternalNameServices=true"
