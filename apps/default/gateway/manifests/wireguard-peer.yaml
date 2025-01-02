@@ -36,6 +36,32 @@ spec:
       containers:
         - name: wireguard-peer
           image: ghcr.io/digitallyrefined/docker-wireguard-tunnel:v3
+          livenessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - |
+                  PEER_IP=$(wg show wg0 | grep 'endpoint:' | awk '{print $2}' | cut -d: -f1)
+                  if [ -z "$PEER_IP" ]; then
+                    exit 1
+                  fi
+                  nc -zvu $PEER_IP 51820 || exit 1
+            initialDelaySeconds: 10
+            periodSeconds: 30
+          readinessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - |
+                  PEER_IP=$(wg show wg0 | grep 'endpoint:' | awk '{print $2}' | cut -d: -f1)
+                  if [ -z "$PEER_IP" ]; then
+                    exit 1
+                  fi
+                  nc -zvu $PEER_IP 51820 || exit 1
+            initialDelaySeconds: 5
+            periodSeconds: 10
           env:
             # Use the FQDN of the headscale service here
             - name: SERVICES
