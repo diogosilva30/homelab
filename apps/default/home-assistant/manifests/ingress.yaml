@@ -23,6 +23,7 @@ metadata:
     gethomepage.dev/group: Home
     gethomepage.dev/icon: home-assistant
     gethomepage.dev/name: Home Assistant
+    gethomepage.dev/showStats: "false"
 spec:
   rules:
     # DNS will be replaced by kustomize
