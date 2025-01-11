@@ -47,7 +47,7 @@ config:
     - Networking:
         - Router Configuration:
             icon: router
-            href: http://192.168.1.254/index.asp
+            href: http://192.168.1.254/
             description: Manage and configure router
 
     - Quick Access:
