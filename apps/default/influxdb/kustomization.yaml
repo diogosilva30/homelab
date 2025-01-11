@@ -1,0 +1,32 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+helmGlobals:
+  chartHome: ../../charts
+
+resources:
+  - manifests/ingress.yaml
+
+helmCharts:
+  - name: influxdb
+    repo: oci://registry-1.docker.io/bitnamicharts/
+    namespace: influxdb
+    releaseName: influxdb
+    version: 6.5.0
+    valuesFile: values.yaml
+
+replacements:
+  - source:
+      kind: Ingress
+      name: influxdb
+      fieldPath: metadata.annotations.dns
+    targets:
+      - select:
+          kind: Ingress
+          name: influxdb
+        fieldPaths:
+          - spec.rules.0.host
+        options:
+          # This keeps the "influxdb." prefix
+          delimiter: "."
+          index: 1

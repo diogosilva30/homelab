@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: influxdb
+  annotations:
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/description: Time series database
+    gethomepage.dev/group: Monitoring
+    gethomepage.dev/icon: influxdb
+    gethomepage.dev/name: InfluxDB
+spec:
+  rules:
+    # DNS will be replaced by kustomize
+    - host: influxdb.$(DNS)
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: influxdb
+                port:
+                  name: http
