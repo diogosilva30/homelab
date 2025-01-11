@@ -38,6 +38,12 @@ config:
         columns: 4
 
   services:
+    - Monitoring:
+        - Energy Monitoring:
+            icon: shelly
+            href: http://192.168.1.215/
+            description: Shelly EM1 Energy Monitor
+
     - Networking:
         - Router Configuration:
             icon: router
