@@ -12,11 +12,11 @@ image:
 ## Authentication parameters
 ##
 auth:
-  enabled: true
+  enabled: false
   usePasswordFiles: false
   admin:
     username: admin
-    password: ""
+    password: "admin"
     token: ""
     org: primary
     bucket: primary
