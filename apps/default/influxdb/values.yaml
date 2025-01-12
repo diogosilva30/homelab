@@ -12,9 +12,10 @@ image:
 ## Authentication parameters
 ##
 auth:
-  enabled: false
+  enabled: true
   usePasswordFiles: false
   admin:
+    # Initial credentials. CHANGE IT!
     username: admin
     password: "admin"
     token: ""
