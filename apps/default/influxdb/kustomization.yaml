@@ -6,14 +6,16 @@ helmGlobals:
 
 resources:
   - manifests/ingress.yaml
+  - manifests/admin-credentials.yaml
 
 helmCharts:
-  - name: influxdb
-    repo: oci://registry-1.docker.io/bitnamicharts/
+  - name: influxdb2
+    repo: https://helm.influxdata.com/
     namespace: influxdb
     releaseName: influxdb
-    version: 6.5.0
+    version: 2.1.2
     valuesFile: values.yaml
+    includeCRDs: true
 
 replacements:
   - source:
