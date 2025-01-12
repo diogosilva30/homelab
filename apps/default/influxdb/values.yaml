@@ -96,9 +96,9 @@ env: {}
 ## Defaults indicated below
 ##
 adminUser:
-  organization: "influxdata"
+  organization: "lab.local"
   bucket: "default"
-  user: "admin"
+  user: "dsilva"
   retention_policy: "0s"
   ## The password and token are obtained from an existing secret. The expected
   ## keys are `admin-password` and `admin-token`.
