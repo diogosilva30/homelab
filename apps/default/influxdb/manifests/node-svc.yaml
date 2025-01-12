@@ -1,0 +1,16 @@
+# Create a service to expose the InfluxDB service
+# as nodePort
+kind: Service
+apiVersion: v1
+metadata:
+  name: influxdb-nodeport
+spec:
+  selector:
+    app.kubernetes.io/instance: influxdb
+    app.kubernetes.io/name: influxdb2
+  type: NodePort
+  ports:
+    - protocol: TCP
+      port: 8086
+      targetPort: 8086
+      nodePort: 30086

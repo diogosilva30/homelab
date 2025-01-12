@@ -7,6 +7,7 @@ helmGlobals:
 resources:
   - manifests/ingress.yaml
   - manifests/admin-credentials.yaml
+  - manifests/node-svc.yaml
 
 helmCharts:
   - name: influxdb2
