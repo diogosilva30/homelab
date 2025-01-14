@@ -25,10 +25,11 @@ RUN apk update && apk add --no-cache unzip helm=${HELM_VERSION} openssh docker n
 # Terraform and Terragrunt versions
 # Cannot upgrade Terraform to 1.7.x due to this error:
 # https://github.com/hashicorp/terraform/issues/34021#issuecomment-1752698805
-ARG TERRAFORM_VERSION=1.5.7 
+ARG TERRAFORM_VERSION=1.10.4
+
 
 # Install terraform
-RUN wget https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip \
+RUN curl -O https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip \
     && unzip terraform_${TERRAFORM_VERSION}_linux_amd64.zip \
     && mv terraform /usr/local/bin/terraform \
     && chmod +x /usr/local/bin/terraform

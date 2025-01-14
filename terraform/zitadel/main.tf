@@ -34,3 +34,12 @@ module "grafana" {
   org_id     = data.zitadel_org.default.id
   me_user_id = data.zitadel_human_user.me.id
 }
+
+// Setup bytestash application
+module "bytestash" {
+  source     = "./zitadel_bytestash"
+  project_id = zitadel_project.lab_project.id
+  org_id     = data.zitadel_org.default.id
+  me_user_id = data.zitadel_human_user.me.id
+}
+

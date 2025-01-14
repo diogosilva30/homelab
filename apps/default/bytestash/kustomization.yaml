@@ -5,15 +5,7 @@ helmGlobals:
   chartHome: ../../charts
 
 resources:
-  - manifests/ingress.yaml
-
-helmCharts:
-  - name: bytestash
-    repo: https://jordan-dalby.github.io/ByteStash/
-    namespace: bytestash
-    releaseName: bytestash
-    version: 0.1.1
-    valuesFile: values.yaml
+  - manifests/bytestash.yaml
 
 replacements:
   - source:

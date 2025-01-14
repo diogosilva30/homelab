@@ -1,0 +1,128 @@
+# PersistentVolumeClaim for storing data
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: bytestash-data
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi # Adjust the storage size as needed
+---
+# ConfigMap for non-sensitive environment variables
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: bytestash-config
+data:
+  BASE_PATH: ""
+  TOKEN_EXPIRY: "24h"
+  ALLOW_NEW_ACCOUNTS: "true"
+  DEBUG: "true"
+  DISABLE_ACCOUNTS: "false"
+  DISABLE_INTERNAL_ACCOUNTS: "false"
+  OIDC_ENABLED: "true"
+  OIDC_DISPLAY_NAME: "IDP (lab.local)"
+  OIDC_CLIENT_ID: "bytestash"
+  OIDC_ISSUER_URL: "http://idp.lab.local"
+  OIDC_SCOPES: "openid profile email"
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: bytestash
+  annotations:
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/description: Code snippets and notes
+    gethomepage.dev/group: Code
+    gethomepage.dev/icon: bytestash
+    gethomepage.dev/name: ByteStash
+spec:
+  rules:
+    # DNS will be replaced by kustomize
+    - host: bytestash.$(DNS)
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: bytestash
+                port:
+                  name: http
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  annotations:
+    sealedsecrets.bitnami.com/cluster-wide: "true"
+  name: bytestash-secrets
+spec:
+  encryptedData:
+    JWT_EXPIRY: AgAs3is+cMz1M0CiXBQ1zvj8damIiMcXvjfCTNFcNCz4fSWgbMAD6oaIh4dOlYsDtyb3z8EGGNWaBboH9kqS9wv1nwvCwIxnXYbHSMaPcc65ZUAbCWGQZCmpligISB3XuwkMyy/MVEZvU/5j8WWEZco/Jy7cX8iWwFIML8M6fNBkYM8JkEdBEkJgiI468wIhhH51/vast4ahHrBbthWy5hjeeWX/4fLNKYGCQARPo/J/zSVMoHSZaZ05ZBMUHra501xxgn0UGWravszdgzgu91hq51nvmYi6bl5DRfd9wwM7WKN0/rwBoTOgCIFCOnxwza/jypulRrflwslau3sWLnL51oM+a6DLCUx9NLQwrMGWrtFmePcIq9RalRlfxt8Iva8+dx+5ZsiUQH4Yo5ECL/J3R36bBu4NCz3vGsTibepbibVar/CWaDErptLEvkOS4/Q5+rGM7IrmZNrtWfx66RZxnpfr0da3TXc+e5uuZ3RWuWA/XupEkehG7rGz1B1QAEhreqdnfq6BLN6SCLLRsVA4jYraRLEk4axipWd55hCr5rRJiS3TS/DlfdZChL64QDyURdDxcdSixgoXw8xSNVvcfRvAWLY3MBzn6Nfx+6pqhCc4qTX1ncmDN5QVjN+fs1/E8OZFhwhKC+1lwAm0uFhc3uaRYjifCuX4wcJ46w8TxhmhuVnEBlbMAWdyz/xrq3wrZOs=
+    JWT_SECRET: AgB5MtPrIRKE31OyjvgU7RhIKGY8vQ9GbS3MKnxGve3Uf3NJAOfAcy8fhyBCfLAXfSPgaPJq9oLzUOKsuJetjIxsRE9eE5AWDaj/nu8lXvsN5JGMvZRACyBidl24VcWtphvguuE6mbwgkkWt/hBD8g+EJj1LtdPYpYKxIJpRCt/AUcDUvTV9GdGwjsnsb4JHFET5fewBvFr9eZO0SZMeWPfNiepMqotTcL4reTQcsrrUeSj7PjTtTyFCj/ivxCRTFrlGQ6CdzVFPcye5eTX5NlaIrUMZTxa1PIGZXA6rX7dR9G4Z94+yAr4wYzgOCOvYE3XtxJPIOJpVIDlhVmnAiVgyjzCPt+xp7OvAWmvuZmQNZHOTJXc7DBXyw0qF6vZWQdYT0hpuBhiJYz2xtIWVMXl3fVAieWJaPddQ6d1PWg4D/n7BJYXtB59TCx5NqmhL0VxMJx4whRYrgVrNcF0dzsvjy6AsvY5VpW2M1bbCxHaZnw3kQldCfqDgV/FLGl6V00P8t6/qTsP+6SZizKBqVRQixlo1AzXJZvSjS2mDAr7s/cri4vslC8TEm+Jhmqr0nY/ijhQWwFPILlw2zdJ7CXQPnmA1eO/CroRyoAC1CdplLW9xQ4vuYKOuEXHrSnZ1o5LprbjhuU8pLpg7u5oKhBu+ML9ShixptHd0SBPkFBqVdnCLYn0KJOKe6ZS+l/ydzN5Zes2dbgtwo9hvkdm4xB9PUWB5WPtp1FhDd5Pqr4E94E8Wg2GY
+    OIDC_CLIENT_SECRET: AgCbrzBc3EPeMCUuF4YNENDqfjor57bIYMPjDObTy/DcG98AHhQGXP+dCjUC4mr6IoN301Rz+bNOGos/r4lf5So7ezNziDo8bnK6cPhwJKKOXW+FzWYWGqZeZjyNqPug7WlFu7pWxAFQPal6UxQIFqJtrnzV0RA/iYhpWsJnOJ4Lun3lzp2Afj8S7c99to1yKIOkCEheRMFQKWEWhv42s7X7pRnETOzhyJMuz7I9jILasnhPsjUDMvBJ2sLkTgvylz7qEp/G7Vy5bwBAk/QczcuirlvmcUs5+kjKiCabOMdCMKmNDEGLPVMuSn3C/e69D/H87hCsdUNEBPVRdvHg6q1Idi73H2GjgLdsKfbEGxDFpb8cl/VjQT01hEWuoNcu0qFEDS/4mVhPnzNDOPiEpiN62CKtceg8ACzZpEQRdt1KCFwB2ybmSffebiABN8etg878O82LEq8WZa2xxpaehBXVPebwlIaZitatgO6ght/WrJvk+sF4JcBfutoZ7CqVYgkROx8G66kECxiUKqgzFb1699xyKbtXpAWakA2WSjwNm536/XT2Fa9d+aQcdmCO8DFidZo7bJvaWzHfMcQp6dosvBxGrkE5JmQKIqYxSI6uVXx7ViL7iC+iaPbj4QqvpS26M14y1Nk/YQapXF2otfF8j9LZqq20rJLpOZo7p6s75KjyBFvSegZWBe8HK4HnpcX3gB4q1NCJGtUC6KgXNCOfHOMQvxRWZ+p8vdIsQqFwCuoC4znT/0bhGZsCjc1c0CUtoub/UbkSNFNkT2ACnlfp
+  template:
+    metadata:
+      annotations:
+        sealedsecrets.bitnami.com/cluster-wide: "true"
+      name: bytestash-secrets
+    type: Opaque
+---
+# Deployment for the bytestash service
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bytestash
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bytestash
+  template:
+    metadata:
+      labels:
+        app: bytestash
+    spec:
+      containers:
+        - name: bytestash
+          image: ghcr.io/jordan-dalby/bytestash:1.5.6
+          ports:
+            - containerPort: 5000
+          volumeMounts:
+            - name: data-volume
+              mountPath: /data/snippets # Mount the PVC to this path
+          envFrom:
+            - configMapRef:
+                name: bytestash-config
+          env:
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: bytestash-secrets
+                  key: JWT_SECRET
+            - name: OIDC_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: bytestash-secrets
+                  key: OIDC_CLIENT_SECRET
+      volumes:
+        - name: data-volume
+          persistentVolumeClaim:
+            claimName: bytestash-data
+---
+# Service to expose the bytestash deployment
+apiVersion: v1
+kind: Service
+metadata:
+  name: bytestash
+spec:
+  selector:
+    app: bytestash
+  ports:
+    - name: http
+      protocol: TCP
+      port: 5005
+      targetPort: 5000
+  type: ClusterIP
