@@ -6,6 +6,10 @@ grafana:
     # https://grafana.com/grafana/plugins/grafana-piechart-panel
     - grafana-piechart-panel
 
+  persistence:
+    enabled: true
+    size: 8Gi
+
   # Inject the variables from the secret into the Grafana configuration
   # This secret was created with "ClusterSecret" in Terraform
   envFromSecret: grafana-oidc-credentials
