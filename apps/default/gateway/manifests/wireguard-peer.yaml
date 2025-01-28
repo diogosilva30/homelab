@@ -36,14 +36,14 @@ spec:
       containers:
         - name: wireguard-peer
           image: ghcr.io/digitallyrefined/docker-wireguard-tunnel:v3
-          # livenessProbe:
-          #   exec:
-          #     command:
-          #       - /bin/sh
-          #       - -c
-          #       - wget -q --spider http://vpn.dsilva.dev/swagger || exit 1
-          #   initialDelaySeconds: 10
-          #   periodSeconds: 30
+          livenessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - wget -q --spider http://vpn.dsilva.dev/swagger || exit 1
+            initialDelaySeconds: 10
+            periodSeconds: 30
           # readinessProbe:
           #   exec:
           #     command:
