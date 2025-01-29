@@ -9,7 +9,7 @@ metadata:
     gethomepage.dev/enabled: "true"
     gethomepage.dev/description: GitOps operations
     gethomepage.dev/group: Monitoring
-    gethomepage.dev/icon: argocd.png
+    gethomepage.dev/icon: argo-cd
     gethomepage.dev/name: ArgoCD
 spec:
   rules:
