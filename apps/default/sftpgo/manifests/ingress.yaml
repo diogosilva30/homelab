@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: sftpgo-web
+  annotations:
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/description: File transfer
+    gethomepage.dev/group: Home
+    gethomepage.dev/icon: sftpgo
+    gethomepage.dev/name: SFTP Go
+spec:
+  rules:
+    # DNS will be replaced by kustomize
+    - host: sftpgo.$(DNS)
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: sftpgo
+                port:
+                  name: http

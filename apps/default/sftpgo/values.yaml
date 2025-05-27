@@ -1,0 +1,15 @@
+# https://artifacthub.io/packages/helm/sftpgo/sftpgo#values-yaml
+
+config:
+  sftpd:
+    max_auth_tries: 5
+
+persistence:
+  enabled: true
+  pvc:
+    accessModes:
+      - ReadWriteOnce
+    resources:
+      requests:
+        storage: 5Gi
+    storageClassName: local-path
