@@ -38,7 +38,7 @@ spec:
               cpu: "500m"
           env:
             - name: WEBHOOK_URL
-              value: "http://n8n.n8n.svc.cluster.local:5678/webhook/ai-whatsapp"
+              value: "http://n8n.n8n.svc.cluster.local:5678/webhook-test/ai-whatsapp"
             - name: PORT
               value: "3000"
           volumeMounts:
