@@ -1,0 +1,147 @@
+# -- n8n log configurations
+log:
+  # -- The log output level. The available options are (from lowest to highest level) are error, warn, info, and debug. The default value is info. You can learn more about these options [here](https://docs.n8n.io/hosting/logging-monitoring/logging/#log-levels).
+  level: info
+  # -- Where to output logs to. Options are: `console` or `file` or both.
+  output:
+    - console
+
+  # -- Scopes to filter logs by. Nothing is filtered by default. Supported log scopes: concurrency, external-secrets, license, multi-main-setup, pubsub, redis, scaling, waiting-executions
+  scopes: []
+    # - concurrency
+    # - external-secrets
+    # - license
+    # - multi-main-setup
+    # - pubsub
+    # - redis
+    # - scaling
+    # - waiting-executions
+
+  file:
+    # -- Location of the log files inside `~/.n8n`. Only for `file` log output.
+    location: "logs/n8n.log"
+    # -- The maximum size (in MB) for each log file. By default, n8n uses 16 MB.
+    maxsize: 16
+    # -- Max number of log files to keep, or max number of days to keep logs for. Once the limit is reached, the oldest log files will be rotated out. If using days, append a `d` suffix. Only for `file` log output.
+    maxcount: "100"
+
+# -- Node configurations for built-in and external npm packages
+nodes:
+  # -- Enable built-in node functions (e.g., HTTP Request, Code Node, etc.)
+  builtin:
+    # -- Enable built-in modules for the Code node
+    enabled: false
+    # -- List of built-in Node.js modules to allow in the Code node (e.g., crypto, fs). Use '*' to allow all.
+    modules: []
+      # - crypto
+      # - fs
+  # -- External npm packages to install and allow in the Code node
+  external:
+    # -- Allow all external npm packages
+    allowAll: false
+    # -- Whether to reinstall missing packages. For more information, see https://docs.n8n.io/integrations/community-nodes/troubleshooting/#error-missing-packages
+    reinstallMissingPackages: false
+    # -- List of npm package names and versions (e.g., "package-name@1.0.0")
+    packages: []
+      # - "moment@2.29.4"
+      # - "lodash@4.17.21"
+  # -- Image for the init container to install npm packages
+  initContainer:
+    # -- Image for the init container to install npm packages
+    image:
+      # -- Repository for the init container to install npm packages
+      repository: node
+      # -- Tag for the init container to install npm packages
+      tag: "20-alpine"
+      # -- Pull policy for the init container to install npm packages
+      pullPolicy: IfNotPresent
+    # -- Resources for the init container
+    resources: {}
+      # requests:
+      #   cpu: 100m
+      #   memory: 128Mi
+      # limits:
+      #   cpu: 500m
+      #   memory: 256Mi
+
+
+# -- n8n database configurations
+db:
+  # -- Prefix to use for table names.
+  tablePrefix: ""
+  # -- Type of database to use. Valid values 'sqlite' | 'postgresdb'
+  type: postgresdb
+
+# -- Worker node configurations
+worker:
+  # -- Use `regular` to use main node as executer, or use `queue` to have worker nodes
+  mode: queue
+
+# -- The workflow history configuration
+workflowHistory:
+  # -- Whether to save workflow history versions
+  enabled: true
+  # -- Time (in hours) to keep workflow history versions for. To disable it, use -1 as a value
+  pruneTime: 336
+
+# -- For instance, the Schedule node uses it to know at what time the workflow should start. Find you timezone from here: https://momentjs.com/timezone/
+timezone: "Europe/Lisbon"
+
+# -- A locale identifier, compatible with the Accept-Language header. n8n doesn't support regional identifiers, such as de-AT.
+defaultLocale: en
+
+
+# -- The service monitor configuration. Please refer to the following link for more information: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api-reference/api.md
+serviceMonitor:
+  # -- When set true then use a ServiceMonitor to configure scraping
+  enabled: true
+  # -- The prefix for the metrics
+  metricsPrefix: "n8n_"
+
+  # -- Whether to include metrics
+  include:
+    # -- Whether to include default metrics
+    defaultMetrics: true
+    # -- Whether to include cache metrics
+    cacheMetrics: false
+    # -- Whether to include message event bus metrics
+    messageEventBusMetrics: false
+    # -- Whether to include workflow id label
+    workflowIdLabel: false
+    # -- Whether to include node type label
+    nodeTypeLabel: false
+    # -- Whether to include credential type label
+    credentialTypeLabel: false
+    # -- Whether to include api endpoints
+    apiEndpoints: false
+    # -- Whether to include api path label
+    apiPathLabel: false
+    # -- Whether to include api method label
+    apiMethodLabel: false
+    # -- Whether to include api status code label
+    apiStatusCodeLabel: false
+    # -- Whether to include queue metrics
+    queueMetrics: false
+
+
+
+
+# -- Bitnami Redis configuration
+redis:
+  enabled: true
+
+# -- External PostgreSQL parameters
+externalPostgresql:
+  # -- External PostgreSQL server host
+  host: "n8n-db-rw.postgresql.svc.cluster.local"
+  # -- External PostgreSQL username
+  username: "n8n"
+  # -- External PostgreSQL password
+  password: ""
+  # -- External PostgreSQL server port
+  port: 5432
+  # -- The name of the external PostgreSQL database. For more information: https://docs.n8n.io/hosting/configuration/supported-databases-settings/#required-permissions
+  database: n8n
+  # -- The name of an existing secret with PostgreSQL (must contain key `postgres-password`) and credentials.
+  # When it's set, the `externalPostgresql.password` parameter is ignored
+  existingSecret: "n8n-postgres-credentials"
