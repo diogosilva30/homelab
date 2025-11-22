@@ -71,6 +71,10 @@ db:
   # -- Type of database to use. Valid values 'sqlite' | 'postgresdb'
   type: postgresdb
 
+main:
+  # -- Base URL for the n8n editor UI
+  editorBaseUrl: "https://n8n.lab.local"
+
 # -- Worker node configurations
 worker:
   # -- Use `regular` to use main node as executer, or use `queue` to have worker nodes
