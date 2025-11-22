@@ -1,0 +1,60 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: whatsapp-proxy-pvc
+  namespace: n8n
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: whatsapp-proxy
+  namespace: n8n
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: whatsapp-proxy
+  template:
+    metadata:
+      labels:
+        app: whatsapp-proxy
+    spec:
+      containers:
+        - name: whatsapp-proxy
+          image: your-dockerhub-username/whatsapp-bot:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3000
+          env:
+            - name: WEBHOOK_URL
+              value: "http://n8n.n8n.svc.cluster.local:5678/webhook/ai-whatsapp"
+            - name: PORT
+              value: "3000"
+          volumeMounts:
+            - name: auth
+              mountPath: /app/auth_info # ⬅️ entire directory
+      volumes:
+        - name: auth
+          persistentVolumeClaim:
+            claimName: whatsapp-proxy-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: whatsapp-proxy
+  namespace: n8n
+spec:
+  selector:
+    app: whatsapp-proxy
+  ports:
+    - name: http
+      protocol: TCP
+      port: 3000
+      targetPort: 3000
+  type: ClusterIP
