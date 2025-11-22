@@ -8,6 +8,7 @@ metadata:
     gethomepage.dev/group: Automation
     gethomepage.dev/icon: n8n
     gethomepage.dev/name: n8n
+    traefik.ingress.kubernetes.io/redirect-entry-point: https
 spec:
   rules:
     # DNS will be replaced by kustomize

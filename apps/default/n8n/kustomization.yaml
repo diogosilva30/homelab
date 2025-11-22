@@ -5,8 +5,8 @@ helmGlobals:
   chartHome: ../../charts
 
 resources:
-  - manifests/db-credentials.yaml
   - manifests/ingress.yaml
+  - manifests/postgres-credentials.yaml
 
 helmCharts:
   - name: n8n

@@ -64,7 +64,6 @@ nodes:
       #   cpu: 500m
       #   memory: 256Mi
 
-
 # -- n8n database configurations
 db:
   # -- Prefix to use for table names.
@@ -89,7 +88,6 @@ timezone: "Europe/Lisbon"
 
 # -- A locale identifier, compatible with the Accept-Language header. n8n doesn't support regional identifiers, such as de-AT.
 defaultLocale: en
-
 
 # -- The service monitor configuration. Please refer to the following link for more information: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api-reference/api.md
 serviceMonitor:
@@ -122,9 +120,6 @@ serviceMonitor:
     apiStatusCodeLabel: false
     # -- Whether to include queue metrics
     queueMetrics: false
-
-
-
 
 # -- Bitnami Redis configuration
 redis:
