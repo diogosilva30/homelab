@@ -7,6 +7,7 @@ helmGlobals:
 resources:
   - manifests/ingress.yaml
   - manifests/postgres-credentials.yaml
+  - manifests/n8n-encryption-key.yaml
 
 helmCharts:
   - name: n8n

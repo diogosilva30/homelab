@@ -73,7 +73,7 @@ db:
 
 main:
   # -- Base URL for the n8n editor UI
-  editorBaseUrl: "https://n8n.lab.local"
+  editorBaseUrl: "http://localhost:5678/"
 
 # -- Worker node configurations
 worker:
@@ -86,6 +86,9 @@ workflowHistory:
   enabled: true
   # -- Time (in hours) to keep workflow history versions for. To disable it, use -1 as a value
   pruneTime: 336
+
+# -- The name of an existing secret with encryption key. The secret must contain a key with the name N8N_ENCRYPTION_KEY.
+existingEncryptionKeySecret: "n8n-encryption-key"
 
 # -- For instance, the Schedule node uses it to know at what time the workflow should start. Find you timezone from here: https://momentjs.com/timezone/
 timezone: "Europe/Lisbon"

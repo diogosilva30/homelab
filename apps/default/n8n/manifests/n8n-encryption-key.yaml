@@ -1,0 +1,18 @@
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  annotations:
+    sealedsecrets.bitnami.com/cluster-wide: "true"
+  creationTimestamp: null
+  name: n8n-encryption-key
+spec:
+  encryptedData:
+    N8N_ENCRYPTION_KEY: AgB+Zl3nd/J0F09eUimulJNkXhjVQcF92J7PyMEUMAdovjmNU0/fkIx14U5iAvUVVQuEIijnlqEmpeUIQCFVyNQ/8uLuuR1oz5P0ZZmANngy1YfV2jK+rhlRr4JnKwRLoVd1ItTt3bgX21YEEORn6kPU9wIuMUXGwpT3L4thU/MwVN4JLdVW8/Yo//iPwlYoi51XFK0eo9m/TRCOcIBbvxq9qopkwHTrK39X0kOOAFFSzvyxscc5A3t8HdMaaDdAdn6NiHNWSp/Fdmq+oppoaGfCVfukQNVVWvU3+xQ01Mn6+Mie/bP9c18msS/F/dcvn46o8X30YMAKLKQE3RkarLGFkehxhRYDtqTFl5AO/FFb+nvVDE+BBGZ2y3ig6tsd9/fA3S4i1EIdFedi7wNgBaPKv5nSq0x9zeZjvGc8JIDEkuVIO76A1kLj07uoY6pvU8mDmRyxnIJle7V8RF0DFoumFOxDG2odosohf/L/JR5PI93mUIJj2AdLE1YgKWI3yw14y8F4fMsOtVwedSIUMr0pkg9/H+HL/4Q6k64isZXzV17Zbgn8TzFHu/4v4/WPojVSpXj3mlXGJr1b/CAflfxIdRVjtexAb7J09TNjQTTJ6xBzGnsaUEU8+lH6tW8zbnEhHZoz2VbxtxbFx2AIh7YE5dJ/OSoidfQnE815IyJrxjQxMRd8ew4P57ziKqW4VU9uE/jdrPUM8dcoh9EwNjSorjYVyCAzxXqxDR6R2frFvTR95gJsRFy7tv/78A==
+  template:
+    metadata:
+      annotations:
+        sealedsecrets.bitnami.com/cluster-wide: "true"
+      creationTimestamp: null
+      name: n8n-encryption-key
+    type: Opaque
