@@ -25,7 +25,7 @@ spec:
     spec:
       containers:
         - name: whatsapp-proxy
-          image: spamz23/whatsapp-bot:latest
+          image: spamz23/whatsapp-proxy:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 3000
