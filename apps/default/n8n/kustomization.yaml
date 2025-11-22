@@ -27,7 +27,7 @@ replacements:
           kind: Ingress
           name: n8n
         fieldPaths:
-          - spec.rules.0.host
+          - spec.rules.1.host
         options:
           # This keeps the "n8n." prefix
           delimiter: "."

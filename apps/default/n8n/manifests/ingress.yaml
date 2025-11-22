@@ -11,7 +11,18 @@ metadata:
     traefik.ingress.kubernetes.io/redirect-entry-point: https
 spec:
   rules:
-    # DNS will be replaced by kustomize
+    # Using lab.com for OAuth compatibility
+    - host: n8n.lab.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: n8n
+                port:
+                  number: 5678
+    # Keeping the original rule for internal access
     - host: n8n.$(DNS)
       http:
         paths:

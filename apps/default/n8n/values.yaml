@@ -73,7 +73,7 @@ db:
 
 main:
   # -- Base URL for the n8n editor UI
-  editorBaseUrl: "http://localhost:5678/"
+  editorBaseUrl: "https://n8n.lab.com/"
 
 # -- Worker node configurations
 worker:
@@ -134,7 +134,7 @@ redis:
 
 webhook:
   mode: queue
-  url: "https://n8n-webhook.lab.local"
+  url: "https://n8n.lab.com"
 
 # -- External PostgreSQL parameters
 externalPostgresql:
