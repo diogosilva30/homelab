@@ -41,6 +41,8 @@ spec:
               value: "http://n8n-webhook.n8n.svc.cluster.local:5678/webhook/ai-whatsapp"
             - name: PORT
               value: "3000"
+            - name: LOG_LEVEL
+              value: "debug"
           volumeMounts:
             - name: auth
               mountPath: /app/auth_info # ⬅️ entire directory
