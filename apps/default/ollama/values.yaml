@@ -9,3 +9,9 @@ ollama:
       - mistral:7b
       - llama3.1:8b
       - phi3:mini
+
+persistentVolume:
+  enabled: true
+  size: 30Gi
+  accessModes:
+    - ReadWriteOnce

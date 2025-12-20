@@ -5,7 +5,7 @@ metadata:
   annotations:
     gethomepage.dev/enabled: "true"
     gethomepage.dev/description: Workflow automation platform
-    gethomepage.dev/group: Automation
+    gethomepage.dev/group: AI
     gethomepage.dev/icon: n8n
     gethomepage.dev/name: n8n
     traefik.ingress.kubernetes.io/redirect-entry-point: https
