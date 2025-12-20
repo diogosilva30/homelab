@@ -1,7 +1,7 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: dsilva.dev
+  name: diogo-silva.net
   # Deploy the certificate in the kube-system namespace, so it can be accessed by Traefik TLS Store
   namespace: kube-system
 spec:
@@ -9,7 +9,7 @@ spec:
   issuerRef:
     kind: ClusterIssuer
     name: letsencrypt-prod # Same as defined in the "cluster_issuer.yaml" file
-  commonName: dsilva.dev
+  commonName: diogo-silva.net
   dnsNames:
-    - dsilva.dev
-    - "*.dsilva.dev"
+    - diogo-silva.net
+    - "*.diogo-silva.net"

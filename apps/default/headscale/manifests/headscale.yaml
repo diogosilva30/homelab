@@ -87,7 +87,7 @@ data:
     #
     # https://myheadscale.example.com:443
     #
-    server_url: https://vpn.dsilva.dev:443
+    server_url: https://vpn.diogo-silva.net:443
 
     # Address to listen to / bind to on the server
     #
@@ -282,7 +282,7 @@ data:
     acme_email: "diogosilv30@gmail.com"
 
     # Domain name to request a TLS certificate for:
-    # tls_letsencrypt_hostname: "vpn.dsilva.dev"
+    # tls_letsencrypt_hostname: "vpn.diogo-silva.net"
 
     # Path to store certificates and metadata needed by
     # letsencrypt

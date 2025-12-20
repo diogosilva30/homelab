@@ -53,7 +53,7 @@ spec:
           commonAnnotations:
             dns: lab.local
             # Externally facing DNS from Cloudflare
-            external_dns: dsilva.dev
+            external_dns: diogo-silva.net
             name: LAB
             environment: LAB
             # Integration with external-dns
