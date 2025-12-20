@@ -21,7 +21,7 @@ replacements:
   - source:
       kind: Ingress
       name: n8n
-      fieldPath: metadata.annotations.dns
+      fieldPath: metadata.annotations.external_dns
     targets:
       - select:
           kind: Ingress

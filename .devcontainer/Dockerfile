@@ -13,12 +13,8 @@ ARG K8S_VERSION=1.29.12
 FROM alpine/k8s:${K8S_VERSION}
 
 ################################################################################
-
-# Helm version - https://github.com/helm/helm/releases
-ARG HELM_VERSION=3.16.3-r0
-
 # Update package repositories and install necessary dependencies
-RUN apk update && apk add --no-cache unzip helm=${HELM_VERSION} openssh docker nano
+RUN apk update && apk add --no-cache unzip helm openssh docker nano
 
 ################################################################################
 

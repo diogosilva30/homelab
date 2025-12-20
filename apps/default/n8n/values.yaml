@@ -73,7 +73,7 @@ db:
 
 main:
   # -- Base URL for the n8n editor UI
-  editorBaseUrl: "https://n8n.lab.com/"
+  editorBaseUrl: "https://n8n.diogo-silva.net/"
 
 # -- Worker node configurations
 worker:
@@ -134,7 +134,7 @@ redis:
 
 webhook:
   mode: queue
-  url: "https://n8n.lab.com"
+  url: "https://n8n.diogo-silva.net"
 
 # -- External PostgreSQL parameters
 externalPostgresql:
