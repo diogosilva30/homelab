@@ -1,0 +1,29 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - manifests/ingress.yaml
+
+helmCharts:
+  - name: ollama
+    repo: https://helm.otwld.com/
+    namespace: ollama
+    releaseName: ollama
+    version: 1.36.0
+    valuesFile: values.yaml
+
+replacements:
+  - source:
+      kind: Ingress
+      name: ollama
+      fieldPath: metadata.annotations.dns
+    targets:
+      - select:
+          kind: Ingress
+          name: ollama
+        fieldPaths:
+          - spec.rules.0.host
+        options:
+          # This keeps the "ollama." prefix
+          delimiter: "."
+          index: 1
