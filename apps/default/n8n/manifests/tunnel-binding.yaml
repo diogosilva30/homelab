@@ -4,6 +4,7 @@ metadata:
   name: n8n-tunnel-binding
 subjects:
   - name: n8n # name of service
+  - name: n8n-webhook # name of webhook service
 tunnelRef:
   kind: ClusterTunnel
   name: homelab-cluster-tunnel

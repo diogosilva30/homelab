@@ -135,7 +135,7 @@ redis:
 
 webhook:
   mode: queue
-  url: "https://n8n.diogo-silva.net"
+  url: "https://n8n-webhook.diogo-silva.net"
 
 # -- External PostgreSQL parameters
 externalPostgresql:
