@@ -132,6 +132,7 @@ serviceMonitor:
 redis:
   enabled: true
 
+
 webhook:
   mode: queue
   url: "https://n8n.diogo-silva.net"

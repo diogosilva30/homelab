@@ -9,7 +9,7 @@ variable "cloudflare_account_id" {
   default     = "8f2f7b46178f7faf8e69b9f3ef8282bd"
 }
 variable "domain" {
-  default = "dsilva.dev"
+  default = "diogo-silva.net"
   type    = string
 }
 variable "emails_for_access_vpn" {

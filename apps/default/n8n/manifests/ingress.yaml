@@ -14,10 +14,80 @@ spec:
     - host: n8n.$(DNS)
       http:
         paths:
-          - path: /
+          - backend:
+              service:
+                name: n8n-webhook
+                port:
+                  number: 5678
+            path: /webhook/
             pathType: Prefix
-            backend:
+          - backend:
               service:
                 name: n8n
                 port:
                   number: 5678
+            path: /webhook-test/
+            pathType: Prefix
+          - backend:
+              service:
+                name: n8n-webhook
+                port:
+                  number: 5678
+            path: /form/
+            pathType: Prefix
+          - backend:
+              service:
+                name: n8n
+                port:
+                  number: 5678
+            path: /form-test/
+            pathType: Prefix
+          - backend:
+              service:
+                name: n8n-mcp-webhook
+                port:
+                  number: 5678
+            path: /mcp/
+            pathType: Prefix
+          - backend:
+              service:
+                name: n8n
+                port:
+                  number: 5678
+            path: /mcp-test/
+            pathType: Prefix
+          - backend:
+              service:
+                name: n8n
+                port:
+                  number: 5678
+            path: /rest/oauth2-credential/callback
+            pathType: Prefix
+          - backend:
+              service:
+                name: n8n
+                port:
+                  number: 5678
+            path: /static/
+            pathType: Prefix
+          - backend:
+              service:
+                name: n8n-webhook
+                port:
+                  number: 5678
+            path: /webhook-waiting/
+            pathType: Prefix
+          - backend:
+              service:
+                name: n8n-webhook
+                port:
+                  number: 5678
+            path: /form-waiting/
+            pathType: Prefix
+          - backend:
+              service:
+                name: n8n
+                port:
+                  number: 5678
+            path: /
+            pathType: Prefix
