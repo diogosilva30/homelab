@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: anne-cat
+  name: whichcatisanne
   namespace: anne-cat
   labels:
     app: anne-cat

@@ -3,7 +3,7 @@ kind: TunnelBinding
 metadata:
   name: anne-cat-tunnel-binding
 subjects:
-  - name: anne-cat
+  - name: whichcatisanne
   # add more services here if needed (e.g., webhook)
 tunnelRef:
   kind: ClusterTunnel

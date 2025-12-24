@@ -19,6 +19,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: anne-cat
+                name: whichcatisanne
                 port:
                   number: 80
