@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: anne-cat
+  namespace: anne-cat
+  annotations:
+    traefik.ingress.kubernetes.io/redirect-entry-point: https
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/name: Anne Cat
+    gethomepage.dev/description: Cat personality reveal
+    gethomepage.dev/group: Fun
+    gethomepage.dev/icon: cat
+spec:
+  rules:
+    - host: whichcatisanne.$(DNS)
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: anne-cat
+                port:
+                  number: 80

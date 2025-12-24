@@ -1,0 +1,13 @@
+apiVersion: networking.cfargotunnel.com/v1alpha1
+kind: TunnelBinding
+metadata:
+  name: anne-cat-tunnel-binding
+subjects:
+  - name: anne-cat
+    # service that serves the site
+    kind: Service
+    namespace: anne-cat
+  # add more services here if needed (e.g., webhook)
+tunnelRef:
+  kind: ClusterTunnel
+  name: homelab-cluster-tunnel

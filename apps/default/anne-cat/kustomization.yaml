@@ -1,0 +1,24 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - manifests/deployment.yaml
+  - manifests/service.yaml
+  - manifests/ingress.yaml
+  - manifests/tunnel-binding.yaml
+
+replacements:
+  - source:
+      kind: Ingress
+      name: anne-cat
+      fieldPath: metadata.annotations.external_dns
+    targets:
+      - select:
+          kind: Ingress
+          name: anne-cat
+        fieldPaths:
+          - spec.rules.0.host
+        options:
+          # Keep the "whichcatisanne." prefix while replacing the domain
+          delimiter: "."
+          index: 1

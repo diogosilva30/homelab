@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: anne-cat
+  namespace: anne-cat
+  labels:
+    app: anne-cat
+spec:
+  type: ClusterIP
+  selector:
+    app: anne-cat
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
