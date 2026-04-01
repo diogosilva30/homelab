@@ -1,0 +1,80 @@
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  annotations:
+    sealedsecrets.bitnami.com/cluster-wide: "true"
+  creationTimestamp: null
+  name: academic-editorial-postgres-credentials
+spec:
+  encryptedData:
+    password: AgCg3hvgi7Y0G8LvTUmz3Stzyh8faSUwom6SjYpgy0hU6QbSSj1I9SfBKuf7MQVPfJevaCVHN6IBsFgedAxBSKAYu/d0sPEC1XcRXXNNKLYDonEZGwg7sBqoaFdcW76qvjyV/smGlbCxwt8d67dOGPCVtdzSVYpKjhDvnjoHtkStj9IY44AAcwin+yaGqcEelT2dlygK2QjrrE7u+kiTkAtRykVyc7UBeUsgINc+/rggHee+co3QaWwh4WFmHIl19WDRazT+RyOMitjMmr5pfZIcQFcyvahF3mAB97uhwvNxagCSzoHz7HrUcbI3WvliheJENG1SmWGMqhH+SwT5d+p6rRZnXw2Qek2JReQlGCYFSx67mAT+yM1H//89urC1/gPPJmAEM68Qa814/qnEdGe9hLRnK3V2/iYhiQLNeldGPT50+C1P8KHYymq5ax8X7CQsiJpv3qVgiPlfCjhNd8ND2GW7Y35qKgrwRwpl28woyNdzrdXcrjdxCzKZ0OWm2n9DW24/tOF7f55qd41msa3psGOERn1crDUORoV/Xc/axuOR3b7heLP1tRkwAYSQ5BTsuA/6V2/44tO3uetul8cvncFP9BPATDII0ESACK/fZED6QyoL2y9pl7eZhJHk994D6XfZ3e2rplNOvZ/pnNRv/xiwrdRK6NE8gHNWHc1UZWvlSJr66ZitBOHPRKb9ZTTj0FI0EP+jwf2HG/bIZkkvOfH9Z4y2LujMerdG72kAOg==
+    username: AgBjUFxTJ14en0iXFn9KO6Nyal+n2w9pvBxL9pVuDAtbcRglUEKXAYZAw095TVOpnFpN5zqKeQtBHNEbouUxrmUkZBaSGG64tmeZd+GJ9EEuBgmjXY5rZPtxwo6sNOlDoMDKge/w6PeoH5FCeDHVaYggFoto9oOZfXzUPavYogN4x+riSkRH52kfSAeJOzkaRYW80JzBMuZkctdSqbfW7xPO1Fj/4ia9+wkuRRMUaLZ0l273WmOAIQyShQQgFjQrOF5Xc67Hr+coIF8r35iclUM/FuQAFSY2Bz3YZPzxgB2eMBGC/xkeNmHUK66VWADk0q7VMNFpGbrawZp/D6iR/IEW62NqRIm8v2yH3rH1Qegkr8/hc7R+EATkCAjh9QLORzU8kClAZO9GyRjqTNNfKMChIpdAoctoPIHb2jbW465ZaYCutAazbjR8N0PrZi8ht7VqOzOh9bDoiA6WON14hHWzLOReUDkt9eAndqffCEKv4j/IcCQuvoDbwt9ArYJrE7mT2nppoEIv1usL5sJU/KFoH6TUIz9Bf99coccR/MKhJUJVgbwMTX1PzRYO+FNuVx6SdT5PZhmFEd8IJs1Tx0p72ACOR7lJMmQpQnuPNYOptPnEhyzaGtQOOp5iGOGSYbpu12KrUfkaGdLGvKbe3imG1k++E8WrpYGsVkDI3DvMNwfd8AIXm7RwZaLnzmQcbEV5gpYOhIw2
+  template:
+    metadata:
+      annotations:
+        sealedsecrets.bitnami.com/cluster-wide: "true"
+      creationTimestamp: null
+      name: academic-editorial-postgres-credentials
+    type: kubernetes.io/basic-auth
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  annotations:
+    sealedsecrets.bitnami.com/cluster-wide: "true"
+  creationTimestamp: null
+  name: academic-editorial-postgres-admin-credentials
+spec:
+  encryptedData:
+    password: AgCn9wwEzXXgdS8urV9jC2ABt1X9bBQGlGvD1GIAkBoDinIRgl3frVNRgxg7Hf6Vet9SqqwSQGts2kBsYXxPp6oARh+Q3AVTV57N+8nrywwq0z43gEZiD+H6h55HzTwu3Fjw+en40+tMmVLl/iJ9VxiG6HvtetoZUpnR19KoNlhXT5npPy1H1eIFHGcUVk80NhNqWG92dCj8iO2qxZPo0xJ1RF1whvIzmM7r/DaUD3z1BmLgxpg/4QVulPuo2kt43/4lHqtdtgIaX98BVphbvFqQrE8My20vXDjz/dt5lCAr14NCyqkDD0W5QIqlxyKeYwZ+rxZVlkgFhrTN45AxBzuuJQfAksvKQ0aIsz5yDBTolegAULjvkBTpjYFWdAn+nadGeUvZwAwky9URtFk0v/Q7wO2YVQyo+MVS9+PktaxCKTZcWE6hJs7plnlSwPwk9aOLMGLS/V6vJHrhV64nGL0NTiikGQzgesfjZxKDYDAfcFUNo2qU/xMhOQKsPWdm2BLtuGjV32xtVLAr1fD3W+AMtF3GSqLIMxQw0fQY5KNOl5pPdLgX6qwE1bn6YisOU6uOn14bfYgu35VSKACUUsBXEzN2DeZhSV/0oXcgfm9SIhfG/y3mWGGzKya1RQv9LdY24N4M9C6QL4qkvCUBL8dWojy5MUfJNYzAE3Z1tFElDsgLAdhBRyP67cRkBIuu8+fZKhbv7o6imwQiXmE06LMGLuvq4MGywaM5anuesv1wwA==
+    username: AgAXHhl3CoTzLi6ia1IZWDu9wSxoBG0IW8k4bqoT3s+EUELZ2Avt0aqQGDg6ycBXvNBp/lKx/kPtyQKXFjT5SwIn3T2kD8L1S6XZEH9upd5f3P5BiL9PfsxLTAB5FhKtDFezWMRucyaY+dMXacSXc2VcuFgcoWl8m+hyDjxpyPufZqAVN7OQ8d6ukPDPQus54rsSX2rPAJApkFq2bS7eF9DxYS0ZznPCY3od78U/9FUh8GWQ9VLXSiKrj/UamvKHPT+Ts/XPktOUiTlOgqFUkh8i7UAdKYs4D+OIz5RtjHP7evNZa2B1urLkPrfzwhTjXHdX9XX/XmjlznhgPE7ESmDPo0i91QEMWakSqljDMAN5cK15iHWUfcDysdwtijyy8OJI0M5QFVyXB/hYAkTuibi18n26vGuJzgYVUf8+J1uhBvWc3eCXBbP/8RpRg6omJ7vwDDpW8Lr1DdS54ZGtmqtXEj0LcgYeiXZk1L/JQIk51A9uoKoy+kStR25sKvNuWe2orkiNW0T4eEGqXI/EFXYFi+p0jP6Bvrq3Z6aD4dOETOVi1MhfmqaRYsiTt+xwu8YISa+o88tdXpvaR4f4pBM7duxHxUHSj5gquLMr35KHxJWBsbWXmf7mkPI7LxeowdU63J/iAJW56T3JhzCriK5FK47/fqbc29r1BBTfXA/yWsnj7g6nHECrezRHc2pHFRIMfGKjJdve2w==
+  template:
+    metadata:
+      annotations:
+        sealedsecrets.bitnami.com/cluster-wide: "true"
+      creationTimestamp: null
+      name: academic-editorial-postgres-admin-credentials
+    type: kubernetes.io/basic-auth
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: academic-editorial-db
+spec:
+  description: "Database for The Academic Editorial"
+  imageName: ghcr.io/cloudnative-pg/postgresql:17.2
+  instances: 1
+  startDelay: 300
+  stopDelay: 300
+  primaryUpdateStrategy: unsupervised
+
+  postgresql:
+    parameters:
+      shared_buffers: 256MB
+      pg_stat_statements.max: "10000"
+      pg_stat_statements.track: all
+      auto_explain.log_min_duration: "10s"
+    pg_hba:
+      - host all all all md5
+
+  bootstrap:
+    initdb:
+      database: academic_editorial
+      owner: ae_user
+      secret:
+        name: academic-editorial-postgres-credentials
+
+  enableSuperuserAccess: true
+  superuserSecret:
+    name: academic-editorial-postgres-admin-credentials
+
+  storage:
+    size: 4Gi
+
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "100m"
+    limits:
+      memory: "512Mi"

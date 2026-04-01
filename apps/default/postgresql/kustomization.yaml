@@ -7,6 +7,7 @@ helmGlobals:
 resources:
   - manifests/zitadel-db.yaml
   - manifests/n8n-db.yaml
+  - manifests/academic-editorial-db.yaml
 
 # Install Cloud Native PostgreSQL operator
 helmCharts:
