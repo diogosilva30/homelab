@@ -1,5 +1,5 @@
 # Based from https://argo-cd.readthedocs.io/en/stable/operator-manual/custom_tools/#adding-tools-via-volume-mounts
-# This patch changes the kustomize version to 5.2.1
+# This patch changes the kustomize version to 5.5.0
 # This enables support for OCI helm charts in kustomize
 # https://github.com/kubernetes-sigs/kustomize/pull/5167
 
@@ -9,6 +9,13 @@
   value:
     # We don't include "-" here because we already appending to the array above
     name: custom-tools
+    emptyDir: {}
+
+# 1b. Define an emptyDir volume for Helm registry config generated at runtime
+- op: add
+  path: /spec/template/spec/volumes/-
+  value:
+    name: helm-registry-config
     emptyDir: {}
 
 # 2. Use an init container to download/copy custom binaries into the emptyDir
@@ -27,6 +34,34 @@
       - mountPath: /custom-tools
         name: custom-tools
 
+# 2b. Login to GHCR and materialize Helm registry config for kustomize --enable-helm pulls
+- op: add
+  path: /spec/template/spec/initContainers/-
+  value:
+    name: create-helm-registry-config
+    image: quay.io/argoproj/argocd:v3.3.6
+    command: [sh, -c]
+    args:
+      - |
+        helm registry login ghcr.io \
+          --username "$GHCR_USERNAME" \
+          --password "$GHCR_PASSWORD" \
+          --registry-config /helm-auth/config.json
+    env:
+      - name: GHCR_USERNAME
+        valueFrom:
+          secretKeyRef:
+            name: ghcr-oci-repo
+            key: username
+      - name: GHCR_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            name: ghcr-oci-repo
+            key: password
+    volumeMounts:
+      - mountPath: /helm-auth
+        name: helm-registry-config
+
 # 3. Volume mount the custom binary to the bin directory (overriding the existing version)
 - op: add
   path: /spec/template/spec/containers/0/volumeMounts/- # "-" means append to the array
@@ -35,3 +70,16 @@
     mountPath: /usr/local/bin/kustomize
     name: custom-tools
     subPath: kustomize_5_5_0
+
+# 4. Mount Helm registry config and point Helm at it
+- op: add
+  path: /spec/template/spec/containers/0/volumeMounts/-
+  value:
+    mountPath: /helm-auth
+    name: helm-registry-config
+
+- op: add
+  path: /spec/template/spec/containers/0/env/-
+  value:
+    name: HELM_REGISTRY_CONFIG
+    value: /helm-auth/config.json
