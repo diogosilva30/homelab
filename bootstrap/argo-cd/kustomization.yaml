@@ -31,7 +31,7 @@ resources:
   - manifests/ingress.yaml
   - manifests/service-monitors.yaml
   # ArgoCD Image Updater
-  - https://raw.githubusercontent.com/argoproj-labs/argocd-image-updater/stable/manifests/install.yaml
+  - https://raw.githubusercontent.com/argoproj-labs/argocd-image-updater/stable/config/install.yaml
   # OCI registry credentials for GHCR
   - manifests/the-academic-editorial-oci-repo.yaml
 
