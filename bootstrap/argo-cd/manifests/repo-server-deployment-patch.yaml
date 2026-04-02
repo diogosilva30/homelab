@@ -46,7 +46,7 @@
         helm registry login ghcr.io \
           --username "$GHCR_USERNAME" \
           --password "$GHCR_PASSWORD" \
-          --registry-config /helm-auth/config.json
+          --registry-config /helm-auth/registry/config.json
     env:
       - name: GHCR_USERNAME
         valueFrom:
@@ -81,5 +81,11 @@
 - op: add
   path: /spec/template/spec/containers/0/env/-
   value:
+    name: HELM_CONFIG_HOME
+    value: /helm-auth
+
+- op: add
+  path: /spec/template/spec/containers/0/env/-
+  value:
     name: HELM_REGISTRY_CONFIG
-    value: /helm-auth/config.json
+    value: /helm-auth/registry/config.json
