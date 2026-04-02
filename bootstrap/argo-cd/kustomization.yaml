@@ -2,23 +2,22 @@ kind: Kustomization
 namespace: argocd
 apiVersion: kustomize.config.k8s.io/v1beta1
 
-
 configMapGenerator:
   - name: argocd-cm
     behavior: merge
     literals:
-    - |
-      repository.credentials=- passwordSecret:
-          key: git_token
-          name: autopilot-secret
-        url: https://github.com/
-        usernameSecret:
-          key: git_username
-          name: autopilot-secret
-    - kustomize.buildOptions=--enable-alpha-plugins --enable-helm --load-restrictor LoadRestrictionsNone
-    # Enable web terminal to exec into pods
-    # https://argo-cd.readthedocs.io/en/stable/operator-manual/web_based_terminal/
-    - exec.enabled="true"
+      - |
+        repository.credentials=- passwordSecret:
+            key: git_token
+            name: autopilot-secret
+          url: https://github.com/
+          usernameSecret:
+            key: git_username
+            name: autopilot-secret
+      - kustomize.buildOptions=--enable-alpha-plugins --enable-helm --load-restrictor LoadRestrictionsNone
+      # Enable web terminal to exec into pods
+      # https://argo-cd.readthedocs.io/en/stable/operator-manual/web_based_terminal/
+      - exec.enabled="true"
   - behavior: merge
     name: argocd-cmd-params-cm
     literals:
@@ -33,8 +32,8 @@ resources:
   - manifests/service-monitors.yaml
   # ArgoCD Image Updater
   - https://raw.githubusercontent.com/argoproj-labs/argocd-image-updater/stable/manifests/install.yaml
-
-
+  # OCI registry credentials for GHCR
+  - manifests/the-academic-editorial-oci-repo.yaml
 
 # Our dynamic environment-specific variables are injects in every manifests
 # as annotations (check `kustomize.commonAnnotations` in `project/default.yaml`).
@@ -67,5 +66,3 @@ patches:
       kind: Role
       name: argocd-server
     path: manifests/web-terminal-permission-patch.yaml
-
-
