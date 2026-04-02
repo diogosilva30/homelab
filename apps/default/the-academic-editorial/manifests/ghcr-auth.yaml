@@ -1,0 +1,20 @@
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  annotations:
+    sealedsecrets.bitnami.com/cluster-wide: "true"
+  creationTimestamp: null
+  name: ghcr-auth
+  namespace: the-academic-editorial
+spec:
+  encryptedData:
+    .dockerconfigjson: AgBt5v//8rqd7Kcx7EM/ZADm9TKwsNCmyaV2F+u/sILaFfimTKaymomtF5Vs8rhgk9Lti4k2CYFd0vhoKTzMAW5RfkURGHZLKx6ov2K8ryvf9H37CEB1JxW9gce+LCegfz3vK1E0kOP+lgQc8WNKCLc8Om413y2A6McyR+szu/8CuAVlNoZvTg/ITmhSRdSrbT6Ffh8NFERdG/0YljFFEuDHMLY17z9kccNvXL2+tM0CjhUaaso9smqJZl5I6rl8v4LLbntcHy44iqf8585zo5yjmCPxJcB/vLC9r8LWh//y0eG8YIXbZm5iUTIew2ZdWVfyCSePUd96u86BIqaZrzRtgqKztped/SbQZ60pTBdTeFM5OyBGRzaqlyQRjC9VxOYRoK6YSQOvQHMTMyPnqlM1VYhQbQBZLU3LetUKsOHlGXO9gxtbi7l4AmlP63L2MBI+kGiTXBbrgUPTD2do6mYB+pHQCA5g2A/gRx/v9t53R9N4G30EJsJ+0it0p2rw7qJhftxDunIQAbn+pEZq1EnZ4sVfrJjPKw4w9QABPCGS4rYe4t+baY6YpcOhjj8wfaWYo1nvdE9z4Bw6Zdym0Ft8rvW9ZxoQA/3O2nn5GLe5u3uAapMQHClL8Bbg0/9CheRKefTVtSENLg9IXbs/B2yvcTt9gc+U12IVJxCHmsXXbjavYgvptjaHXq+SJlsLOOa3to1+rfe2loxCIJEvKUckLoqf7heXxNPBBleu+8KSP/SWO32TMhniKjL1e7XjB1UOkOlsI90gzNAauIx8npv6kjpx7eJI0RkurSEUrCuK2zC6gUM1M35L+/ITIUjK1rWdLP4r2I/Uv5EMlmN/0LtpArqQvQ8bftsOvC+w4YS2v8CSBHonscUPopGEmEuXssq+GDqvIlk26/MYa7rpgH8VKZ03pL3dSxCy7HzpFZ67kk1PVpxgVxwHT7GeXOn1pTyCROux5pRq2ZHdYIxhDjNaznXLtx98Jw==
+  template:
+    metadata:
+      annotations:
+        sealedsecrets.bitnami.com/cluster-wide: "true"
+      creationTimestamp: null
+      name: ghcr-auth
+      namespace: the-academic-editorial
+    type: kubernetes.io/dockerconfigjson

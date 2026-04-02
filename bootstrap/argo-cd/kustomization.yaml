@@ -33,7 +33,7 @@ resources:
   # ArgoCD Image Updater
   - https://raw.githubusercontent.com/argoproj-labs/argocd-image-updater/stable/config/install.yaml
   # OCI registry credentials for GHCR
-  - manifests/the-academic-editorial-oci-repo.yaml
+  - manifests/ghcr-oci-repo.yaml
 
 # Our dynamic environment-specific variables are injects in every manifests
 # as annotations (check `kustomize.commonAnnotations` in `project/default.yaml`).
