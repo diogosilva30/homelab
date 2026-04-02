@@ -5,7 +5,7 @@ metadata:
   annotations:
     sealedsecrets.bitnami.com/cluster-wide: "true"
   creationTimestamp: null
-  name: oci-registry-ghcr
+  name: the-academic-editorial-oci-repo
   namespace: argocd
 spec:
   encryptedData:
@@ -22,6 +22,6 @@ spec:
       creationTimestamp: null
       labels:
         argocd.argoproj.io/secret-type: repository
-      name: oci-registry-ghcr
+      name: the-academic-editorial-oci-repo
       namespace: argocd
     type: Opaque
