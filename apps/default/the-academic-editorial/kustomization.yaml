@@ -1,0 +1,39 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+helmGlobals:
+  chartHome: ../../charts
+
+resources:
+  - manifests/ingress.yaml
+  - manifests/backend-env.yaml
+
+helmCharts:
+  - name: backend
+    repo: oci://ghcr.io/diogosilva30/the-academic-editorial/charts
+    namespace: the-academic-editorial
+    releaseName: backend
+    version: 1.2.0
+    valuesFile: backend-values.yaml
+
+  - name: frontend
+    repo: oci://ghcr.io/diogosilva30/the-academic-editorial/charts
+    namespace: the-academic-editorial
+    releaseName: frontend
+    version: 0.3.0
+    valuesFile: frontend-values.yaml
+
+replacements:
+  - source:
+      kind: Ingress
+      name: the-academic-editorial
+      fieldPath: metadata.annotations.dns
+    targets:
+      - select:
+          kind: Ingress
+          name: the-academic-editorial
+        fieldPaths:
+          - spec.rules.0.host
+        options:
+          delimiter: "."
+          index: 1

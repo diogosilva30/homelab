@@ -1,0 +1,42 @@
+image:
+  repository: ghcr.io/diogosilva30/the-academic-editorial/backend
+  tag: "1.2.0"
+  pullPolicy: IfNotPresent
+
+replicaCount: 1
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8000
+
+ingress:
+  enabled: false
+
+env:
+  - name: DJANGO_CONFIGURATION
+    value: "Prod"
+  - name: ALLOWED_HOSTS
+    value: "*"
+  - name: DATABASE_URL
+    valueFrom:
+      secretKeyRef:
+        name: academic-editorial-backend-env
+        key: DATABASE_URL
+  - name: DJANGO_SECRET_KEY
+    valueFrom:
+      secretKeyRef:
+        name: academic-editorial-backend-env
+        key: DJANGO_SECRET_KEY
+  - name: GEMINI_API_KEY
+    valueFrom:
+      secretKeyRef:
+        name: academic-editorial-backend-env
+        key: GEMINI_API_KEY
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    memory: 512Mi
