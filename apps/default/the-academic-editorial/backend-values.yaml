@@ -28,11 +28,6 @@ env:
       secretKeyRef:
         name: academic-editorial-backend-env
         key: DJANGO_SECRET_KEY
-  - name: GEMINI_API_KEY
-    valueFrom:
-      secretKeyRef:
-        name: academic-editorial-backend-env
-        key: GEMINI_API_KEY
 
 resources:
   requests:
