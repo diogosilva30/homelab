@@ -75,5 +75,13 @@ api:
     limits:
       memory: 512Mi
   probes:
-    liveness: {}
-    readiness: {}
+    readiness:
+      tcpSocket:
+        port: http
+      initialDelaySeconds: 15
+      periodSeconds: 10
+    liveness:
+      tcpSocket:
+        port: http
+      initialDelaySeconds: 30
+      periodSeconds: 15
