@@ -3,7 +3,8 @@ kind: TunnelBinding
 metadata:
   name: the-academic-editorial-tunnel-binding
 subjects:
-  - name: academic-editorial
+  - kind: Service
+    name: academic-editorial
 tunnelRef:
   kind: ClusterTunnel
   name: homelab-cluster-tunnel
