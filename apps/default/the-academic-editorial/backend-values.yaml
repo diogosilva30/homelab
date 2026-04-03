@@ -55,7 +55,10 @@ profiles:
     branch: main
     depth: 1
     syncIntervalSeconds: 300
-    mountPath: /profiles/official
+    # Path where the repo's profiles subtree is mounted in the backend container.
+    mountPath: /profiles
+    # Subdirectory inside the synced repository to expose at mountPath.
+    repoSubPath: profiles
     auth:
       enabled: true
       # Kubernetes Secret containing a git token (HTTPS auth).

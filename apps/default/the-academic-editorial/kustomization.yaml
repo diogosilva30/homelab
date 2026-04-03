@@ -17,7 +17,7 @@ helmCharts:
     repo: oci://ghcr.io/diogosilva30/the-academic-editorial/charts
     namespace: the-academic-editorial
     releaseName: backend
-    version: 1.2.0
+    version: 1.3.1
     valuesFile: backend-values.yaml
 
   - name: frontend
