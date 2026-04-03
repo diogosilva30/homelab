@@ -74,3 +74,6 @@ api:
       memory: 256Mi
     limits:
       memory: 512Mi
+  probes:
+    liveness: {}
+    readiness: {}
