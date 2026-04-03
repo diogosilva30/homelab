@@ -10,7 +10,7 @@ metadata:
     gethomepage.dev/name: The Academic Editorial
 spec:
   rules:
-    - host: editorial.$(DNS)
+    - host: academic-editorial.$(DNS)
       http:
         paths:
           - path: /api
