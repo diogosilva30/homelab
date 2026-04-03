@@ -1,0 +1,16 @@
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  creationTimestamp: null
+  name: gitsync-token
+spec:
+  encryptedData:
+    GH_TOKEN: AgCCG1V1lijLH7e4Dp/U5+suACyFGbhYpFjPSjdeHyu0Bfvqu39l5EXyM70+OvzZLRxg1RY7h6bvolBEoRmZocc6Kija2uhgqGSwIAr/nQvTHvPg5bFpjS+6EEhAkRMsw9ywyGFWa9P+WqTdUujp+uHVANcUVtopxjMchX7iB/yFRaELo0i1y7wXCxOOHrEewv0OjVA6heE9hXa6AjsPhnHxRQpmH0tt9P4qjRuKSdSqSEkh87t1iSUbzFLomJxHTYt07gvOAdeXQkZHSNg2eaJdD4BABiHOguQ4QXWG8CoWDbL1hfuNIeDZsujZM6midz7sufrq8vmmpE9FX4ql+dnBD/6FZ+9BiV8EqzfCcPwkt0DIX0s1gfzYPIie8WAOV/Vh8+UBTWH//Dfq+owz2NElwRqFo/LFj8hi1VVDGnzTQhtzKcEoCybTTQi85hwiZIQdcEEAqa/0wId0yoSF802Z7c4CZBYpD3/+/pI93GIaHUXX7rHGUdVvjssJ9O1Gs8IUPgxpzrZqSmb3aKdgIH8OqJpXv2QkUbupAiT9O32OYbUYREh5HerD/WF4P7vXPO4gC+EAc65fDmgkp4jAfPC04dMNoC0z8dtTW2T1iaLf2qdgithZwaH1nSZF4WFvSEODz2LvLGXiJdQf3YJkzEizdhdmqXjV9eJJhvFqz8kEpzRMqV9Q8nXLIbIvMQfkckWe1c8aYE62Vch//UKI9snDBbTbjEA+RuLBQ+5xRhfSKn5JAZZrMW0g
+  template:
+    metadata:
+      annotations:
+        sealedsecrets.bitnami.com/cluster-wide: "false"
+      creationTimestamp: null
+      name: gitsync-token
+    type: Opaque

@@ -1,0 +1,16 @@
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  creationTimestamp: null
+  name: gh-copilot-api-token
+spec:
+  encryptedData:
+    GH_TOKEN: AgC3bM9J5XnG8axokUNnfi9mJ2hXCZvF1hSXH25I59s97zSW02u9oN06CXeWKjdofANC0yuWVpwIEZQxwoMZwtCt0GCUHymzI3EcdmEh7fRdJpv6sAh3K1f7SOwYrjJVgfU0RrynbP7n+4L3cwjzfxC1mBp8Sbwt2tEYKCu57RKBLO/SsMrpry+sAXjKiM0JJQf4Jwalmr1F6Z+beCKWPewYjFoC/ay6J2XJ4nj23dJ+wkocyR22JwNSCtE47yhx3tADUSr4+ouAgc0exMRH1N3l/ax5kt2kZMnuKaxYLZXw37eoU3t5i9lJcgiu+kTUHWgtNpUC09RGhGVVnTkXclDyuTo6rzG1Xvf0/yx6NEhFa+59T/ry95Dvfo8cOrowpUkEZxf4GbMp6X7kg+QEd35csm93E1K5Wsp0Gu1OueDWboOL3IQiqVnM8wOf/vqoXD1L71b/ljzOXug9QFWZEWdZCs4ZNiZCxYvt/IOsl8KOEyeecm+B7eiVt3iTZGEKH5fyfblV9rPIvolOUPg5T2b0FdWiiakbLFfOY1Zf5iDkbbBlV9ugLdiM4GEeci8Lvj+BZ8Qgkz4BXeSI887Nz5Cqj0tb6dn8vvgPq73oagcgVMR+IPMUV0kQM1qM0CgZ8ALOiNoYljdC8a4O2f2QWN4028Nhux9RZK6YyiADQ2rR2HpK+kSYyexnbRwt1qvJIkK4UzxSBhkdwB52kEMneMER1m9Kjeb2ApKWUc0IHhdFfUya5BmKOBO8
+  template:
+    metadata:
+      annotations:
+        sealedsecrets.bitnami.com/cluster-wide: "false"
+      creationTimestamp: null
+      name: gh-copilot-api-token
+    type: Opaque

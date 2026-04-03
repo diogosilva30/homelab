@@ -29,6 +29,41 @@ env:
         name: academic-editorial-backend-env
         key: DJANGO_SECRET_KEY
 
+llmProxy:
+  enabled: true
+  image:
+    repository: ghcr.io/ericc-ch/copilot-api
+    tag: latest
+    pullPolicy: IfNotPresent
+  accountType: business
+  ghTokenSecret:
+    name: "gh-copilot-api-token"
+    key: GH_TOKEN
+  persistence:
+    enabled: true
+    size: 1Gi
+    storageClassName: ""
+
+profiles:
+  gitSync:
+    enabled: true
+    image:
+      repository: registry.k8s.io/git-sync/git-sync
+      tag: "v4.3.0"
+      pullPolicy: IfNotPresent
+    repo: "https://github.com/diogosilva30/the-academic-editorial.git"
+    branch: main
+    depth: 1
+    syncIntervalSeconds: 300
+    mountPath: /profiles/official
+    auth:
+      enabled: true
+      # Kubernetes Secret containing a git token (HTTPS auth).
+      tokenSecretName: gitsync-token
+      tokenKey: GH_TOKEN
+      # Username used with token auth (for GitHub, x-access-token is recommended).
+      username: x-access-token
+
 resources:
   requests:
     cpu: 100m
