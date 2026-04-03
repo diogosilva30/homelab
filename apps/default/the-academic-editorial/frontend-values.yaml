@@ -3,10 +3,10 @@ image:
   tag: "0.3.0"
   pullPolicy: IfNotPresent
 
-fullNameOverride: "academic-editorial"
 replicaCount: 1
 
 service:
+  name: academic-editorial
   type: ClusterIP
   port: 80
   targetPort: 80
