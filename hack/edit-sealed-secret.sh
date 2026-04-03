@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # Usage:
-#   ./hack/edit-sealed-secret.sh [--cluster] [--private-key private.key] [--cert sealed-secrets.crt] <path-to-sealed-secret.yaml>
+#   ./hack/edit-sealed-secret.sh [--cluster] [--private-key private.key] [--cert sealed-secrets.crt] [--name secret-name] [--namespace secret-namespace] [--cluster-wide true|false] <path-to-sealed-secret.yaml>
 #
 # Modes:
 # 1) Default (offline mode): decrypts SealedSecret using private key, edits it, and re-seals using a cert
@@ -10,13 +10,16 @@ set -euo pipefail
 # 2) Cluster mode (--cluster): reads live Secret from cluster, edits it, and re-seals via controller.
 
 usage() {
-  echo "Usage: $0 [--cluster] [--private-key private.key] [--cert sealed-secrets.crt] <path-to-sealed-secret.yaml>"
+  echo "Usage: $0 [--cluster] [--private-key private.key] [--cert sealed-secrets.crt] [--name secret-name] [--namespace secret-namespace] [--cluster-wide true|false] <path-to-sealed-secret.yaml>"
 }
 
 OFFLINE=true
 PRIVATE_KEY="private.key"
 CERT_FILE=""
 SEALED_FILE=""
+SECRET_NAME_OVERRIDE=""
+SECRET_NS_OVERRIDE=""
+CLUSTER_WIDE_OVERRIDE=""
 
 while [ "$#" -gt 0 ]; do
   case "$1" in
@@ -36,6 +39,18 @@ while [ "$#" -gt 0 ]; do
       CERT_FILE="${2:-}"
       shift 2
       ;;
+    --name)
+      SECRET_NAME_OVERRIDE="${2:-}"
+      shift 2
+      ;;
+    --namespace)
+      SECRET_NS_OVERRIDE="${2:-}"
+      shift 2
+      ;;
+    --cluster-wide)
+      CLUSTER_WIDE_OVERRIDE="${2:-}"
+      shift 2
+      ;;
     -h|--help)
       usage
       exit 0
@@ -52,9 +67,15 @@ if [ -z "$SEALED_FILE" ]; then
   exit 1
 fi
 
-if [ ! -f "$SEALED_FILE" ]; then
-  echo "Error: file '$SEALED_FILE' not found."
+if [ -n "$CLUSTER_WIDE_OVERRIDE" ] && [ "$CLUSTER_WIDE_OVERRIDE" != "true" ] && [ "$CLUSTER_WIDE_OVERRIDE" != "false" ]; then
+  echo "Error: --cluster-wide must be 'true' or 'false'."
   exit 1
+fi
+
+FILE_EXISTS=true
+if [ ! -f "$SEALED_FILE" ]; then
+  FILE_EXISTS=false
+  mkdir -p "$(dirname "$SEALED_FILE")"
 fi
 
 # Ensure required tools are available
@@ -80,9 +101,36 @@ fi
 CONTROLLER_NAME="sealed-secrets"
 CONTROLLER_NS="sealed-secrets"
 
-SECRET_NAME=$(yq '.metadata.name' "$SEALED_FILE")
-SECRET_NS=$(yq '.metadata.namespace // "default"' "$SEALED_FILE")
-CLUSTER_WIDE=$(yq '.metadata.annotations."sealedsecrets.bitnami.com/cluster-wide" // "false"' "$SEALED_FILE")
+if [ "$FILE_EXISTS" = true ]; then
+  SECRET_NAME=$(yq '.metadata.name' "$SEALED_FILE")
+  SECRET_NS=$(yq '.metadata.namespace // "default"' "$SEALED_FILE")
+  CLUSTER_WIDE=$(yq '.metadata.annotations."sealedsecrets.bitnami.com/cluster-wide" // "false"' "$SEALED_FILE")
+else
+  SECRET_NAME="${SECRET_NAME_OVERRIDE:-$(basename "$SEALED_FILE" .yaml)}"
+  SECRET_NS="${SECRET_NS_OVERRIDE:-default}"
+  CLUSTER_WIDE="${CLUSTER_WIDE_OVERRIDE:-false}"
+  echo "Creating new SealedSecret at '$SEALED_FILE' (name='$SECRET_NAME', namespace='$SECRET_NS', cluster-wide='$CLUSTER_WIDE')."
+fi
+
+if [ -n "$SECRET_NAME_OVERRIDE" ]; then
+  SECRET_NAME="$SECRET_NAME_OVERRIDE"
+fi
+if [ -n "$SECRET_NS_OVERRIDE" ]; then
+  SECRET_NS="$SECRET_NS_OVERRIDE"
+fi
+if [ -n "$CLUSTER_WIDE_OVERRIDE" ]; then
+  CLUSTER_WIDE="$CLUSTER_WIDE_OVERRIDE"
+fi
+
+if [ -z "$SECRET_NAME" ] || [ "$SECRET_NAME" = "null" ]; then
+  echo "Error: secret name is empty. Set --name or provide a file with metadata.name."
+  exit 1
+fi
+
+SEAL_EMPTY_FLAG=""
+if [ "$FILE_EXISTS" = false ]; then
+  SEAL_EMPTY_FLAG="--allow-empty-data"
+fi
 
 PLAIN_FILE=$(mktemp /tmp/secret-XXXXXX.yaml)
 TMP_CERT=""
@@ -101,38 +149,52 @@ cleanup() {
 }
 trap cleanup EXIT
 
-if [ "$OFFLINE" = true ]; then
-  echo "Decrypting SealedSecret offline using '$PRIVATE_KEY'..."
-  if ! kubeseal --recovery-unseal --recovery-private-key "$PRIVATE_KEY" < "$SEALED_FILE" > "$PLAIN_FILE"; then
-    echo "Primary key could not decrypt. Checking for rotated controller keys in cluster..."
-    if command -v kubectl &>/dev/null; then
-      TMP_KEY_DIR=$(mktemp -d /tmp/sealed-keys-XXXXXX)
-      KEY_LIST="$PRIVATE_KEY"
+if [ "$FILE_EXISTS" = true ]; then
+  if [ "$OFFLINE" = true ]; then
+    echo "Decrypting SealedSecret offline using '$PRIVATE_KEY'..."
+    if ! kubeseal --recovery-unseal --recovery-private-key "$PRIVATE_KEY" < "$SEALED_FILE" > "$PLAIN_FILE"; then
+      echo "Primary key could not decrypt. Checking for rotated controller keys in cluster..."
+      if command -v kubectl &>/dev/null; then
+        TMP_KEY_DIR=$(mktemp -d /tmp/sealed-keys-XXXXXX)
+        KEY_LIST="$PRIVATE_KEY"
 
-      while IFS= read -r secret_name; do
-        [ -z "$secret_name" ] && continue
-        out_file="$TMP_KEY_DIR/$secret_name.key"
-        if kubectl get secret "$secret_name" -n "$CONTROLLER_NS" -o jsonpath='{.data.tls\.key}' 2>/dev/null | base64 -d > "$out_file"; then
-          KEY_LIST="$KEY_LIST,$out_file"
+        while IFS= read -r secret_name; do
+          [ -z "$secret_name" ] && continue
+          out_file="$TMP_KEY_DIR/$secret_name.key"
+          if kubectl get secret "$secret_name" -n "$CONTROLLER_NS" -o jsonpath='{.data.tls\.key}' 2>/dev/null | base64 -d > "$out_file"; then
+            KEY_LIST="$KEY_LIST,$out_file"
+          fi
+        done < <(kubectl get secrets -n "$CONTROLLER_NS" -o jsonpath='{range .items[?(@.type=="kubernetes.io/tls")]}{.metadata.name}{"\n"}{end}' 2>/dev/null)
+
+        if ! kubeseal --recovery-unseal --recovery-private-key "$KEY_LIST" < "$SEALED_FILE" > "$PLAIN_FILE"; then
+          echo "Error: no available key could decrypt this SealedSecret."
+          echo "Try: $0 --cluster $SEALED_FILE"
+          exit 1
         fi
-      done < <(kubectl get secrets -n "$CONTROLLER_NS" -o jsonpath='{range .items[?(@.type=="kubernetes.io/tls")]}{.metadata.name}{"\n"}{end}' 2>/dev/null)
-
-      if ! kubeseal --recovery-unseal --recovery-private-key "$KEY_LIST" < "$SEALED_FILE" > "$PLAIN_FILE"; then
-        echo "Error: no available key could decrypt this SealedSecret."
-        echo "Try: $0 --cluster $SEALED_FILE"
+      else
+        echo "Error: no key could decrypt and kubectl is unavailable for rotated-key fallback."
+        echo "Try with the matching private key or use --cluster."
         exit 1
       fi
-    else
-      echo "Error: no key could decrypt and kubectl is unavailable for rotated-key fallback."
-      echo "Try with the matching private key or use --cluster."
-      exit 1
     fi
+  else
+    echo "Fetching live Secret '$SECRET_NAME' from namespace '$SECRET_NS'..."
+    kubectl get secret "$SECRET_NAME" -n "$SECRET_NS" -o yaml \
+      | yq 'del(.metadata.resourceVersion, .metadata.uid, .metadata.creationTimestamp, .metadata.managedFields, .metadata.ownerReferences, .metadata.annotations["kubectl.kubernetes.io/last-applied-configuration"])' \
+      > "$PLAIN_FILE"
   fi
 else
-  echo "Fetching live Secret '$SECRET_NAME' from namespace '$SECRET_NS'..."
-  kubectl get secret "$SECRET_NAME" -n "$SECRET_NS" -o yaml \
-    | yq 'del(.metadata.resourceVersion, .metadata.uid, .metadata.creationTimestamp, .metadata.managedFields, .metadata.ownerReferences, .metadata.annotations["kubectl.kubernetes.io/last-applied-configuration"])' \
-    > "$PLAIN_FILE"
+  cat > "$PLAIN_FILE" <<EOF
+apiVersion: v1
+kind: Secret
+metadata:
+  name: $SECRET_NAME
+  namespace: $SECRET_NS
+  annotations:
+    sealedsecrets.bitnami.com/cluster-wide: "$CLUSTER_WIDE"
+type: Opaque
+stringData: {}
+EOF
 fi
 
 # Convert base64 .data to plaintext .stringData for easy editing
@@ -172,13 +234,16 @@ fi
 
 CHECKSUM_AFTER=$(shasum "$PLAIN_FILE" | cut -d' ' -f1)
 if [ "$CHECKSUM_BEFORE" = "$CHECKSUM_AFTER" ]; then
-  echo "No changes detected. Aborting."
-  exit 0
+  if [ "$FILE_EXISTS" = true ]; then
+    echo "No changes detected. Aborting."
+    exit 0
+  fi
+  echo "No changes detected, creating new SealedSecret from template."
 fi
 
 echo "Re-sealing secret..."
 if [ -n "$CERT_FILE" ]; then
-  kubeseal --cert "$CERT_FILE" --format yaml < "$PLAIN_FILE" > "$SEALED_FILE"
+  kubeseal $SEAL_EMPTY_FLAG --cert "$CERT_FILE" --format yaml < "$PLAIN_FILE" > "$SEALED_FILE"
 elif [ "$OFFLINE" = true ]; then
   if ! command -v openssl &>/dev/null; then
     echo "Error: 'openssl' is required for offline reseal without --cert."
@@ -186,9 +251,10 @@ elif [ "$OFFLINE" = true ]; then
   fi
   TMP_CERT=$(mktemp /tmp/sealed-secrets-cert-XXXXXX.pem)
   openssl req -x509 -key "$PRIVATE_KEY" -out "$TMP_CERT" -days 3650 -subj "/CN=sealed-secrets-recovery" >/dev/null 2>&1
-  kubeseal --cert "$TMP_CERT" --format yaml < "$PLAIN_FILE" > "$SEALED_FILE"
+  kubeseal $SEAL_EMPTY_FLAG --cert "$TMP_CERT" --format yaml < "$PLAIN_FILE" > "$SEALED_FILE"
 else
   kubeseal \
+    $SEAL_EMPTY_FLAG \
     --controller-name "$CONTROLLER_NAME" \
     --controller-namespace "$CONTROLLER_NS" \
     --scope cluster-wide \
