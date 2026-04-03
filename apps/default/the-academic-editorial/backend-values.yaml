@@ -1,6 +1,6 @@
 image:
   repository: ghcr.io/diogosilva30/the-academic-editorial/backend
-  tag: "1.2.1"
+  tag: "1.3.0"
   pullPolicy: IfNotPresent
 
 replicaCount: 1
