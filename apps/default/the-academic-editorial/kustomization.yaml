@@ -2,7 +2,7 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 helmGlobals:
-  chartHome: ../../charts
+  chartHome: ../../charts/the-academic-editorial
 
 resources:
   - manifests/ingress.yaml
@@ -15,17 +15,13 @@ resources:
 
 helmCharts:
   - name: backend
-    repo: oci://ghcr.io/diogosilva30/the-academic-editorial/charts
     namespace: the-academic-editorial
     releaseName: backend
-    version: 1.3.2
     valuesFile: backend-values.yaml
 
   - name: frontend
-    repo: oci://ghcr.io/diogosilva30/the-academic-editorial/charts
     namespace: the-academic-editorial
     releaseName: frontend
-    version: 0.3.0
     valuesFile: frontend-values.yaml
 
 replacements:

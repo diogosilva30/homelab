@@ -1,0 +1,58 @@
+{{- if .Values.llmProxy.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "backend.llmProxyFullname" . }}
+  labels:
+    {{- include "backend.labels" . | nindent 4 }}
+    app.kubernetes.io/component: llm-proxy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "backend.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: llm-proxy
+  template:
+    metadata:
+      labels:
+        {{- include "backend.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: llm-proxy
+    spec:
+      containers:
+        - name: llm-proxy
+          image: "{{ .Values.llmProxy.image.repository }}:{{ .Values.llmProxy.image.tag }}"
+          imagePullPolicy: {{ .Values.llmProxy.image.pullPolicy }}
+          args:
+            - start
+            - --account-type
+            - {{ .Values.llmProxy.accountType | quote }}
+          env:
+            - name: GH_TOKEN
+              {{- if .Values.llmProxy.ghTokenSecret.name }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.llmProxy.ghTokenSecret.name | quote }}
+                  key: {{ .Values.llmProxy.ghTokenSecret.key | quote }}
+              {{- else }}
+              value: {{ .Values.llmProxy.ghToken | quote }}
+              {{- end }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.llmProxy.service.targetPort }}
+              protocol: TCP
+          {{- with .Values.llmProxy.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          volumeMounts:
+            - name: copilot-data
+              mountPath: /root/.local/share/copilot-api
+      volumes:
+        - name: copilot-data
+          {{- if .Values.llmProxy.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ include "backend.llmProxyFullname" . }}
+          {{- else }}
+          emptyDir: {}
+          {{- end }}
+{{- end }}

@@ -1,0 +1,6 @@
+apiVersion: v2
+name: backend
+description: Django API backend for The Academic Editorial
+type: application
+version: 1.3.2
+appVersion: "1.3.2"

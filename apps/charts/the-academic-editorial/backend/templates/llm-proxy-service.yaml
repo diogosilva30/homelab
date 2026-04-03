@@ -1,0 +1,19 @@
+{{- if .Values.llmProxy.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "backend.llmProxyFullname" . }}
+  labels:
+    {{- include "backend.labels" . | nindent 4 }}
+    app.kubernetes.io/component: llm-proxy
+spec:
+  type: {{ .Values.llmProxy.service.type }}
+  ports:
+    - port: {{ .Values.llmProxy.service.port }}
+      targetPort: {{ .Values.llmProxy.service.targetPort }}
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "backend.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: llm-proxy
+{{- end }}

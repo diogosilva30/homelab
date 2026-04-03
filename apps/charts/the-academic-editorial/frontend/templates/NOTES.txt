@@ -1,0 +1,17 @@
+Frontend deployed successfully!
+
+Service: {{ include "frontend.fullname" . }}
+Port:    {{ .Values.service.port }} → {{ .Values.service.targetPort }}
+
+{{- if .Values.ingress.enabled }}
+
+Ingress is enabled. Routes configured:
+{{- range .Values.ingress.hosts }}
+  {{- range .paths }}
+  - {{ .path }} → {{ include "frontend.fullname" $ }}:{{ $.Values.service.port }}
+  {{- end }}
+{{- end }}
+  - {{ .Values.ingress.backendService.path }} → {{ .Values.ingress.backendService.name }}:{{ .Values.ingress.backendService.port }}
+{{- end }}
+
+Health check endpoint: /health

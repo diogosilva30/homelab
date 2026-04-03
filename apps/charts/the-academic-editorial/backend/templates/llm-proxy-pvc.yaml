@@ -1,0 +1,18 @@
+{{- if and .Values.llmProxy.enabled .Values.llmProxy.persistence.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "backend.llmProxyFullname" . }}
+  labels:
+    {{- include "backend.labels" . | nindent 4 }}
+    app.kubernetes.io/component: llm-proxy
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.llmProxy.persistence.size }}
+  {{- if .Values.llmProxy.persistence.storageClassName }}
+  storageClassName: {{ .Values.llmProxy.persistence.storageClassName }}
+  {{- end }}
+{{- end }}

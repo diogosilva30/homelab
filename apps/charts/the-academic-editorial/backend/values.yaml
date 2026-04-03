@@ -1,0 +1,78 @@
+image:
+  repository: ""
+  tag: ""
+  pullPolicy: IfNotPresent
+
+replicaCount: 1
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8000
+
+api:
+  probes:
+    readiness: {}
+    liveness: {}
+  resources: {}
+
+ingress:
+  enabled: true
+  className: ""
+  annotations: {}
+  hosts:
+    - host: ""
+      paths:
+        - path: /api
+          pathType: Prefix
+
+env:
+  - name: DJANGO_CONFIGURATION
+    value: "Prod"
+  - name: ALLOWED_HOSTS
+    value: "*"
+
+llmProxy:
+  enabled: false
+  image:
+    repository: ghcr.io/ericc-ch/copilot-api
+    tag: latest
+    pullPolicy: IfNotPresent
+  accountType: business
+  # Prefer secretRef in production. Inline value is kept for local/dev convenience.
+  ghToken: ""
+  ghTokenSecret:
+    name: ""
+    key: GH_TOKEN
+  service:
+    type: ClusterIP
+    port: 4141
+    targetPort: 4141
+  resources: {}
+  persistence:
+    enabled: false
+    size: 1Gi
+    storageClassName: ""
+
+profiles:
+  gitSync:
+    enabled: false
+    image:
+      repository: registry.k8s.io/git-sync/git-sync
+      tag: "v4.3.0"
+      pullPolicy: IfNotPresent
+    repo: ""
+    branch: main
+    depth: 1
+    syncIntervalSeconds: 300
+    # Path where the repo's profiles subtree is mounted in the backend container.
+    mountPath: /profiles
+    # Subdirectory inside the synced repository to expose at mountPath.
+    repoSubPath: profiles
+    auth:
+      enabled: false
+      # Kubernetes Secret containing a git token (HTTPS auth).
+      tokenSecretName: ""
+      tokenKey: token
+      # Username used with token auth (for GitHub, x-access-token is recommended).
+      username: x-access-token

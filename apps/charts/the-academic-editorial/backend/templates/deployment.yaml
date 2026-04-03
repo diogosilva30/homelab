@@ -1,0 +1,112 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "backend.fullname" . }}
+  labels:
+    {{- include "backend.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "backend.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "backend.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- $gitSyncRoot := "/git-sync-root" }}
+      {{- $gitSyncLink := "repo" }}
+      {{- $profilesSubPath := printf "%s/%s" $gitSyncLink (.Values.profiles.gitSync.repoSubPath | default "profiles") }}
+      {{- if .Values.profiles.gitSync.enabled }}
+      initContainers:
+        - name: profiles-git-sync-init
+          image: "{{ .Values.profiles.gitSync.image.repository }}:{{ .Values.profiles.gitSync.image.tag }}"
+          imagePullPolicy: {{ .Values.profiles.gitSync.image.pullPolicy }}
+          {{- if .Values.profiles.gitSync.auth.enabled }}
+          env:
+            - name: GITSYNC_USERNAME
+              value: {{ .Values.profiles.gitSync.auth.username | quote }}
+            - name: GITSYNC_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ required "profiles.gitSync.auth.tokenSecretName is required when profiles.gitSync.auth.enabled=true" .Values.profiles.gitSync.auth.tokenSecretName | quote }}
+                  key: {{ .Values.profiles.gitSync.auth.tokenKey | quote }}
+          {{- end }}
+          args:
+            - --repo={{ required "profiles.gitSync.repo is required when profiles.gitSync.enabled=true" .Values.profiles.gitSync.repo }}
+            - --ref={{ .Values.profiles.gitSync.branch }}
+            - --depth={{ .Values.profiles.gitSync.depth }}
+            - --root={{ $gitSyncRoot }}
+            - --link={{ $gitSyncLink }}
+            - --one-time=true
+          volumeMounts:
+            - name: profiles-sync
+              mountPath: {{ $gitSyncRoot | quote }}
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.targetPort }}
+              protocol: TCP
+          {{- if or .Values.llmProxy.enabled .Values.env }}
+          env:
+            {{- if .Values.llmProxy.enabled }}
+            - name: DJANGO_LLM_BASE_URL
+              value: http://{{ include "backend.llmProxyFullname" . }}:{{ .Values.llmProxy.service.port }}/v1
+            {{- end }}
+            {{- if .Values.env }}
+            {{- toYaml .Values.env | nindent 12 }}
+            {{- end }}
+          {{- end }}
+          {{- with .Values.api.probes.readiness }}
+          readinessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.api.probes.liveness }}
+          livenessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.api.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- if .Values.profiles.gitSync.enabled }}
+          volumeMounts:
+            - name: profiles-sync
+              mountPath: {{ .Values.profiles.gitSync.mountPath | quote }}
+              subPath: {{ $profilesSubPath | quote }}
+              readOnly: true
+          {{- end }}
+        {{- if .Values.profiles.gitSync.enabled }}
+        - name: profiles-git-sync
+          image: "{{ .Values.profiles.gitSync.image.repository }}:{{ .Values.profiles.gitSync.image.tag }}"
+          imagePullPolicy: {{ .Values.profiles.gitSync.image.pullPolicy }}
+          {{- if .Values.profiles.gitSync.auth.enabled }}
+          env:
+            - name: GITSYNC_USERNAME
+              value: {{ .Values.profiles.gitSync.auth.username | quote }}
+            - name: GITSYNC_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ required "profiles.gitSync.auth.tokenSecretName is required when profiles.gitSync.auth.enabled=true" .Values.profiles.gitSync.auth.tokenSecretName | quote }}
+                  key: {{ .Values.profiles.gitSync.auth.tokenKey | quote }}
+          {{- end }}
+          args:
+            - --repo={{ required "profiles.gitSync.repo is required when profiles.gitSync.enabled=true" .Values.profiles.gitSync.repo }}
+            - --ref={{ .Values.profiles.gitSync.branch }}
+            - --depth={{ .Values.profiles.gitSync.depth }}
+            - --root={{ $gitSyncRoot }}
+            - --link={{ $gitSyncLink }}
+            - --period={{ .Values.profiles.gitSync.syncIntervalSeconds }}s
+          volumeMounts:
+            - name: profiles-sync
+              mountPath: {{ $gitSyncRoot | quote }}
+        {{- end }}
+      {{- if .Values.profiles.gitSync.enabled }}
+      volumes:
+        - name: profiles-sync
+          emptyDir: {}
+      {{- end }}

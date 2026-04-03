@@ -1,0 +1,31 @@
+image:
+  repository: ""
+  tag: ""
+  pullPolicy: IfNotPresent
+
+replicaCount: 1
+
+service:
+  name: ""
+  type: ClusterIP
+  port: 80
+  targetPort: 80
+
+ingress:
+  enabled: true
+  className: ""
+  annotations: {}
+  hosts:
+    - host: ""
+      paths:
+        - path: /
+          pathType: Prefix
+  backendService:
+    name: backend
+    port: 80
+    path: /api
+    pathType: Prefix
+
+env: []
+
+resources: {}

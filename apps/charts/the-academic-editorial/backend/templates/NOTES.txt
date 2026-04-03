@@ -1,0 +1,16 @@
+Backend deployed successfully!
+
+Service: {{ include "backend.fullname" . }}
+Port:    {{ .Values.service.port }} → {{ .Values.service.targetPort }}
+
+{{- if .Values.ingress.enabled }}
+
+Ingress is enabled. Routes configured:
+{{- range .Values.ingress.hosts }}
+  {{- range .paths }}
+  - {{ .path }} → {{ include "backend.fullname" $ }}:{{ $.Values.service.port }}
+  {{- end }}
+{{- end }}
+{{- end }}
+
+Health check endpoint: /ht/
