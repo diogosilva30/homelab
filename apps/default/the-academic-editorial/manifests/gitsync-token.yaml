@@ -2,15 +2,17 @@
 apiVersion: bitnami.com/v1alpha1
 kind: SealedSecret
 metadata:
+  annotations:
+    sealedsecrets.bitnami.com/cluster-wide: "true"
   creationTimestamp: null
   name: gitsync-token
 spec:
   encryptedData:
-    GH_TOKEN: AgCCG1V1lijLH7e4Dp/U5+suACyFGbhYpFjPSjdeHyu0Bfvqu39l5EXyM70+OvzZLRxg1RY7h6bvolBEoRmZocc6Kija2uhgqGSwIAr/nQvTHvPg5bFpjS+6EEhAkRMsw9ywyGFWa9P+WqTdUujp+uHVANcUVtopxjMchX7iB/yFRaELo0i1y7wXCxOOHrEewv0OjVA6heE9hXa6AjsPhnHxRQpmH0tt9P4qjRuKSdSqSEkh87t1iSUbzFLomJxHTYt07gvOAdeXQkZHSNg2eaJdD4BABiHOguQ4QXWG8CoWDbL1hfuNIeDZsujZM6midz7sufrq8vmmpE9FX4ql+dnBD/6FZ+9BiV8EqzfCcPwkt0DIX0s1gfzYPIie8WAOV/Vh8+UBTWH//Dfq+owz2NElwRqFo/LFj8hi1VVDGnzTQhtzKcEoCybTTQi85hwiZIQdcEEAqa/0wId0yoSF802Z7c4CZBYpD3/+/pI93GIaHUXX7rHGUdVvjssJ9O1Gs8IUPgxpzrZqSmb3aKdgIH8OqJpXv2QkUbupAiT9O32OYbUYREh5HerD/WF4P7vXPO4gC+EAc65fDmgkp4jAfPC04dMNoC0z8dtTW2T1iaLf2qdgithZwaH1nSZF4WFvSEODz2LvLGXiJdQf3YJkzEizdhdmqXjV9eJJhvFqz8kEpzRMqV9Q8nXLIbIvMQfkckWe1c8aYE62Vch//UKI9snDBbTbjEA+RuLBQ+5xRhfSKn5JAZZrMW0g
+    GH_TOKEN: AgCLuHUgGP4ZlCe6Z4Ir+UOZnnl3lB1GZz5SbufqoDjmKjLiRhPJJoe7lcbCwoLR/L13iktNP0yuxTW/d/4voxwXh0c2Ev4DQL+J4NMBoQDT59Rk07ujagbad4P1HRLqOl3CcI5bq6qUzRLCEt4Gv8go2ZZtJm+Avjss91sbjevq3LuHeoYgrwuBLi6aH4oDukq+UNY4wTFzq3fATCgefhKO4BCpFkuJiSeDzJuhHcEnoRAEKGP7fO5vsM94GGDEWFjmTrRqdNNFCJ1/oDs4HZLO3f8qP5iMriAxGFavv/TwYjO4xqDCy9WiqMPLOrecrvDbGM617ZouFXFvs/pf2prsZ+rFT2MGWoyHamArF4eVhvfqs8dt9ELDJNghNvj5v78nDMAlCAvpGkb2TdV11BzA/CrI9ck4kB1VPK6YBrKXV49ezCbuuZX0sXGHM9dBHlKYIIqge1bX8zpslN6Rb12UTXLJLegyMzgEbJeYqAGuz3NbEP7ivUuam+UAX/cljr+kAqbAfWKcBDl/vLyyn0TvlY/+RHoA43Xiu52P09gXzi9N4brdiZlbclF1oSfnGIK4lbFQDSu3S00XvlCP8HgUp8fjuYMp9IVeoushDWK2kkegdft8lMuly08E1/EPR9lpeJY8JsSIIvfLKx9d5B5PC+JHkiNnsgpYLTFb/hdbhZtBEssNEs77fnA+egJexOPdM3uP4Y+n7Umh/GVbIr1ncH390sfOU7V91Ph7ATw+SXxy+qFMO/vt
   template:
     metadata:
       annotations:
-        sealedsecrets.bitnami.com/cluster-wide: "false"
+        sealedsecrets.bitnami.com/cluster-wide: "true"
       creationTimestamp: null
       name: gitsync-token
     type: Opaque

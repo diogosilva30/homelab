@@ -179,9 +179,24 @@ if [ "$FILE_EXISTS" = true ]; then
     fi
   else
     echo "Fetching live Secret '$SECRET_NAME' from namespace '$SECRET_NS'..."
-    kubectl get secret "$SECRET_NAME" -n "$SECRET_NS" -o yaml \
+    if kubectl get secret "$SECRET_NAME" -n "$SECRET_NS" -o yaml \
       | yq 'del(.metadata.resourceVersion, .metadata.uid, .metadata.creationTimestamp, .metadata.managedFields, .metadata.ownerReferences, .metadata.annotations["kubectl.kubernetes.io/last-applied-configuration"])' \
-      > "$PLAIN_FILE"
+      > "$PLAIN_FILE"; then
+      :
+    else
+      echo "Live Secret not found; creating an editable template instead."
+      cat > "$PLAIN_FILE" <<EOF
+apiVersion: v1
+kind: Secret
+metadata:
+  name: $SECRET_NAME
+  namespace: $SECRET_NS
+  annotations:
+    sealedsecrets.bitnami.com/cluster-wide: "$CLUSTER_WIDE"
+type: Opaque
+stringData: {}
+EOF
+    fi
   fi
 else
   cat > "$PLAIN_FILE" <<EOF
