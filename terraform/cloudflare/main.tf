@@ -10,42 +10,30 @@ locals {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////
-// Protect Headscale /web admin page with cloudflare access
+// Protect The Academic Editorial with cloudflare access
 //////////////////////////////////////////////////////////////////////////////////////
 
-resource "cloudflare_record" "record_vpn" {
-  zone_id = local.cloudflare_zone_id
-  name    = "vpn"
-  content = var.gateway_address
-  type    = "CNAME"
-  ttl     = 1
-  proxied = true
-  comment = "Record to proxy to fly.io gateway machine"
-}
-
-
-# Allowing access to our list of emails only
-resource "cloudflare_zero_trust_access_policy" "vpn_admin_email_policy" {
+resource "cloudflare_zero_trust_access_policy" "editorial_email_policy" {
   account_id = var.cloudflare_account_id
-  name       = "VPN admin page email policy"
+  name       = "The Academic Editorial email policy"
   decision   = "allow"
 
   include {
-    email = var.emails_for_access_vpn
+    email = var.emails_for_access_editorial
   }
 
   require {
-    email = var.emails_for_access_vpn
+    email = var.emails_for_access_editorial
   }
 }
 
-resource "cloudflare_zero_trust_access_application" "headscale_protect" {
+resource "cloudflare_zero_trust_access_application" "editorial_protect" {
   zone_id          = local.cloudflare_zone_id
-  name             = "Headscale admin page protection"
-  domain           = format("%s.%s/%s", "vpn", var.domain, "web") // Final URL is "vpn.<zone>/web"
+  name             = "The Academic Editorial protection"
+  domain           = format("%s.%s", var.editorial_subdomain, var.domain)
   session_duration = "24h"
   policies = [
-    cloudflare_zero_trust_access_policy.vpn_admin_email_policy.id,
+    cloudflare_zero_trust_access_policy.editorial_email_policy.id,
   ]
 }
 

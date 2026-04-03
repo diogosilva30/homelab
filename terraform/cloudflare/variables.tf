@@ -12,11 +12,14 @@ variable "domain" {
   default = "diogo-silva.net"
   type    = string
 }
-variable "emails_for_access_vpn" {
+
+variable "emails_for_access_editorial" {
   type        = list(string)
-  description = "List of emails that can access VPN admin page."
+  description = "List of emails that can access The Academic Editorial app."
 }
-variable "gateway_address" {
-  type    = string
-  default = "gw-dsilva.fly.dev"
+
+variable "editorial_subdomain" {
+  type        = string
+  default     = "editorial"
+  description = "Subdomain used by The Academic Editorial app."
 }

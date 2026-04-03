@@ -67,9 +67,10 @@ profiles:
       # Username used with token auth (for GitHub, x-access-token is recommended).
       username: x-access-token
 
-resources:
-  requests:
-    cpu: 100m
-    memory: 256Mi
-  limits:
-    memory: 512Mi
+api:
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      memory: 512Mi
