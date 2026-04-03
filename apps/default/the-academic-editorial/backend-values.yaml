@@ -1,6 +1,6 @@
 image:
   repository: ghcr.io/diogosilva30/the-academic-editorial/backend
-  tag: "1.2.0"
+  tag: "1.2.1"
   pullPolicy: IfNotPresent
 
 replicaCount: 1
@@ -16,13 +16,13 @@ ingress:
 env:
   - name: DJANGO_CONFIGURATION
     value: "Prod"
-  - name: ALLOWED_HOSTS
+  - name: DJANGO_ALLOWED_HOSTS
     value: "*"
-  - name: DATABASE_URL
+  - name: DJANGO_DATABASE_URL
     valueFrom:
       secretKeyRef:
         name: academic-editorial-backend-env
-        key: DATABASE_URL
+        key: DJANGO_DATABASE_URL
   - name: DJANGO_SECRET_KEY
     valueFrom:
       secretKeyRef:

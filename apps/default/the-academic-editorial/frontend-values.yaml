@@ -13,6 +13,10 @@ service:
 ingress:
   enabled: false
 
+env:
+  - name: VITE_GOOGLE_CLIENT_ID
+    value: "134486215324-h9rkud4n4id0b9m2411a2dh77rnnnaa9.apps.googleusercontent.com"
+
 resources:
   requests:
     cpu: 50m
