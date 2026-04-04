@@ -63,3 +63,33 @@ app.kubernetes.io/name: {{ include "backend.name" . }}-llm-proxy
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
+{{/*
+Celery worker fullname.
+*/}}
+{{- define "backend.celeryWorkerFullname" -}}
+{{- printf "%s-celery-worker" (include "backend.fullname" .) | trunc 63 | trimSuffix "-" -}}
+{{- end }}
+
+{{/*
+Selector labels dedicated to celery worker pods.
+*/}}
+{{- define "backend.celeryWorkerSelectorLabels" -}}
+app.kubernetes.io/name: {{ include "backend.name" . }}-celery-worker
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+{{/*
+Redis fullname.
+*/}}
+{{- define "backend.redisFullname" -}}
+{{- printf "%s-redis" (include "backend.fullname" .) | trunc 63 | trimSuffix "-" -}}
+{{- end }}
+
+{{/*
+Selector labels dedicated to redis pods/services.
+*/}}
+{{- define "backend.redisSelectorLabels" -}}
+app.kubernetes.io/name: {{ include "backend.name" . }}-redis
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+

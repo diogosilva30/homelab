@@ -1,6 +1,6 @@
 image:
   repository: ghcr.io/diogosilva30/the-academic-editorial/backend
-  tag: "1.1.0"
+  tag: "1.2.0"
   pullPolicy: Always
 
 replicaCount: 1
@@ -85,3 +85,34 @@ api:
         port: http
       initialDelaySeconds: 30
       periodSeconds: 15
+
+celeryWorker:
+  enabled: true
+  replicaCount: 1
+  command:
+    - celery
+    - -A
+    - backend
+    - worker
+    - --loglevel=INFO
+    - --concurrency=2
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      memory: 512Mi
+
+redis:
+  enabled: true
+  service:
+    type: ClusterIP
+    port: 6379
+  brokerDb: 0
+  resultBackendDb: 1
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      memory: 128Mi

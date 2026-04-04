@@ -51,11 +51,17 @@ spec:
             - name: http
               containerPort: {{ .Values.service.targetPort }}
               protocol: TCP
-          {{- if or .Values.llmProxy.enabled .Values.env }}
+          {{- if or .Values.llmProxy.enabled .Values.redis.enabled .Values.env }}
           env:
             {{- if .Values.llmProxy.enabled }}
             - name: DJANGO_LLM_BASE_URL
               value: http://{{ include "backend.llmProxyFullname" . }}:{{ .Values.llmProxy.service.port }}/v1
+            {{- end }}
+            {{- if .Values.redis.enabled }}
+            - name: DJANGO_CELERY_BROKER_URL
+              value: redis://{{ include "backend.redisFullname" . }}:{{ .Values.redis.service.port }}/{{ .Values.redis.brokerDb }}
+            - name: DJANGO_CELERY_RESULT_BACKEND
+              value: redis://{{ include "backend.redisFullname" . }}:{{ .Values.redis.service.port }}/{{ .Values.redis.resultBackendDb }}
             {{- end }}
             {{- if .Values.env }}
             {{- toYaml .Values.env | nindent 12 }}

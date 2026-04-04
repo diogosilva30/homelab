@@ -32,6 +32,36 @@ env:
   - name: ALLOWED_HOSTS
     value: "*"
 
+celeryWorker:
+  enabled: false
+  replicaCount: 1
+  image:
+    repository: ""
+    tag: ""
+    pullPolicy: ""
+  command:
+    - celery
+    - -A
+    - backend
+    - worker
+    - --loglevel=INFO
+    - --concurrency=2
+  env: []
+  resources: {}
+
+redis:
+  enabled: false
+  image:
+    repository: redis
+    tag: "7.2-alpine"
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    port: 6379
+  brokerDb: 0
+  resultBackendDb: 1
+  resources: {}
+
 llmProxy:
   enabled: false
   image:

@@ -1,0 +1,47 @@
+{{- if .Values.celeryWorker.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "backend.celeryWorkerFullname" . }}
+  labels:
+    {{- include "backend.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.celeryWorker.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "backend.celeryWorkerSelectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "backend.celeryWorkerSelectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: celery-worker
+          image: "{{ .Values.celeryWorker.image.repository | default .Values.image.repository }}:{{ .Values.celeryWorker.image.tag | default .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.celeryWorker.image.pullPolicy | default .Values.image.pullPolicy }}
+          command:
+            {{- toYaml .Values.celeryWorker.command | nindent 12 }}
+          {{- if or .Values.llmProxy.enabled .Values.redis.enabled .Values.env .Values.celeryWorker.env }}
+          env:
+            {{- if .Values.llmProxy.enabled }}
+            - name: DJANGO_LLM_BASE_URL
+              value: http://{{ include "backend.llmProxyFullname" . }}:{{ .Values.llmProxy.service.port }}/v1
+            {{- end }}
+            {{- if .Values.redis.enabled }}
+            - name: DJANGO_CELERY_BROKER_URL
+              value: redis://{{ include "backend.redisFullname" . }}:{{ .Values.redis.service.port }}/{{ .Values.redis.brokerDb }}
+            - name: DJANGO_CELERY_RESULT_BACKEND
+              value: redis://{{ include "backend.redisFullname" . }}:{{ .Values.redis.service.port }}/{{ .Values.redis.resultBackendDb }}
+            {{- end }}
+            {{- if .Values.env }}
+            {{- toYaml .Values.env | nindent 12 }}
+            {{- end }}
+            {{- if .Values.celeryWorker.env }}
+            {{- toYaml .Values.celeryWorker.env | nindent 12 }}
+            {{- end }}
+          {{- end }}
+          {{- with .Values.celeryWorker.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+{{- end }}
