@@ -21,10 +21,6 @@ resource "cloudflare_zero_trust_access_policy" "editorial_email_policy" {
   include {
     email = var.emails_for_access_editorial
   }
-
-  require {
-    email = var.emails_for_access_editorial
-  }
 }
 
 resource "cloudflare_zero_trust_access_application" "editorial_protect" {
