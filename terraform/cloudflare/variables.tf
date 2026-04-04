@@ -20,6 +20,6 @@ variable "emails_for_access_editorial" {
 
 variable "editorial_subdomain" {
   type        = string
-  default     = "editorial"
+  default     = "academic-editorial"
   description = "Subdomain used by The Academic Editorial app."
 }
