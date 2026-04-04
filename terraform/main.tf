@@ -7,5 +7,7 @@ module "cloudflare" {
   emails_for_access_editorial = [
     "diogosilv30@gmail.com",
     "annehoekman1@gmail.com",
+    "bruno.miguel19995@gmail.com",
+    "jpmrs1313@gmail.com",
   ]
 }

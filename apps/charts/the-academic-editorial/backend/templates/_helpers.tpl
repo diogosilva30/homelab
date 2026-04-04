@@ -55,3 +55,11 @@ LLM proxy fullname.
 {{- printf "%s-llm-proxy" (include "backend.fullname" .) | trunc 63 | trimSuffix "-" -}}
 {{- end }}
 
+{{/*
+Selector labels dedicated to llm-proxy pods/services.
+*/}}
+{{- define "backend.llmProxySelectorLabels" -}}
+app.kubernetes.io/name: {{ include "backend.name" . }}-llm-proxy
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+

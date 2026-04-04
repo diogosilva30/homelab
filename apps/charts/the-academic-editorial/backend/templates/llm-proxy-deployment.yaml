@@ -10,12 +10,12 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      {{- include "backend.selectorLabels" . | nindent 6 }}
+      {{- include "backend.llmProxySelectorLabels" . | nindent 6 }}
       app.kubernetes.io/component: llm-proxy
   template:
     metadata:
       labels:
-        {{- include "backend.selectorLabels" . | nindent 8 }}
+        {{- include "backend.llmProxySelectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: llm-proxy
     spec:
       containers:
