@@ -44,4 +44,15 @@ spec:
           resources:
             {{- toYaml . | nindent 12 }}
           {{- end }}
+          {{- if .Values.media.persistence.enabled }}
+          volumeMounts:
+            - name: media-storage
+              mountPath: {{ .Values.media.persistence.mountPath | quote }}
+          {{- end }}
+      {{- if .Values.media.persistence.enabled }}
+      volumes:
+        - name: media-storage
+          persistentVolumeClaim:
+            claimName: {{ .Values.media.persistence.existingClaim | default (printf "%s-media" (include "backend.fullname" .)) }}
+      {{- end }}
 {{- end }}

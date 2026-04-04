@@ -1,0 +1,17 @@
+{{- if and .Values.media.persistence.enabled (not .Values.media.persistence.existingClaim) }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ printf "%s-media" (include "backend.fullname" .) }}
+  labels:
+    {{- include "backend.labels" . | nindent 4 }}
+spec:
+  accessModes:
+    {{- toYaml .Values.media.persistence.accessModes | nindent 4 }}
+  resources:
+    requests:
+      storage: {{ .Values.media.persistence.size }}
+  {{- if .Values.media.persistence.storageClassName }}
+  storageClassName: {{ .Values.media.persistence.storageClassName }}
+  {{- end }}
+{{- end }}

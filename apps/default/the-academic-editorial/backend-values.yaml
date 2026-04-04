@@ -29,6 +29,16 @@ env:
         name: academic-editorial-backend-env
         key: DJANGO_SECRET_KEY
 
+media:
+  persistence:
+    enabled: true
+    accessModes:
+      - ReadWriteMany
+    size: 5Gi
+    storageClassName: ""
+    existingClaim: ""
+    mountPath: /app/media
+
 llmProxy:
   enabled: true
   image:

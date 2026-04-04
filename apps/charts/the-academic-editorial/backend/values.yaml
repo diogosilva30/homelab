@@ -32,6 +32,18 @@ env:
   - name: ALLOWED_HOSTS
     value: "*"
 
+media:
+  persistence:
+    enabled: false
+    # Use RWX for API + Celery shared access in production.
+    accessModes:
+      - ReadWriteMany
+    size: 5Gi
+    storageClassName: ""
+    # Optional pre-created PVC name. When empty, the chart creates one.
+    existingClaim: ""
+    mountPath: /app/media
+
 celeryWorker:
   enabled: false
   replicaCount: 1

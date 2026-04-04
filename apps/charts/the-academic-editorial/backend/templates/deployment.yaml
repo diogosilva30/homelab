@@ -85,6 +85,14 @@ spec:
               mountPath: {{ .Values.profiles.gitSync.mountPath | quote }}
               subPath: {{ $profilesSubPath | quote }}
               readOnly: true
+            {{- if .Values.media.persistence.enabled }}
+            - name: media-storage
+              mountPath: {{ .Values.media.persistence.mountPath | quote }}
+            {{- end }}
+          {{- else if .Values.media.persistence.enabled }}
+          volumeMounts:
+            - name: media-storage
+              mountPath: {{ .Values.media.persistence.mountPath | quote }}
           {{- end }}
         {{- if .Values.profiles.gitSync.enabled }}
         - name: profiles-git-sync
@@ -111,8 +119,15 @@ spec:
             - name: profiles-sync
               mountPath: {{ $gitSyncRoot | quote }}
         {{- end }}
-      {{- if .Values.profiles.gitSync.enabled }}
+      {{- if or .Values.profiles.gitSync.enabled .Values.media.persistence.enabled }}
       volumes:
+        {{- if .Values.profiles.gitSync.enabled }}
         - name: profiles-sync
           emptyDir: {}
+        {{- end }}
+        {{- if .Values.media.persistence.enabled }}
+        - name: media-storage
+          persistentVolumeClaim:
+            claimName: {{ .Values.media.persistence.existingClaim | default (printf "%s-media" (include "backend.fullname" .)) }}
+        {{- end }}
       {{- end }}
