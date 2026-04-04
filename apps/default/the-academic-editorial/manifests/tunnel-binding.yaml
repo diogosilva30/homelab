@@ -4,7 +4,15 @@ metadata:
   name: the-academic-editorial-tunnel-binding
 subjects:
   - kind: Service
+    name: backend
+    spec:
+      fqdn: academic-editorial.$(DNS)
+      # Match API/media first so app requests do not hit the frontend nginx service.
+      path: "^/(api|media)(/.*)?$"
+  - kind: Service
     name: academic-editorial
+    spec:
+      fqdn: academic-editorial.$(DNS)
 tunnelRef:
   kind: ClusterTunnel
   name: homelab-cluster-tunnel

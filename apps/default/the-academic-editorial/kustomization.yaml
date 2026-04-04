@@ -38,6 +38,15 @@ replacements:
         options:
           delimiter: "."
           index: 1
+      - select:
+          kind: TunnelBinding
+          name: the-academic-editorial-tunnel-binding
+        fieldPaths:
+          - subjects.0.spec.fqdn
+          - subjects.1.spec.fqdn
+        options:
+          delimiter: "."
+          index: 1
 
 patches:
   - target:
