@@ -35,9 +35,10 @@ env:
 media:
   persistence:
     enabled: false
-    # Use RWX for API + Celery shared access in production.
+    # Default is RWO for broad compatibility (e.g. local-path).
+    # Set RWX only when your storage class supports it.
     accessModes:
-      - ReadWriteMany
+      - ReadWriteOnce
     size: 5Gi
     storageClassName: ""
     # Optional pre-created PVC name. When empty, the chart creates one.
