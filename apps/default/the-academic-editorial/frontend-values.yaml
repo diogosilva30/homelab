@@ -1,6 +1,6 @@
 image:
   repository: ghcr.io/diogosilva30/the-academic-editorial/frontend
-  tag: "1.8.0"
+  tag: "1.8.1"
   pullPolicy: Always
 
 replicaCount: 1
