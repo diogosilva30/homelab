@@ -27,6 +27,20 @@ spec:
                 name: backend
                 port:
                   number: 80
+          - path: /admin
+            pathType: Prefix
+            backend:
+              service:
+                name: backend
+                port:
+                  number: 80
+          - path: /static
+            pathType: Prefix
+            backend:
+              service:
+                name: backend
+                port:
+                  number: 80
           - path: /
             pathType: Prefix
             backend:

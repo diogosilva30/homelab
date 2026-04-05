@@ -7,8 +7,8 @@ subjects:
     name: backend
     spec:
       fqdn: academic-editorial.$(DNS)
-      # Match API/media/admin first so app requests do not hit the frontend nginx service.
-      path: "^/(api|media|admin)(/.*)?$"
+      # Match API/media/admin/static first so app requests do not hit the frontend nginx service.
+      path: "^/(api|media|admin|static)(/.*)?$"
   - kind: Service
     name: academic-editorial
     spec:
