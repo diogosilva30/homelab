@@ -1,6 +1,6 @@
 image:
   repository: ghcr.io/diogosilva30/the-academic-editorial/backend
-  tag: "1.14.0"
+  tag: "1.18.0"
   pullPolicy: Always
 
 replicaCount: 1
@@ -38,6 +38,8 @@ media:
     storageClassName: ""
     existingClaim: ""
     mountPath: /app/media
+    staticMountPath: /app/static
+    staticSubPath: static
 
 llmProxy:
   enabled: true
@@ -115,14 +117,28 @@ celeryWorker:
 
 redis:
   enabled: true
-  service:
-    type: ClusterIP
+  connection:
+    host: ""
     port: 6379
+  auth:
+    enabled: false
+  architecture: standalone
+  master:
+    persistence:
+      enabled: false
+    resources:
+      requests:
+        cpu: 50m
+        memory: 64Mi
+      limits:
+        memory: 128Mi
   brokerDb: 0
   resultBackendDb: 1
-  resources:
-    requests:
-      cpu: 50m
-      memory: 64Mi
-    limits:
-      memory: 128Mi
+
+nginxFiles:
+  enabled: true
+  replicaCount: 1
+  service:
+    type: ClusterIP
+    port: 80
+    targetPort: 8080

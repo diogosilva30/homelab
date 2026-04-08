@@ -59,9 +59,9 @@ spec:
             {{- end }}
             {{- if .Values.redis.enabled }}
             - name: DJANGO_CELERY_BROKER_URL
-              value: redis://{{ include "backend.redisFullname" . }}:{{ .Values.redis.service.port }}/{{ .Values.redis.brokerDb }}
+              value: redis://{{ include "backend.redisHost" . }}:{{ .Values.redis.connection.port }}/{{ .Values.redis.brokerDb }}
             - name: DJANGO_CELERY_RESULT_BACKEND
-              value: redis://{{ include "backend.redisFullname" . }}:{{ .Values.redis.service.port }}/{{ .Values.redis.resultBackendDb }}
+              value: redis://{{ include "backend.redisHost" . }}:{{ .Values.redis.connection.port }}/{{ .Values.redis.resultBackendDb }}
             {{- end }}
             {{- if .Values.env }}
             {{- toYaml .Values.env | nindent 12 }}
@@ -88,11 +88,17 @@ spec:
             {{- if .Values.media.persistence.enabled }}
             - name: media-storage
               mountPath: {{ .Values.media.persistence.mountPath | quote }}
+            - name: media-storage
+              mountPath: {{ .Values.media.persistence.staticMountPath | quote }}
+              subPath: {{ .Values.media.persistence.staticSubPath | quote }}
             {{- end }}
           {{- else if .Values.media.persistence.enabled }}
           volumeMounts:
             - name: media-storage
               mountPath: {{ .Values.media.persistence.mountPath | quote }}
+            - name: media-storage
+              mountPath: {{ .Values.media.persistence.staticMountPath | quote }}
+              subPath: {{ .Values.media.persistence.staticSubPath | quote }}
           {{- end }}
         {{- if .Values.profiles.gitSync.enabled }}
         - name: profiles-git-sync

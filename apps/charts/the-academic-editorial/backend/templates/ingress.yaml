@@ -25,9 +25,15 @@ spec:
             pathType: {{ .pathType }}
             backend:
               service:
+                {{- if and $.Values.nginxFiles.enabled (or (eq .path "/media") (eq .path "/static")) }}
+                name: {{ include "backend.nginxFilesFullname" $ }}
+                port:
+                  number: {{ $.Values.nginxFiles.service.port }}
+                {{- else }}
                 name: {{ include "backend.fullname" $ }}
                 port:
                   number: {{ $.Values.service.port }}
+                {{- end }}
           {{- end }}
     {{- end }}
 {{- end }}

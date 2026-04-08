@@ -1,0 +1,28 @@
+{{- if .Values.nginxFiles.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "backend.nginxFilesFullname" . }}-config
+  labels:
+    {{- include "backend.labels" . | nindent 4 }}
+data:
+  default.conf: |
+    server {
+      listen {{ .Values.nginxFiles.service.targetPort }};
+      server_name _;
+
+      location /media/ {
+        alias /srv/media/;
+        add_header Cache-Control "{{ .Values.nginxFiles.cacheControl }}";
+      }
+
+      location /static/ {
+        alias /srv/static/;
+        add_header Cache-Control "{{ .Values.nginxFiles.cacheControl }}";
+      }
+
+      location / {
+        return 404;
+      }
+    }
+{{- end }}

@@ -4,3 +4,8 @@ description: Django API backend for The Academic Editorial
 type: application
 version: 1.4.0
 appVersion: "1.4.0"
+dependencies:
+  - name: redis
+    version: 20.11.3
+    repository: oci://registry-1.docker.io/bitnamicharts
+    condition: redis.enabled

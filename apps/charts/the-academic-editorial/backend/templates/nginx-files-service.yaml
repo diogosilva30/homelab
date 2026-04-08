@@ -1,0 +1,17 @@
+{{- if .Values.nginxFiles.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "backend.nginxFilesFullname" . }}
+  labels:
+    {{- include "backend.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.nginxFiles.service.type }}
+  ports:
+    - port: {{ .Values.nginxFiles.service.port }}
+      targetPort: {{ .Values.nginxFiles.service.targetPort }}
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "backend.nginxFilesSelectorLabels" . | nindent 4 }}
+{{- end }}

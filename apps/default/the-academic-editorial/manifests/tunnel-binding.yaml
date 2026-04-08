@@ -7,8 +7,14 @@ subjects:
     name: backend
     spec:
       fqdn: academic-editorial.$(DNS)
-      # Match API/media/admin/static first so app requests do not hit the frontend nginx service.
-      path: "^/(api|media|admin|static)(/.*)?$"
+      # Route API/admin requests to Django backend service.
+      path: "^/(api|admin)(/.*)?$"
+  - kind: Service
+    name: backend-nginx-files
+    spec:
+      fqdn: academic-editorial.$(DNS)
+      # Route static/media paths to the dedicated files service.
+      path: "^/(media|static)(/.*)?$"
   - kind: Service
     name: academic-editorial
     spec:

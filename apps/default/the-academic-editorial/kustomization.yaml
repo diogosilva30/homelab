@@ -44,6 +44,7 @@ replacements:
         fieldPaths:
           - subjects.0.spec.fqdn
           - subjects.1.spec.fqdn
+          - subjects.2.spec.fqdn
         options:
           delimiter: "."
           index: 1

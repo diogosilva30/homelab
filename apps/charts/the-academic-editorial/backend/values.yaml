@@ -44,6 +44,8 @@ media:
     # Optional pre-created PVC name. When empty, the chart creates one.
     existingClaim: ""
     mountPath: /app/media
+    staticMountPath: /app/static
+    staticSubPath: static
 
 celeryWorker:
   enabled: false
@@ -64,22 +66,39 @@ celeryWorker:
 
 redis:
   enabled: false
-  image:
-    repository: redis
-    tag: "7.2-alpine"
-    pullPolicy: IfNotPresent
-  service:
-    type: ClusterIP
+  connection:
+    # Optional explicit Redis hostname override.
+    host: ""
     port: 6379
+  auth:
+    enabled: false
+  architecture: standalone
+  master:
+    persistence:
+      enabled: false
   brokerDb: 0
   resultBackendDb: 1
   resources: {}
 
+nginxFiles:
+  enabled: false
+  replicaCount: 1
+  image:
+    repository: nginx
+    tag: "1.27-alpine"
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    port: 80
+    targetPort: 8080
+  resources: {}
+  cacheControl: public, max-age=31536000, immutable
+
 llmProxy:
   enabled: false
   image:
-    repository: ghcr.io/ericc-ch/copilot-api
-    tag: latest
+    repository: ghcr.io/caozhiyuan/copilot-api
+    tag: v1.5.5
     pullPolicy: IfNotPresent
   accountType: business
   # Prefer secretRef in production. Inline value is kept for local/dev convenience.

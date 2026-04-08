@@ -1,0 +1,47 @@
+{{- if and .Values.nginxFiles.enabled .Values.media.persistence.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "backend.nginxFilesFullname" . }}
+  labels:
+    {{- include "backend.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.nginxFiles.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "backend.nginxFilesSelectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "backend.nginxFilesSelectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: nginx-files
+          image: "{{ .Values.nginxFiles.image.repository }}:{{ .Values.nginxFiles.image.tag }}"
+          imagePullPolicy: {{ .Values.nginxFiles.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.nginxFiles.service.targetPort }}
+              protocol: TCP
+          volumeMounts:
+            - name: media-storage
+              mountPath: /srv/media
+            - name: media-storage
+              mountPath: /srv/static
+              subPath: {{ .Values.media.persistence.staticSubPath | quote }}
+            - name: nginx-config
+              mountPath: /etc/nginx/conf.d/default.conf
+              subPath: default.conf
+              readOnly: true
+          {{- with .Values.nginxFiles.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+      volumes:
+        - name: media-storage
+          persistentVolumeClaim:
+            claimName: {{ .Values.media.persistence.existingClaim | default (printf "%s-media" (include "backend.fullname" .)) }}
+        - name: nginx-config
+          configMap:
+            name: {{ include "backend.nginxFilesFullname" . }}-config
+{{- end }}

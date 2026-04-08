@@ -24,7 +24,7 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: backend
+                name: backend-nginx-files
                 port:
                   number: 80
           - path: /admin
@@ -38,7 +38,7 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: backend
+                name: backend-nginx-files
                 port:
                   number: 80
           - path: /
