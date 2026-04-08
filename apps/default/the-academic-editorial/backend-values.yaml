@@ -44,7 +44,7 @@ media:
 llmProxy:
   enabled: true
   image:
-    repository: ghcr.io/ericc-ch/copilot-api
+    repository: ghcr.io/caozhiyuan/copilot-api
     tag: latest
     pullPolicy: IfNotPresent
   accountType: business
