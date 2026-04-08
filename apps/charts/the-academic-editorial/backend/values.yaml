@@ -66,6 +66,10 @@ celeryWorker:
 
 redis:
   enabled: false
+  image:
+    registry: docker.io
+    repository: bitnami/redis
+    tag: latest
   connection:
     # Optional explicit Redis hostname override.
     host: ""

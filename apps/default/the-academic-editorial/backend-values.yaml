@@ -117,6 +117,10 @@ celeryWorker:
 
 redis:
   enabled: true
+  image:
+    registry: docker.io
+    repository: bitnami/redis
+    tag: latest
   connection:
     host: ""
     port: 6379
