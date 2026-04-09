@@ -40,6 +40,10 @@ spec:
             {{- toYaml .Values.celeryWorker.env | nindent 12 }}
             {{- end }}
           {{- end }}
+          {{- if .Values.envFrom }}
+          envFrom:
+            {{- toYaml .Values.envFrom | nindent 12 }}
+          {{- end }}
           {{- with .Values.celeryWorker.resources }}
           resources:
             {{- toYaml . | nindent 12 }}

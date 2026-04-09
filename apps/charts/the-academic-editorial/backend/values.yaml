@@ -32,6 +32,11 @@ env:
   - name: ALLOWED_HOSTS
     value: "*"
 
+# Optional env imports, for example:
+# - secretRef:
+#     name: my-backend-env
+envFrom: []
+
 media:
   persistence:
     enabled: false

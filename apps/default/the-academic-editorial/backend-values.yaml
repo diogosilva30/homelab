@@ -18,16 +18,10 @@ env:
     value: "Prod"
   - name: DJANGO_ALLOWED_HOSTS
     value: "*"
-  - name: DJANGO_DATABASE_URL
-    valueFrom:
-      secretKeyRef:
-        name: academic-editorial-backend-env
-        key: DJANGO_DATABASE_URL
-  - name: DJANGO_SECRET_KEY
-    valueFrom:
-      secretKeyRef:
-        name: academic-editorial-backend-env
-        key: DJANGO_SECRET_KEY
+
+envFrom:
+  - secretRef:
+      name: academic-editorial-backend-env
 
 media:
   persistence:

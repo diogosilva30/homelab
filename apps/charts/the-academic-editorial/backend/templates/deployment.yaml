@@ -67,6 +67,10 @@ spec:
             {{- toYaml .Values.env | nindent 12 }}
             {{- end }}
           {{- end }}
+          {{- if .Values.envFrom }}
+          envFrom:
+            {{- toYaml .Values.envFrom | nindent 12 }}
+          {{- end }}
           {{- with .Values.api.probes.readiness }}
           readinessProbe:
             {{- toYaml . | nindent 12 }}
