@@ -51,7 +51,7 @@ spec:
             - name: http
               containerPort: {{ .Values.service.targetPort }}
               protocol: TCP
-          {{- if or .Values.llmProxy.enabled .Values.redis.enabled .Values.env }}
+          {{- if or .Values.llmProxy.enabled .Values.redis.enabled .Values.profiles.gitSync.enabled .Values.env }}
           env:
             {{- if .Values.llmProxy.enabled }}
             - name: DJANGO_LLM_BASE_URL
@@ -62,6 +62,10 @@ spec:
               value: redis://{{ include "backend.redisHost" . }}:{{ .Values.redis.connection.port }}/{{ .Values.redis.brokerDb }}
             - name: DJANGO_CELERY_RESULT_BACKEND
               value: redis://{{ include "backend.redisHost" . }}:{{ .Values.redis.connection.port }}/{{ .Values.redis.resultBackendDb }}
+            {{- end }}
+            {{- if .Values.profiles.gitSync.enabled }}
+            - name: PROFILES_BASE_DIR
+              value: "{{ .Values.profiles.gitSync.mountPath }}/{{ $profilesSubPath }}"
             {{- end }}
             {{- if .Values.env }}
             {{- toYaml .Values.env | nindent 12 }}
@@ -87,7 +91,6 @@ spec:
           volumeMounts:
             - name: profiles-sync
               mountPath: {{ .Values.profiles.gitSync.mountPath | quote }}
-              subPath: {{ $profilesSubPath | quote }}
               readOnly: true
             {{- if .Values.media.persistence.enabled }}
             - name: media-storage
