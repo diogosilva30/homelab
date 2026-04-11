@@ -1,9 +1,9 @@
 image:
   repository: ghcr.io/diogosilva30/the-academic-editorial/backend
-  tag: "1.21.0"
+  tag: "1.27.1"
   pullPolicy: Always
 
-replicaCount: 1
+replicaCount: 3
 
 service:
   type: ClusterIP
