@@ -9,7 +9,7 @@ module "cloudflare" {
     "annehoekman1@gmail.com",
     "bruno.miguel19995@gmail.com",
     "jpmrs1313@gmail.com",
-    "ricardoandradeguimaraes@gmail.com",
-    "tun.nadalini@gmail.com"
+    "tun.nadalini@gmail.com",
+    "brecht@vdvelden.org"
   ]
 }
