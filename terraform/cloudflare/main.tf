@@ -3,10 +3,12 @@
 // Cloudflare related code
 
 data "cloudflare_zone" "zone" {
-  name = var.domain
+  filter = {
+    name = var.domain
+  }
 }
 locals {
-  cloudflare_zone_id = data.cloudflare_zone.zone.id
+  cloudflare_zone_id = data.cloudflare_zone.zone.zone_id
 }
 
 //////////////////////////////////////////////////////////////////////////////////////
@@ -18,9 +20,11 @@ resource "cloudflare_zero_trust_access_policy" "editorial_email_policy" {
   name       = "The Academic Editorial email policy"
   decision   = "allow"
 
-  include {
-    email = var.emails_for_access_editorial
-  }
+  include = [for e in var.emails_for_access_editorial : {
+    email = {
+      email = e
+    }
+  }]
 }
 
 resource "cloudflare_zero_trust_access_policy" "editorial_stripe_webhook_bypass_policy" {
@@ -28,27 +32,29 @@ resource "cloudflare_zero_trust_access_policy" "editorial_stripe_webhook_bypass_
   name       = "The Academic Editorial Stripe webhook bypass policy"
   decision   = "bypass"
 
-  include {
-    everyone = true
-  }
+  include = [{
+    everyone = {}
+  }]
 }
 
 resource "cloudflare_zero_trust_access_application" "editorial_stripe_webhook_bypass" {
   zone_id = local.cloudflare_zone_id
   name    = "The Academic Editorial Stripe webhook bypass"
   domain  = format("%s.%s/api/payments/stripe/webhook", var.editorial_subdomain, var.domain)
-  policies = [
-    cloudflare_zero_trust_access_policy.editorial_stripe_webhook_bypass_policy.id,
-  ]
+  type    = "self_hosted"
+  policies = [{
+    id = cloudflare_zero_trust_access_policy.editorial_stripe_webhook_bypass_policy.id
+  }]
 }
 
 resource "cloudflare_zero_trust_access_application" "editorial_protect" {
   zone_id          = local.cloudflare_zone_id
   name             = "The Academic Editorial protection"
   domain           = format("%s.%s", var.editorial_subdomain, var.domain)
+  type             = "self_hosted"
   session_duration = "24h"
-  policies = [
-    cloudflare_zero_trust_access_policy.editorial_email_policy.id,
-  ]
+  policies = [{
+    id = cloudflare_zero_trust_access_policy.editorial_email_policy.id
+  }]
 }
 
