@@ -23,7 +23,7 @@ Each chart is **independently deployable** — no umbrella chart, no dependencie
 ```bash
 # Backend
 helm upgrade --install backend ./charts/backend \
-  --set image.repository=ghcr.io/diogosilva30/the-academic-editorial/backend \
+  --set image.repository=ghcr.io/journal-ready/the-academic-editorial/backend \
   --set image.tag=1.0.0 \
   --set env[0].name=DATABASE_URL \
   --set env[0].value=postgres://user:pass@host:5432/db \
@@ -32,7 +32,7 @@ helm upgrade --install backend ./charts/backend \
 
 # Frontend
 helm upgrade --install frontend ./charts/frontend \
-  --set image.repository=ghcr.io/diogosilva30/the-academic-editorial/frontend \
+  --set image.repository=ghcr.io/journal-ready/the-academic-editorial/frontend \
   --set image.tag=1.0.0
 ```
 
@@ -52,14 +52,14 @@ include changes under the corresponding chart directories:
 
 ```bash
 # Pull a specific version
-helm pull oci://ghcr.io/diogosilva30/the-academic-editorial/charts/backend --version 1.0.0
-helm pull oci://ghcr.io/diogosilva30/the-academic-editorial/charts/frontend --version 1.0.0
+helm pull oci://ghcr.io/journal-ready/the-academic-editorial/charts/backend --version 1.0.0
+helm pull oci://ghcr.io/journal-ready/the-academic-editorial/charts/frontend --version 1.0.0
 
 # Install directly from OCI
 helm upgrade --install backend \
-  oci://ghcr.io/diogosilva30/the-academic-editorial/charts/backend \
+  oci://ghcr.io/journal-ready/the-academic-editorial/charts/backend \
   --version 1.0.0 \
-  --set image.repository=ghcr.io/diogosilva30/the-academic-editorial/backend \
+  --set image.repository=ghcr.io/journal-ready/the-academic-editorial/backend \
   --set image.tag=1.0.0
 ```
 
