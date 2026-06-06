@@ -43,7 +43,7 @@ metadata:
   name: academic-editorial-db
 spec:
   description: "Database for The Academic Editorial"
-  imageName: ghcr.io/cloudnative-pg/postgresql:17.2
+  imageName: ghcr.io/cloudnative-pg/postgresql:17-standard-trixie
   instances: 1
   startDelay: 300
   stopDelay: 300
@@ -64,6 +64,8 @@ spec:
       owner: ae_user
       secret:
         name: academic-editorial-postgres-credentials
+      postInitApplicationSQL:
+        - CREATE EXTENSION IF NOT EXISTS vector;
 
   enableSuperuserAccess: true
   superuserSecret:
