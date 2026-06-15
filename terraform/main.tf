@@ -14,5 +14,6 @@ module "cloudflare" {
     "l.r.van.der.linden@umcg.nl",
     "carlos.moreira12@hotmail.com",
     "margotaalders@gmail.com",
+    "emilyjaarsma@gmail.com"
   ]
 }
