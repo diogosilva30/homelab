@@ -37,6 +37,9 @@ env:
 #     name: my-backend-env
 envFrom: []
 
+# Optional pod annotations applied to backend and celery worker pods.
+podAnnotations: {}
+
 media:
   persistence:
     enabled: false

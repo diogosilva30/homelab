@@ -13,6 +13,10 @@ spec:
     metadata:
       labels:
         {{- include "backend.selectorLabels" . | nindent 8 }}
+      {{- with (index .Values "podAnnotations") }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
     spec:
       {{- $gitSyncRoot := "/git-sync-root" }}
       {{- $gitSyncLink := "repo" }}
