@@ -54,7 +54,7 @@ spec:
           {{- if or .Values.llmProxy.enabled .Values.redis.enabled .Values.profiles.gitSync.enabled .Values.env }}
           env:
             {{- if .Values.llmProxy.enabled }}
-            - name: DJANGO_LLM_BASE_URL
+            - name: OPENAI_BASE_URL
               value: http://{{ include "backend.llmProxyFullname" . }}:{{ .Values.llmProxy.service.port }}/v1
             {{- end }}
             {{- if .Values.redis.enabled }}

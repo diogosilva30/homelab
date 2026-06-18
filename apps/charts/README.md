@@ -123,7 +123,7 @@ helm upgrade --install backend ./charts/backend \
   --set llmProxy.ghTokenSecret.key=GH_TOKEN
 ```
 
-When enabled, backend gets `DJANGO_LLM_BASE_URL` automatically set to the internal
+When enabled, backend gets `OPENAI_BASE_URL` automatically set to the internal
 service URL (`http://<release>-backend-llm-proxy:4141/v1`).
 
 Relevant backend values:
