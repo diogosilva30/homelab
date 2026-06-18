@@ -38,7 +38,7 @@ media:
     staticSubPath: static
 
 llmProxy:
-  enabled: false
+  enabled: true
   image:
     repository: ghcr.io/caozhiyuan/copilot-api
     tag: latest
