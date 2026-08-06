@@ -1,0 +1,48 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: hermes-webui-external
+spec:
+  ports:
+    - name: http
+      protocol: TCP
+      port: 8787
+      targetPort: 8787
+---
+apiVersion: discovery.k8s.io/v1
+kind: EndpointSlice
+metadata:
+  name: hermes-webui-external
+  labels:
+    kubernetes.io/service-name: hermes-webui-external
+addressType: IPv4
+ports:
+  - name: http
+    protocol: TCP
+    port: 8787
+endpoints:
+  - addresses:
+      - 192.168.1.86
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: hermes-webui
+  annotations:
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/description: Mobile control for Hermes Agent
+    gethomepage.dev/group: AI
+    gethomepage.dev/icon: mdi-robot-outline
+    gethomepage.dev/name: Hermes WebUI
+spec:
+  rules:
+    - host: hermes.$(DNS)
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: hermes-webui-external
+                port:
+                  name: http

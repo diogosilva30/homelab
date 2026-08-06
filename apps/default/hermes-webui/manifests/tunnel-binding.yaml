@@ -1,0 +1,12 @@
+apiVersion: networking.cfargotunnel.com/v1alpha1
+kind: TunnelBinding
+metadata:
+  name: hermes-webui-tunnel-binding
+subjects:
+  - kind: Service
+    name: hermes-webui-external
+    spec:
+      fqdn: hermes.$(DNS)
+tunnelRef:
+  kind: ClusterTunnel
+  name: homelab-cluster-tunnel
