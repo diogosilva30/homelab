@@ -3,26 +3,13 @@ kind: Service
 metadata:
   name: hermes-webui-external
 spec:
+  type: ExternalName
+  externalName: 192.168.1.86
   ports:
     - name: http
       protocol: TCP
       port: 8787
       targetPort: 8787
----
-apiVersion: discovery.k8s.io/v1
-kind: EndpointSlice
-metadata:
-  name: hermes-webui-external
-  labels:
-    kubernetes.io/service-name: hermes-webui-external
-addressType: IPv4
-ports:
-  - name: http
-    protocol: TCP
-    port: 8787
-endpoints:
-  - addresses:
-      - 192.168.1.86
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
